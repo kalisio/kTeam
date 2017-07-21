@@ -7,7 +7,7 @@ import { kaelia } from 'kCore'
 import team from '../src'
 
 describe('kTeam', () => {
-  let app
+  let app, orgService, groupService
 
   before(() => {
     chailint(chai, util)
@@ -20,9 +20,18 @@ describe('kTeam', () => {
     expect(typeof team).to.equal('function')
   })
 
-  it('registers the organization service', () => {
+  it('registers the organisation service', () => {
     app.configure(team)
-    let service = app.getService('organisations')
-    expect(service).toExist()
+    orgService = app.getService('organisations')
+    expect(orgService).toExist()
+  })
+
+  it('creates an organization', () => {
+    return orgService.create({ name: 'test-org' })
+    .then(org => {
+      // This should create a service for organisation groups
+      groupService = app.getService(org._id + '/groups')
+      expect(groupService).toExist()
+    })
   })
 })

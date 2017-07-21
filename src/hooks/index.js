@@ -1,8 +1,8 @@
-import { createOrganisationServices, destroyOrganisationServices } from './organisation'
+import { createOrganisationServices, removeOrganisationServices } from './organisation'
 
 let hooks = {
   createOrganisationServices,
-  destroyOrganisationServices
+  removeOrganisationServices
 }
 
 export default hooks

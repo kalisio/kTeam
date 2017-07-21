@@ -7,8 +7,8 @@ export * from './service'
 */
 // However for now we face a bug in babel so that transform-runtime with export * from 'x' generates import statements in transpiled code
 // Tracked here : https://github.com/babel/babel/issues/2877
-import { createOrganisationServices, destroyOrganisationServices } from './hooks'
-export let hooks = { createOrganisationServices, destroyOrganisationServices }
+import { createOrganisationServices, removeOrganisationServices } from './hooks'
+export let hooks = { createOrganisationServices, removeOrganisationServices }
 
 const debug = makeDebug('kaelia:kTeam')
 
