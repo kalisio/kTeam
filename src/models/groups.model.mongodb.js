@@ -1,3 +1,4 @@
 module.exports = function (app, options) {
-  options.Model = options.db || app.db.collection('groups')
+  let db = options.db || app.db
+  options.Model = db.collection('groups')
 }

@@ -1,4 +1,4 @@
-import { createOrganisationServices, destroyOrganisationServices } from '../../hooks'
+import { createOrganisationServices, removeOrganisationServices } from '../../hooks'
 const { authenticate } = require('feathers-authentication').hooks
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
     create: [ createOrganisationServices ],
     update: [],
     patch: [],
-    remove: [ destroyOrganisationServices ]
+    remove: [ removeOrganisationServices ]
   },
 
   error: {

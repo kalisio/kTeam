@@ -14,7 +14,12 @@ export function createOrganisationServices (hook) {
     debug('DB created for organisation ' + hook.result.name)
     let organisationDb = app.db._db.db(hook.result._id.toString())
 
-    return app.createService(hook.result._id + '/groups', path.join(__dirname, '..', 'models'), path.join(__dirname, '..', 'services'), { db: organisationDb })
+    app.createContextualService(hook.result,
+      'groups',
+      path.join(__dirname, '..', 'models'),
+      path.join(__dirname, '..', 'services'),
+      { db: organisationDb })
+    return hook
   });
 }
 
@@ -22,9 +27,10 @@ export function removeOrganisationServices (hook) {
   let app = hook.app
   let databaseService = app.service('databases')
   
-  // Then we remove the organisation DB 
+  // Then we remove the organisation DB
   return databaseService.remove(hook.result._id.toString())
   .then(db => {
     debug('DB removed for organisation ' + hook.result.name)
+    return hook
   })
 }

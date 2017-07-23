@@ -7,7 +7,7 @@ import { kaelia } from 'kCore'
 import team from '../src'
 
 describe('kTeam', () => {
-  let app, orgService, groupService
+  let app, orgService, groupService, orgObject, groupObject
 
   before(() => {
     chailint(chai, util)
@@ -29,9 +29,37 @@ describe('kTeam', () => {
   it('creates an organization', () => {
     return orgService.create({ name: 'test-org' })
     .then(org => {
+      orgObject = org
+      expect(org).toExist()
+      expect(org.name).to.equal('test-org')
       // This should create a service for organisation groups
-      groupService = app.getService(org._id + '/groups')
+      groupService = app.getContextualService(org, 'groups')
       expect(groupService).toExist()
+    })
+  })
+
+  it('creates an organization group', () => {
+    return groupService.create({ name: 'test-group' })
+    .then(group => {
+      groupObject = group
+      expect(group).toExist()
+      expect(group.name).to.equal('test-group')
+    })
+  })
+
+  it('removes an organization group', () => {
+    return groupService.remove(groupObject._id)
+    .then(group => {
+      expect(group).toExist()
+      expect(group.name).to.equal('test-group')
+    })
+  })
+
+  it('removes an organization', () => {
+    return orgService.remove(orgObject._id)
+    .then(org => {
+      expect(org).toExist()
+      expect(org.name).to.equal('test-org')
     })
   })
 })
