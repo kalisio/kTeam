@@ -1,6 +1,8 @@
 import path from 'path'
 import makeDebug from 'debug'
 const debug = makeDebug('kaelia:kTeam')
+const servicesPath = path.join(__dirname, '..', 'services')
+const modelsPath = path.join(__dirname, '..', 'models')
 
 export function createOrganisationServices (hook) {
   let app = hook.app
@@ -14,11 +16,20 @@ export function createOrganisationServices (hook) {
     debug('DB created for organisation ' + hook.result.name)
     let organisationDb = app.db.instance.db(hook.result._id.toString())
 
-    app.createContextualService(hook.result,
-      'groups',
-      path.join(__dirname, '..', 'models'),
-      path.join(__dirname, '..', 'services'),
-      { db: organisationDb })
+    app.createService('users', {
+      servicesPath,
+      path: hook.result._id.toString() + '/users',
+      proxy: {
+        service: app.getService('users'),
+        params: { query: { 'organisation._id': hook.result._id.toString() } }
+      }
+    })
+    app.createService('groups', {
+      modelsPath,
+      servicesPath,
+      path: hook.result._id.toString() + '/groups',
+      db: organisationDb
+    })
     return hook
   })
 }
