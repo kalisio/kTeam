@@ -12,7 +12,7 @@ export function createOrganisationServices (hook) {
   })
   .then(db => {
     debug('DB created for organisation ' + hook.result.name)
-    let organisationDb = app.db._db.db(hook.result._id.toString())
+    let organisationDb = app.db.instance.db(hook.result._id.toString())
 
     app.createContextualService(hook.result,
       'groups',
@@ -34,3 +34,17 @@ export function removeOrganisationServices (hook) {
     return hook
   })
 }
+
+export function createPrivateOrganisation (hook) {
+  let app = hook.app
+  let organisationService = app.getService('organisations')
+  // Create a private organisation for the user
+  return organisationService.create({
+    name: hook.result.name
+  })
+  .then(org => {
+    debug('Private organisation created for user ' + hook.result.name)
+    return hook
+  })
+}
+
