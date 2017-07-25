@@ -1,13 +1,10 @@
-import path from 'path'
-import logger from 'winston'
-import fs from 'fs-extra'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 import core, { kaelia } from 'kCore'
 import team from '../src'
 
 describe('kTeam', () => {
-  let app, adminDb, userService, orgService, groupService, orgObject, groupObject
+  let app, adminDb, userService, orgService, groupService, userObject, orgObject, groupObject
 
   before(() => {
     chailint(chai, util)
@@ -93,10 +90,21 @@ describe('kTeam', () => {
 
   it('creates a private organization on user registration', () => {
     return userService.create({ email: 'test@test.org', name: 'test-user' })
-    .then(org => {
+    .then(user => {
+      userObject = user
       return orgService.find({ query: { name: 'test-user' } })
       .then(orgs => {
         expect(orgs.data.length > 0).beTrue()
+      })
+    })
+  })
+
+  it('removes private organization on user removal', () => {
+    return userService.remove(userObject._id)
+    .then(org => {
+      return orgService.find({ query: { name: 'test-user' } })
+      .then(orgs => {
+        expect(orgs.data.length === 0).beTrue()
       })
     })
   })

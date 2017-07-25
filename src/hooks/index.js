@@ -1,9 +1,10 @@
-import { createOrganisationServices, removeOrganisationServices, createPrivateOrganisation } from './organisation'
+import { createOrganisationServices, removeOrganisationServices, createPrivateOrganisation, removePrivateOrganisation } from './organisation'
 
 let hooks = {
   createOrganisationServices,
   removeOrganisationServices,
-  createPrivateOrganisation
+  createPrivateOrganisation,
+  removePrivateOrganisation
 }
 
 export default hooks
