@@ -10,6 +10,7 @@ module.exports = function () {
   app.use('databases', mongoManager.database({ db: app.db._db }))
 
   app.createService('organisations', { modelsPath, servicesPath })
+  app.createService('authorisation', { servicesPath })
   // Add hook to automatically creates a new organisation when creating a new user
   app.configureService('users', app.getService('users'), servicesPath)
 }

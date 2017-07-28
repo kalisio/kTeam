@@ -21,7 +21,7 @@ export function createOrganisationServices (hook) {
       path: hook.result._id.toString() + '/users',
       proxy: {
         service: app.getService('users'),
-        params: { query: { 'organisation._id': hook.result._id.toString() } }
+        params: { query: { 'organisations._id': hook.result._id.toString() } }
       }
     })
     app.createService('groups', {
@@ -46,17 +46,58 @@ export function removeOrganisationServices (hook) {
   })
 }
 
+export function createOrganisationAuthorisations (hook) {
+  let app = hook.app
+  let authorisationService = app.getService('authorisation')
+  let userService = app.getService('users')
+
+  // Set membership for the owner
+  return authorisationService.update(null, {
+    scope: 'organisations',
+    permissions: '*' // Owner by default
+  }, { // Because we already have subject/resource set it as service params and not data
+    subjects: [hook.params.owner],
+    subjectsService: userService,
+    resource: hook.result,
+    resourcesService: hook.service
+  })
+  .then(authorisation => {
+    debug('Private organisation ownership set for user ' + hook.result._id)
+    return hook
+  })
+}
+
+export function removeOrganisationAuthorisations (hook) {
+  let app = hook.app
+  let authorisationService = app.getService('authorisation')
+
+  // Unset membership for the all org users
+  return authorisationService.remove(null, {
+    resource: hook.result,
+    query: {
+      subjectsService: hook.result._id.toString() + '/users',
+      scope: 'organisations'
+    }
+  })
+  .then(authorisation => {
+    debug('Authorisations unset for organisation ' + hook.result._id)
+    return hook
+  })
+}
+
 export function createPrivateOrganisation (hook) {
   let app = hook.app
   let organisationService = app.getService('organisations')
+
   // Create a private organisation for the user
   return organisationService.create({
-    _id: hook.result._id,
-    name: hook.result.name
+    _id: hook.result._id, // Same ID as user, fine because in another service
+    name: hook.result.name // Same name as user
+  }, {
+    owner: hook.result
   })
   .then(org => {
-    debug('Private organisation created for user ' + hook.result.name)
-    return hook
+    debug('Private organisation created for user ' + hook.result._id)
   })
 }
 
@@ -66,7 +107,6 @@ export function removePrivateOrganisation (hook) {
   // Create a private organisation for the user
   return organisationService.remove(hook.result._id.toString())
   .then(org => {
-    debug('Private organisation removed for user ' + hook.result.name)
-    return hook
+    debug('Private organisation removed for user ' + hook.result._id)
   })
 }

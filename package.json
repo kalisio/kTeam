@@ -59,6 +59,7 @@
     "fs-extra": "^3.0.0",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.26",
+    "sift": "^5.0.0",
     "uberproto": "^1.2.0",
     "winston": "^2.3.1"
   },
