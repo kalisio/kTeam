@@ -6,7 +6,7 @@ import team from '../src'
 describe('kTeam', () => {
   let app, adminDb,
     userService, orgService, authorisationService, orgGroupService, orgUserService,
-    userObject, orgObject, groupObject
+    user1Object, user2Object, orgObject, groupObject
 
   before(() => {
     chailint(chai, util)
@@ -33,14 +33,25 @@ describe('kTeam', () => {
     expect(authorisationService).toExist()
   })
 
-  it('creates a private organisation on user registration', () => {
-    return userService.create({ email: 'test@test.org', name: 'test-user' })
+  it('creates a test user', () => {
+    return userService.create({ email: 'test-1@test.org', name: 'test-user-1' })
     .then(user => {
-      userObject = user
-      expect(userObject.organisations).toExist()
+      user1Object = user
+      return userService.find({ query: { name: 'test-user-1' } })
+      .then(users => {
+        expect(users.data.length > 0).beTrue()
+      })
+    })
+  })
+
+  it('creates a private organisation on user registration', () => {
+    return userService.create({ email: 'test-2@test.org', name: 'test-user-2' })
+    .then(user => {
+      user2Object = user
+      expect(user2Object.organisations).toExist()
       // By default the user manage its own organisation
-      expect(userObject.organisations[0].permissions).to.deep.equal('*')
-      return orgService.find({ query: { name: 'test-user' } })
+      expect(user2Object.organisations[0].permissions).to.deep.equal('*')
+      return orgService.find({ query: { name: 'test-user-2' } })
       .then(orgs => {
         expect(orgs.data.length > 0).beTrue()
       })
@@ -48,7 +59,7 @@ describe('kTeam', () => {
   })
 
   it('creates an organisation', () => {
-    return orgService.create({ name: 'test-org' }, { owner: userObject })
+    return orgService.create({ name: 'test-org' }, { user: user1Object })
     .then(org => {
       return orgService.find({ query: { name: 'test-org' } })
       .then(orgs => {
@@ -68,30 +79,30 @@ describe('kTeam', () => {
   })
 
   it('restricted access to organisation users for members', () => {
-    return userService.find({ query: { name: userObject.name } })
+    return userService.find({ query: { name: user2Object.name } })
     .then(users => {
       // User is found on the global service
       expect(users.data.length > 0).beTrue()
-      return orgUserService.find({ query: { name: userObject.name } })
+      return orgUserService.find({ query: { name: user2Object.name } })
       .then(users => {
-        // User is also found on the org service (owner by default)
-        expect(users.data.length > 0).beTrue()
-        // Remove membership for the user
-        return authorisationService.remove(null, {
-          subjects: [userObject],
-          subjectsService: 'users',
-          query: {
-            scope: 'organisations',
-            permissions: '*'
-          },
+        // User is not found on the org service while no membership
+        expect(users.data.length === 0).beTrue()
+        // Add membership for the user
+        return authorisationService.update(null, {
+          scope: 'organisations',
+          permissions: 'manage'
+        },
+        {
+          subjects: [user2Object],
+          subjectsService: userService,
           resource: orgObject,
-          resourcesService: 'organisations'
+          resourcesService: orgService
         })
         .then(authorisation => {
-          return orgUserService.find({ query: { name: userObject.name } })
+          return orgUserService.find({ query: { name: user2Object.name } })
           .then(users => {
-            // But not now on the org if no membership
-            expect(users.data.length === 0).beTrue()
+            // Found now on the org with membership
+            expect(users.data.length > 0).beTrue()
           })
         })
       })
@@ -141,11 +152,21 @@ describe('kTeam', () => {
   })
 
   it('removes private organisation on user removal', () => {
-    return userService.remove(userObject._id)
+    return userService.remove(user2Object._id)
     .then(org => {
-      return orgService.find({ query: { name: userObject.name } })
+      return orgService.find({ query: { name: user2Object.name } })
       .then(orgs => {
         expect(orgs.data.length === 0).beTrue()
+      })
+    })
+  })
+
+  it('removes test user', () => {
+    return userService.remove(user1Object._id)
+    .then(org => {
+      return userService.find({ query: { name: user1Object.name } })
+      .then(users => {
+        expect(users.data.length === 0).beTrue()
       })
     })
   })

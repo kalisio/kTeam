@@ -19,12 +19,12 @@ export default {
       // Then retrieve the right scope on the subject
       let scope = _.get(subject, scopeName, [])
       // Then the target resource
-      let resource = findResource(scope, { _id: params.resource._id })
+      let resource = findResource(scope, { _id: params.resource._id.toString() })
       // On first authorisation create the resource in scope
       if (!resource) {
         resource = {
           name: params.resource.name,
-          _id: params.resource._id
+          _id: params.resource._id.toString()
         }
         scope.push(resource)
       }
@@ -50,7 +50,7 @@ export default {
       // Then retrieve the right scope on the subject
       let scope = _.get(subject, scopeName, [])
       // Then the target resource
-      scope.filter(sift({ _id: params.resource._id }))
+      scope.filter(sift({ _id: params.resource._id.toString() }))
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)

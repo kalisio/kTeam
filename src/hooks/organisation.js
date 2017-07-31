@@ -15,7 +15,6 @@ export function createOrganisationServices (hook) {
   .then(db => {
     debug('DB created for organisation ' + hook.result.name)
     let organisationDb = app.db.instance.db(hook.result._id.toString())
-
     app.createService('users', {
       servicesPath,
       path: hook.result._id.toString() + '/users',
@@ -56,7 +55,7 @@ export function createOrganisationAuthorisations (hook) {
     scope: 'organisations',
     permissions: '*' // Owner by default
   }, { // Because we already have subject/resource set it as service params and not data
-    subjects: [hook.params.owner],
+    subjects: [hook.params.user],
     subjectsService: userService,
     resource: hook.result,
     resourcesService: hook.service
@@ -94,7 +93,7 @@ export function createPrivateOrganisation (hook) {
     _id: hook.result._id, // Same ID as user, fine because in another service
     name: hook.result.name // Same name as user
   }, {
-    owner: hook.result
+    user: hook.result
   })
   .then(org => {
     debug('Private organisation created for user ' + hook.result._id)
