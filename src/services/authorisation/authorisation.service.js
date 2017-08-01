@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import sift from 'sift'
 import makeDebug from 'debug'
+import { updateAbilitiesForSubject } from '../../permissions'
 
 const debug = makeDebug('kaelia:kTeam')
 
@@ -11,6 +12,8 @@ function findResource (scope, query) {
 }
 
 export default {
+  // Used to change permissions for a subject on a resource
+  // We don't use ID and pass parameters in the query/params object
   update (id, data, params) {
     let query = params.query
     // Make hook usable with query params as well
@@ -34,8 +37,11 @@ export default {
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
+      updateAbilitiesForSubject(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
+      }, {
+        user: params.user
       })
       .then(subject => {
         debug('Authorisation ' + data.permissions + ' set for subject ' + subject._id + ' on resource ' + params.resource._id + ' with scope ' + scopeName)
@@ -43,6 +49,8 @@ export default {
     }))
   },
 
+  // Used to remove permissions for a subject on a resource
+  // We don't use ID and pass parameters in the query/params object
   remove (id, params) {
     let query = params.query
     let scopeName = query.scope // Get scope name first
@@ -54,8 +62,11 @@ export default {
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
+      updateAbilitiesForSubject(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
+      }, {
+        user: params.user
       })
       .then(subject => {
         debug('Authorisation unset for subject ' + subject._id + ' on resource ' + params.resource._id + ' with scope ' + scopeName)

@@ -1,8 +1,9 @@
-import { updateAbilities, createPrivateOrganisation, removePrivateOrganisation } from '../../hooks'
+import { disallow } from 'feathers-hooks-common'
 
 module.exports = {
   before: {
-    all: [],
+    // Only used internally
+    all: [ disallow('external') ],
     find: [],
     get: [],
     create: [],
@@ -15,10 +16,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ updateAbilities, createPrivateOrganisation ],
+    create: [],
     update: [],
     patch: [],
-    remove: [ removePrivateOrganisation ]
+    remove: []
   },
 
   error: {

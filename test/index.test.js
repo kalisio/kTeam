@@ -1,7 +1,7 @@
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 import core, { kaelia } from 'kCore'
-import team from '../src'
+import team, { hooks as teamHooks } from '../src'
 
 describe('kTeam', () => {
   let app, adminDb,
@@ -12,6 +12,11 @@ describe('kTeam', () => {
     chailint(chai, util)
 
     app = kaelia()
+    // Register authorisation hooks
+    app.hooks({
+      before: { all: teamHooks.processAbilities },
+      after: { all: teamHooks.authorise }
+    })
     return app.db.connect()
     .then(db => {
       adminDb = app.db.instance.admin()
@@ -33,6 +38,14 @@ describe('kTeam', () => {
     expect(authorisationService).toExist()
   })
 
+  it('unauthorised users cannot create organisations', () => {
+    return orgService.create({ name: 'test-org' })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+    })
+  })
+
   it('creates a test user', () => {
     return userService.create({ email: 'test-1@test.org', name: 'test-user-1' })
     .then(user => {
@@ -50,7 +63,7 @@ describe('kTeam', () => {
       user2Object = user
       expect(user2Object.organisations).toExist()
       // By default the user manage its own organisation
-      expect(user2Object.organisations[0].permissions).to.deep.equal('*')
+      expect(user2Object.organisations[0].permissions).to.deep.equal('owner')
       return orgService.find({ query: { name: 'test-user-2' } })
       .then(orgs => {
         expect(orgs.data.length > 0).beTrue()
@@ -90,14 +103,15 @@ describe('kTeam', () => {
         // Add membership for the user
         return authorisationService.update(null, {
           scope: 'organisations',
-          permissions: 'manage'
+          permissions: 'manager'
         },
-        {
-          subjects: [user2Object],
-          subjectsService: userService,
-          resource: orgObject,
-          resourcesService: orgService
-        })
+          {
+            user: user1Object,
+            subjects: [user2Object],
+            subjectsService: userService,
+            resource: orgObject,
+            resourcesService: orgService
+          })
         .then(authorisation => {
           return orgUserService.find({ query: { name: user2Object.name } })
           .then(users => {
@@ -110,7 +124,7 @@ describe('kTeam', () => {
   })
 
   it('creates an organisation group', () => {
-    return orgGroupService.create({ name: 'test-group' })
+    return orgGroupService.create({ name: 'test-group' }, { user: user2Object })
     .then(_ => {
       return orgGroupService.find({ query: { name: 'test-group' } })
       .then(groups => {
@@ -127,7 +141,7 @@ describe('kTeam', () => {
   })
 
   it('removes an organisation group', () => {
-    return orgGroupService.remove(groupObject._id)
+    return orgGroupService.remove(groupObject._id, { user: user2Object })
     .then(_ => {
       return orgGroupService.find({ query: { name: groupObject.name } })
       .then(groups => {
@@ -137,7 +151,7 @@ describe('kTeam', () => {
   })
 
   it('removes an organisation', () => {
-    return orgService.remove(orgObject._id)
+    return orgService.remove(orgObject._id, { user: user1Object })
     .then(org => {
       return orgService.find({ query: { name: 'test-org' } })
       .then(orgs => {
@@ -152,7 +166,7 @@ describe('kTeam', () => {
   })
 
   it('removes private organisation on user removal', () => {
-    return userService.remove(user2Object._id)
+    return userService.remove(user2Object._id, { user: user2Object })
     .then(org => {
       return orgService.find({ query: { name: user2Object.name } })
       .then(orgs => {
@@ -162,7 +176,7 @@ describe('kTeam', () => {
   })
 
   it('removes test user', () => {
-    return userService.remove(user1Object._id)
+    return userService.remove(user1Object._id, { user: user1Object })
     .then(org => {
       return userService.find({ query: { name: user1Object.name } })
       .then(users => {

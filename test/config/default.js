@@ -32,8 +32,7 @@ module.exports = {
   },
   logs: {
     Console: {
-      colorize: true,
-      level: 'verbose'
+      colorize: true
     },
     DailyRotateFile: {
       filename: path.join(__dirname, '..', 'test-log-'),

@@ -6,11 +6,13 @@ const modelsPath = path.join(__dirname, '..', 'models')
 
 export function createOrganisationServices (hook) {
   let app = hook.app
-  let databaseService = app.service('databases')
+  let databaseService = app.getService('databases')
 
   // First we create the organisation DB
   return databaseService.create({
     name: hook.result._id.toString()
+  }, {
+    user: hook.params.user
   })
   .then(db => {
     debug('DB created for organisation ' + hook.result.name)
@@ -35,10 +37,12 @@ export function createOrganisationServices (hook) {
 
 export function removeOrganisationServices (hook) {
   let app = hook.app
-  let databaseService = app.service('databases')
+  let databaseService = app.getService('databases')
 
   // Then we remove the organisation DB
-  return databaseService.remove(hook.result._id.toString())
+  return databaseService.remove(hook.result._id.toString(), {
+    user: hook.params.user
+  })
   .then(db => {
     debug('DB removed for organisation ' + hook.result.name)
     return hook
@@ -53,8 +57,9 @@ export function createOrganisationAuthorisations (hook) {
   // Set membership for the owner
   return authorisationService.update(null, {
     scope: 'organisations',
-    permissions: '*' // Owner by default
+    permissions: 'owner' // Owner by default
   }, { // Because we already have subject/resource set it as service params and not data
+    user: hook.params.user,
     subjects: [hook.params.user],
     subjectsService: userService,
     resource: hook.result,
@@ -77,6 +82,8 @@ export function removeOrganisationAuthorisations (hook) {
       subjectsService: hook.result._id.toString() + '/users',
       scope: 'organisations'
     }
+  }, {
+    user: hook.params.user
   })
   .then(authorisation => {
     debug('Authorisations unset for organisation ' + hook.result._id)
@@ -104,7 +111,9 @@ export function removePrivateOrganisation (hook) {
   let app = hook.app
   let organisationService = app.getService('organisations')
   // Create a private organisation for the user
-  return organisationService.remove(hook.result._id.toString())
+  return organisationService.remove(hook.result._id.toString(), {
+    user: hook.result
+  })
   .then(org => {
     debug('Private organisation removed for user ' + hook.result._id)
   })
