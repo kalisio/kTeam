@@ -1,4 +1,3 @@
-import LruCache from 'lru-cache'
 import { Ability, AbilityBuilder } from 'casl'
 
 // Define some alias to simplify ability definitions
@@ -14,10 +13,6 @@ const Roles = {
 
 // Get the unique global symbol to store resource type on a resource object
 export const RESOURCE_TYPE = 'type'
-const ANONYMOUS_USER = 'anonymous'
-
-// Store abilities of the N most active users in LRU cache (defaults to 1000)
-const Cache = new LruCache(1000)
 
 export function defineResourceRules (subject, resource, resourceService, can) {
   const role = Roles[resource.permissions]
@@ -27,7 +22,7 @@ export function defineResourceRules (subject, resource, resourceService, can) {
   }
   if (role >= Roles.manager) {
     can('update', resourceService, { _id: resource._id.toString() })
-    can('manage', 'authorisation', { resource: resource._id.toString() })
+    can('manage', 'authorisations', { resource: resource._id.toString() })
   }
   if (role >= Roles.owner) {
     can('remove', resourceService, { _id: resource._id.toString() })
@@ -45,29 +40,28 @@ export function defineAbilitiesForSubject (subject) {
   // Default rules for all authenticated users
   if (subject) {
     // Read/Update profile
-    can(['read', 'update', 'remove'], 'users', { _id: subject._id.toString() })
+    can(['update', 'remove'], 'users', { _id: subject._id.toString() })
     // Create new organisations and associated DB
     can('create', 'organisations')
-    can('create', 'databases')
-
+    
     // Then rules for organisations
     if (subject.organisations) {
       subject.organisations.forEach(organisation => {
+        // Generic rules for resources
         defineResourceRules(subject, organisation, 'organisations', can)
+        // Specific rules for organiations
         const role = Roles[organisation.permissions]
         if (role >= Roles.manager) {
-          can('create', 'groups')
-          can('update', 'users', { 'organisations._id': organisation._id.toString() })
+          can('create', 'groups', { organisation: organisation._id.toString() })
         }
-        if (role >= Roles.owner) {
-          can('remove', 'databases', { name: organisation._id.toString() })
-        }
-        // Then rules for org groups
-        if (organisation.groups) {
-          organisation.groups.forEach(group => {
-            defineResourceRules(subject, group, 'groups', can)
-          })
-        }
+      })
+    }
+    // Then rules for groups
+    if (subject.groups) {
+      subject.groups.forEach(group => {
+        // Generic rules for resources
+        defineResourceRules(subject, group, 'groups', can)
+        // Np specific rules for groups
       })
     }
   }
@@ -82,33 +76,10 @@ export function defineAbilitiesForSubject (subject) {
   }})
 }
 
-// Compute abilities for a given user and set it in cache the first time
-// or get it from cache if found
-export function getAbilitiesForSubject (subject) {
-  if (subject) {
-    if (Cache.has(subject._id.toString())) return Cache.get(subject._id.toString())
-  } else {
-    if (Cache.has(ANONYMOUS_USER)) return Cache.get(ANONYMOUS_USER)
-  }
-
-  let abilities = defineAbilitiesForSubject(subject)
-
-  if (subject) {
-    Cache.set(subject._id.toString(), abilities)
-  } else {
-    Cache.set(ANONYMOUS_USER, abilities)
-  }
-
-  return abilities
-}
-
-// Compute abilities for a given user and update it in cache
-export function updateAbilitiesForSubject (subject) {
-  if (subject) {
-    Cache.del(subject._id.toString())
-  } else {
-    Cache.del(ANONYMOUS_USER)
-  }
-
-  return getAbilitiesForSubject(subject)
+export function hasAbilities (abilities, action, resource, serviceName) {
+  resource[Symbol.for(RESOURCE_TYPE)] = serviceName
+  const result = abilities.can(action, resource)
+  // Not required anymore
+  delete resource[Symbol.for(RESOURCE_TYPE)]
+  return result
 }

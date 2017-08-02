@@ -1,9 +1,13 @@
 import _ from 'lodash'
 import sift from 'sift'
+import LruCache from 'lru-cache'
 import makeDebug from 'debug'
-import { updateAbilitiesForSubject } from '../../permissions'
+import { defineAbilitiesForSubject } from '../../permissions'
 
-const debug = makeDebug('kaelia:kTeam')
+const debug = makeDebug('kaelia:kTeam:authorisation')
+
+// Global key to store abilities in cache for anonymous users
+const ANONYMOUS_USER = 'anonymous'
 
 // Util function to look for a given resource in a scope
 function findResource (scope, query) {
@@ -13,8 +17,9 @@ function findResource (scope, query) {
 
 export default {
   // Used to change permissions for a subject on a resource
-  // We don't use ID and pass parameters in the query/params object
-  update (id, data, params) {
+  // We pass parameters in the query/data object
+  // The params object should be already filled by populate hooks
+  create (data, params) {
     let query = params.query
     // Make hook usable with query params as well
     let scopeName = data.scope || query.scope // Get scope name first
@@ -37,10 +42,11 @@ export default {
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
-      updateAbilitiesForSubject(subject)
+      this.updateAbilitiesForSubject(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
+        authorised: true, // Internal call so skip uthorisations
         user: params.user
       })
       .then(subject => {
@@ -50,7 +56,8 @@ export default {
   },
 
   // Used to remove permissions for a subject on a resource
-  // We don't use ID and pass parameters in the query/params object
+  // We use ID as target resource and pass parameters in the query object
+  // The params object should be already filled by populate hooks
   remove (id, params) {
     let query = params.query
     let scopeName = query.scope // Get scope name first
@@ -58,19 +65,68 @@ export default {
       // Then retrieve the right scope on the subject
       let scope = _.get(subject, scopeName, [])
       // Then the target resource
-      scope.filter(sift({ _id: params.resource._id.toString() }))
+      scope.filter(sift({ _id: id }))
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
-      updateAbilitiesForSubject(subject)
+      this.updateAbilitiesForSubject(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
+        authorised: true, // Internal call so skip uthorisations
         user: params.user
       })
       .then(subject => {
-        debug('Authorisation unset for subject ' + subject._id + ' on resource ' + params.resource._id + ' with scope ' + scopeName)
+        debug('Authorisation unset for subject ' + subject._id + ' on resource ' + id + ' with scope ' + scopeName)
       })
     }))
+  },
+
+  setup (app) {
+    const config = app.get('authorisation')
+    if (config.cache) {
+      // Store abilities of the N most active users in LRU cache (defaults to 1000)
+      this.cache = new LruCache(config.cache.maxUsers || 1000)
+      debug('Using LRU cache for user abilities')
+    } else {
+      debug('Do not use LRU cache for user abilities')
+    }
+  },
+
+  // Compute abilities for a given user and set it in cache the first time
+  // or get it from cache if found
+  getAbilitiesForSubject (subject) {
+    if (this.cache) {
+      if (subject) {
+        if (this.cache.has(subject._id.toString())) return this.cache.get(subject._id.toString())
+      } else {
+        if (this.cache.has(ANONYMOUS_USER)) return this.cache.get(ANONYMOUS_USER)
+      }
+    }
+
+    let abilities = defineAbilitiesForSubject(subject)
+
+    if (this.cache) {
+      if (subject) {
+        this.cache.set(subject._id.toString(), abilities)
+      } else {
+        this.cache.set(ANONYMOUS_USER, abilities)
+      }
+    }
+
+    return abilities
+  },
+
+  // Compute abilities for a given user and update it in cache
+  updateAbilitiesForSubject (subject) {
+    if (this.cache) {
+      if (subject) {
+        this.cache.del(subject._id.toString())
+      } else {
+        this.cache.del(ANONYMOUS_USER)
+      }
+    }
+
+    return this.getAbilitiesForSubject(subject)
   }
 }

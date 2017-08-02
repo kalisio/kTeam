@@ -1,6 +1,6 @@
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
-import core, { kaelia } from 'kCore'
+import core, { kaelia, hooks as coreHooks } from 'kCore'
 import team, { hooks as teamHooks } from '../src'
 
 describe('kTeam', () => {
@@ -12,10 +12,14 @@ describe('kTeam', () => {
     chailint(chai, util)
 
     app = kaelia()
-    // Register authorisation hooks
+    // Register authorisation hook
     app.hooks({
-      before: { all: teamHooks.processAbilities },
-      after: { all: teamHooks.authorise }
+      before: { all: teamHooks.authorise }
+      /* For debug 
+      before: { all: [coreHooks.log, teamHooks.authorise] },
+      after: { all: coreHooks.log },
+      error: { all: coreHooks.log }
+      */
     })
     return app.db.connect()
     .then(db => {
@@ -34,11 +38,11 @@ describe('kTeam', () => {
     app.configure(team)
     orgService = app.getService('organisations')
     expect(orgService).toExist()
-    authorisationService = app.getService('authorisation')
+    authorisationService = app.getService('authorisations')
     expect(authorisationService).toExist()
   })
 
-  it('unauthorised users cannot create organisations', () => {
+  it('unregistered users cannot create organisations', () => {
     return orgService.create({ name: 'test-org' })
     .catch(error => {
       expect(error).toExist()
@@ -91,7 +95,7 @@ describe('kTeam', () => {
     })
   })
 
-  it('restricted access to organisation users for members', () => {
+  it('non-members cannot access organisation users', () => {
     return userService.find({ query: { name: user2Object.name } })
     .then(users => {
       // User is found on the global service
@@ -100,38 +104,99 @@ describe('kTeam', () => {
       .then(users => {
         // User is not found on the org service while no membership
         expect(users.data.length === 0).beTrue()
-        // Add membership for the user
-        return authorisationService.update(null, {
-          scope: 'organisations',
-          permissions: 'manager'
-        },
-          {
-            user: user1Object,
-            subjects: [user2Object],
-            subjectsService: userService,
-            resource: orgObject,
-            resourcesService: orgService
-          })
-        .then(authorisation => {
-          return orgUserService.find({ query: { name: user2Object.name } })
-          .then(users => {
-            // Found now on the org with membership
-            expect(users.data.length > 0).beTrue()
-          })
-        })
       })
     })
   })
 
-  it('creates an organisation group', () => {
-    return orgGroupService.create({ name: 'test-group' }, { user: user2Object })
+  it('non-members cannot manage organisation permissions', () => {
+    return authorisationService.create({
+      scope: 'organisations',
+      permissions: 'member',
+      subjects: user2Object._id.toString(),
+      subjectsService: 'users',
+      resource: orgObject._id.toString(),
+      resourcesService: 'organisations'
+    },
+    {
+      user: user2Object
+    })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+    })
+  })
+
+  it('owner can add organisation members', () => {
+    return authorisationService.create({
+      scope: 'organisations',
+      permissions: 'member',
+      subjects: user2Object._id.toString(),
+      subjectsService: 'users',
+      resource: orgObject._id.toString(),
+      resourcesService: 'organisations'
+    },
+    {
+      user: user1Object
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { name: user2Object.name } })
+      .then(users => {
+        expect(users.data.length > 0).beTrue()
+        user2Object = users.data[0]
+        expect(user2Object.organisations[1].permissions).to.deep.equal('member')
+      })
+    })
+  })
+
+  it('members can access organisation users', () => {
+    return orgUserService.find({ query: { name: user2Object.name } }, { user: user2Object })
+    .then(users => {
+      // Found now on the org with membership
+      expect(users.data.length > 0).beTrue()
+    })
+  })
+
+  it('members cannot create an organisation group', () => {
+    return orgGroupService.create({ name: 'test-group', organisation: orgObject._id.toString() }, { user: user2Object })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+    })
+  })
+
+  it('owner can add organisation managers', () => {
+    return authorisationService.create({
+      scope: 'organisations',
+      permissions: 'manager',
+      subjects: user2Object._id.toString(),
+      subjectsService: 'users',
+      resource: orgObject._id.toString(),
+      resourcesService: 'organisations'
+    },
+    {
+      user: user1Object
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { name: user2Object.name } })
+      .then(users => {
+        expect(users.data.length > 0).beTrue()
+        user2Object = users.data[0]
+        expect(user2Object.organisations[1].permissions).to.deep.equal('manager')
+      })
+    })
+  })
+
+  it('manager can create an organisation group', () => {
+    return orgGroupService.create({ name: 'test-group', organisation: orgObject._id.toString() }, { user: user2Object })
     .then(_ => {
       return orgGroupService.find({ query: { name: 'test-group' } })
       .then(groups => {
         expect(groups.data.length > 0).beTrue()
         groupObject = groups.data[0]
         expect(groupObject.name).to.equal('test-group')
-        // Now this should have created DB for organisation
+        // Now we have added some documents this should have created DB for organisation
         return adminDb.listDatabases()
         .then(dbs => {
           expect(dbs.databases.find(db => db.name === orgObject._id.toString())).toExist()
@@ -140,7 +205,7 @@ describe('kTeam', () => {
     })
   })
 
-  it('removes an organisation group', () => {
+  it('group owner can remove his organisation group', () => {
     return orgGroupService.remove(groupObject._id, { user: user2Object })
     .then(_ => {
       return orgGroupService.find({ query: { name: groupObject.name } })
@@ -150,7 +215,7 @@ describe('kTeam', () => {
     })
   })
 
-  it('removes an organisation', () => {
+  it('owner can remove his organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object })
     .then(org => {
       return orgService.find({ query: { name: 'test-org' } })

@@ -30,9 +30,17 @@ module.exports = {
       clientSecret: 'a03PrspLJLIUqnJ7ANtLgutd'
     }
   },
+  authorisation: {
+    /*
+    cache: {
+      maxUsers: 1000
+    }
+    */
+  },
   logs: {
     Console: {
-      colorize: true
+      colorize: true,
+      level: 'debug'
     },
     DailyRotateFile: {
       filename: path.join(__dirname, '..', 'test-log-'),

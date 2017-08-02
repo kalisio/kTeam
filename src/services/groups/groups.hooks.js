@@ -1,3 +1,4 @@
+import { createGroupAuthorisations, removeGroupAuthorisations } from '../../hooks'
 const { authenticate } = require('feathers-authentication').hooks
 
 module.exports = {
@@ -15,10 +16,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [ createGroupAuthorisations ],
     update: [],
     patch: [],
-    remove: []
+    remove: [ removeGroupAuthorisations ]
   },
 
   error: {

@@ -12,6 +12,7 @@ export function createOrganisationServices (hook) {
   return databaseService.create({
     name: hook.result._id.toString()
   }, {
+    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user
   })
   .then(db => {
@@ -41,6 +42,7 @@ export function removeOrganisationServices (hook) {
 
   // Then we remove the organisation DB
   return databaseService.remove(hook.result._id.toString(), {
+    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user
   })
   .then(db => {
@@ -51,38 +53,38 @@ export function removeOrganisationServices (hook) {
 
 export function createOrganisationAuthorisations (hook) {
   let app = hook.app
-  let authorisationService = app.getService('authorisation')
+  let authorisationService = app.getService('authorisations')
   let userService = app.getService('users')
 
   // Set membership for the owner
-  return authorisationService.update(null, {
+  return authorisationService.create({
     scope: 'organisations',
     permissions: 'owner' // Owner by default
-  }, { // Because we already have subject/resource set it as service params and not data
+  }, {
+    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user,
+    // Because we already have subject/resource set it as objects to avoid populating
     subjects: [hook.params.user],
     subjectsService: userService,
     resource: hook.result,
     resourcesService: hook.service
   })
   .then(authorisation => {
-    debug('Private organisation ownership set for user ' + hook.result._id)
+    debug('Organisation ownership set for user ' + hook.result._id)
     return hook
   })
 }
 
 export function removeOrganisationAuthorisations (hook) {
   let app = hook.app
-  let authorisationService = app.getService('authorisation')
+  let authorisationService = app.getService('authorisations')
 
   // Unset membership for the all org users
-  return authorisationService.remove(null, {
-    resource: hook.result,
+  return authorisationService.remove(hook.result._id.toString(), {
     query: {
       subjectsService: hook.result._id.toString() + '/users',
       scope: 'organisations'
-    }
-  }, {
+    },
     user: hook.params.user
   })
   .then(authorisation => {

@@ -19,7 +19,7 @@ module.exports = {
     create: [ createOrganisationServices, createOrganisationAuthorisations ],
     update: [],
     patch: [],
-    remove: [ removeOrganisationAuthorisations, removeOrganisationServices ]
+    remove: [ removeOrganisationServices, removeOrganisationAuthorisations ]
   },
 
   error: {

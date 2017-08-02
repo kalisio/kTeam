@@ -6,10 +6,10 @@ module.exports = {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [],
-    update: [ populateSubjects, populateResource ],
+    create: [ populateSubjects, populateResource ],
+    update: [],
     patch: [],
-    remove: [ populateSubjects, populateResource ]
+    remove: [ populateSubjects ]
   },
 
   after: {
