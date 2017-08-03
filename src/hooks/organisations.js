@@ -12,7 +12,6 @@ export function createOrganisationServices (hook) {
   return databaseService.create({
     name: hook.result._id.toString()
   }, {
-    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user
   })
   .then(db => {
@@ -42,7 +41,6 @@ export function removeOrganisationServices (hook) {
 
   // Then we remove the organisation DB
   return databaseService.remove(hook.result._id.toString(), {
-    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user
   })
   .then(db => {
@@ -61,7 +59,6 @@ export function createOrganisationAuthorisations (hook) {
     scope: 'organisations',
     permissions: 'owner' // Owner by default
   }, {
-    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user,
     // Because we already have subject/resource set it as objects to avoid populating
     subjects: [hook.params.user],

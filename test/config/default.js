@@ -31,11 +31,9 @@ module.exports = {
     }
   },
   authorisation: {
-    /*
     cache: {
       maxUsers: 1000
     }
-    */
   },
   logs: {
     Console: {

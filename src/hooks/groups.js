@@ -11,7 +11,6 @@ export function createGroupAuthorisations (hook) {
     scope: 'groups',
     permissions: 'owner'
   }, {
-    authorised: true, // Internal call so skip uthorisations
     user: hook.params.user,
     // Because we already have subject/resource set it as objects to avoid populating
     subjects: [hook.params.user],

@@ -46,7 +46,6 @@ export default {
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
-        authorised: true, // Internal call so skip uthorisations
         user: params.user
       })
       .then(subject => {
@@ -73,7 +72,6 @@ export default {
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
-        authorised: true, // Internal call so skip uthorisations
         user: params.user
       })
       .then(subject => {

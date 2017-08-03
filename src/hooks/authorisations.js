@@ -28,9 +28,8 @@ export function authorise (hook) {
     throw new Error(`The 'authorise' hook should only be used as a 'before' hook.`)
   }
 
-  // If called internally should we skip authorisation ?
-  // if (!hook.params.provider) {
-  if (hook.params.authorised) {
+  // If called internally we skip authorisation unless explicitely asked for
+  if (!hook.params.checkAuthorisation && (!hook.params.provider || hook.params.authorised)) {
     return Promise.resolve(hook)
   }
 
@@ -65,7 +64,7 @@ export function authorise (hook) {
   } else if (typeof hook.service.get === 'function') {
     // In this case (single get/update/patch) we need to fetch the item first
     // Bypass authorisation otherwise we will loop infinitely
-    hook.params.authorised = true
+    hook.params.checkAuthorisation = false
     return hook.service.get(hook.id, hook.params)
     .then(resource => {
       debug('Target resource is ', resource)
@@ -77,9 +76,11 @@ export function authorise (hook) {
       if (action === 'get') {
         hook.result = resource
       }
+      hook.params.authorised = true
       return hook
     })
   }
 
+  hook.params.authorised = true
   return Promise.resolve(hook)
 }
