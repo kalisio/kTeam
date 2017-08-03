@@ -1,6 +1,6 @@
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
-import core, { kaelia, hooks as coreHooks } from 'kCore'
+import core, { kaelia } from 'kCore'
 import team, { hooks as teamHooks } from '../src'
 
 describe('kTeam', () => {
@@ -15,7 +15,7 @@ describe('kTeam', () => {
     // Register authorisation hook
     app.hooks({
       before: { all: teamHooks.authorise }
-      /* For debug 
+      /* For debug
       before: { all: [coreHooks.log, teamHooks.authorise] },
       after: { all: coreHooks.log },
       error: { all: coreHooks.log }
@@ -117,9 +117,9 @@ describe('kTeam', () => {
       resource: orgObject._id.toString(),
       resourcesService: 'organisations'
     },
-    {
-      user: user2Object
-    })
+      {
+        user: user2Object
+      })
     .catch(error => {
       expect(error).toExist()
       expect(error.name).to.equal('Forbidden')
@@ -135,9 +135,9 @@ describe('kTeam', () => {
       resource: orgObject._id.toString(),
       resourcesService: 'organisations'
     },
-    {
-      user: user1Object
-    })
+      {
+        user: user1Object
+      })
     .then(authorisation => {
       expect(authorisation).toExist()
       return userService.find({ query: { name: user2Object.name } })
@@ -174,9 +174,9 @@ describe('kTeam', () => {
       resource: orgObject._id.toString(),
       resourcesService: 'organisations'
     },
-    {
-      user: user1Object
-    })
+      {
+        user: user1Object
+      })
     .then(authorisation => {
       expect(authorisation).toExist()
       return userService.find({ query: { name: user2Object.name } })

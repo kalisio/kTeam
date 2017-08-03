@@ -43,7 +43,7 @@ export function defineAbilitiesForSubject (subject) {
     can(['update', 'remove'], 'users', { _id: subject._id.toString() })
     // Create new organisations and associated DB
     can('create', 'organisations')
-    
+
     // Then rules for organisations
     if (subject.organisations) {
       subject.organisations.forEach(organisation => {

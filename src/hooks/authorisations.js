@@ -60,10 +60,9 @@ export function authorise (hook) {
       debug('Target resource rules are ', rules)
       merge(hook.params.query, toMongoQuery(rules))
     }
-  }
   // Some specific services might not expose a get function, in this case we can check for authorisation
   // this has to be implemented by the service itself
-  else if (typeof hook.service.get === 'function') {
+  } else if (typeof hook.service.get === 'function') {
     // In this case (single get/update/patch) we need to fetch the item first
     // Bypass authorisation otherwise we will loop infinitely
     hook.params.authorised = true
