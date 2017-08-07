@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "homepage": "https://github.com/kaelia-tech/kTeam",
   "main": "lib/",
+  "browser": {
+    "lib/": "lib/client/"
+  },
   "keywords": [
     "kaelia",
     "kaelia-plugin"
