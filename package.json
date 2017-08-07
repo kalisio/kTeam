@@ -58,6 +58,7 @@
     "feathers-hooks": "^2.0.1",
     "feathers-hooks-common": "^3.0.0",
     "feathers-mongodb": "^2.8.0",
+    "feathers-mongodb-management": "^0.1.0",
     "fs-extra": "^3.0.0",
     "kCore": "git://github.com/kaelia-tech/kCore.git#master",
     "lodash": "^4.17.4",
