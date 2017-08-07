@@ -57,6 +57,4 @@ typings/
 # dotenv environment variables file
 .env
 
-# The compiled/babelified modules
-lib/
 
