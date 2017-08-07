@@ -82,7 +82,7 @@ export default {
 
   setup (app) {
     const config = app.get('authorisation')
-    if (config.cache) {
+    if (config && config.cache) {
       // Store abilities of the N most active users in LRU cache (defaults to 1000)
       this.cache = new LruCache(config.cache.maxUsers || 1000)
       debug('Using LRU cache for user abilities')
