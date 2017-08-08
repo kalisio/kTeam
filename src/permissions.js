@@ -118,4 +118,3 @@ defineAbilitiesForSubject.registerHook(defineUserAbilitiesForSubject)
 defineAbilitiesForSubject.registerHook(defineOrganisationAbilitiesForSubject)
 // Then rules for groups
 defineAbilitiesForSubject.registerHook(defineGroupAbilitiesForSubject)
-  

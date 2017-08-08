@@ -19,6 +19,9 @@ let authorisationMixin = {
         abilities = defineAbilitiesForSubject(user)
         Store.set('user.abilities', abilities)
       }
+      if (abilities) {
+        logger.debug('New user abilities: ', abilities.rules)
+      }
       return abilities
     }
   },
@@ -27,14 +30,10 @@ let authorisationMixin = {
     let abilities = Store.get('user.abilities', null)
     if (!abilities) {
       // Otherwise try to compute them
-      abilities = this.updateAbilities()
-      logger.debug('New user abilities: ', abilities.rules)
+      this.updateAbilities()
     }
     // Whenever the user is updated, update abilities as well
-    Events.$on('user-changed', user => {
-      let abilities = this.updateAbilities()
-      logger.debug('New user abilities: ', abilities.rules)
-    })
+    Events.$on('user-changed', user => this.updateAbilities())
   }
 }
 
