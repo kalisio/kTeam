@@ -1,8 +1,5 @@
-import path from 'path'
 import makeDebug from 'debug'
 const debug = makeDebug('kaelia:kTeam')
-const servicesPath = path.join(__dirname, '..', 'services')
-const modelsPath = path.join(__dirname, '..', 'models')
 
 export function createOrganisationServices (hook) {
   let app = hook.app

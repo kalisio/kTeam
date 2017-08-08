@@ -7,7 +7,7 @@ export * from '../permissions'
 export * as mixins from './mixins'
 
 export default function init () {
-  const app = this
+  // const app = this
 
   logger.debug('Initializing kaelia team')
 }
