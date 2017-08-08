@@ -6,6 +6,7 @@ const modelsPath = path.join(__dirname, '..', 'models')
 
 export function createOrganisationServices (hook) {
   let app = hook.app
+  let organisationService = hook.service
   let databaseService = app.getService('databases')
 
   // First we create the organisation DB
@@ -16,21 +17,7 @@ export function createOrganisationServices (hook) {
   })
   .then(db => {
     debug('DB created for organisation ' + hook.result.name)
-    let organisationDb = app.db.instance.db(hook.result._id.toString())
-    app.createService('users', {
-      servicesPath,
-      path: hook.result._id.toString() + '/users',
-      proxy: {
-        service: app.getService('users'),
-        params: { query: { 'organisations._id': hook.result._id.toString() } }
-      }
-    })
-    app.createService('groups', {
-      modelsPath,
-      servicesPath,
-      path: hook.result._id.toString() + '/groups',
-      db: organisationDb
-    })
+    organisationService.createOrganisationServices(hook.result)
     return hook
   })
 }
