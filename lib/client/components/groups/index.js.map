@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/client/components/groups/index.js"],"names":["KGroups"],"mappings":";;;;;;;AAAA;;;;;;QAGEA,O,GAAAA,O","file":"index.js","sourcesContent":["import KUsers from './KGroups.vue'\n\nexport {\n  KGroups\n}\n"]}

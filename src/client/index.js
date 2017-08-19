@@ -19,5 +19,5 @@ export default function init () {
     }
   })
 
-  logger.debug('Initializing kaelia team')
+  logger.debug('Initializing kalisio team')
 }

@@ -53,6 +53,7 @@
     "lib": "lib"
   },
   "dependencies": {
+    "babel-loader": "^7.1.2",
     "casl": "^1.0.0",
     "debug": "^2.6.4",
     "feathers": "^2.1.4",
