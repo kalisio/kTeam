@@ -6,11 +6,11 @@ import services from './services'
 export * as hooks from './hooks'
 export * from './permissions'
 
-const debug = makeDebug('kaelia:kTeam')
+const debug = makeDebug('kalisio:kTeam')
 
 export default function init () {
   const app = this
 
-  debug('Initializing kaelia team')
+  debug('Initializing kalisio team')
   app.configure(services)
 }

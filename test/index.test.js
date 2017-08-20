@@ -2,7 +2,7 @@ import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
 import logger from 'winston'
-import core, { kaelia } from 'kCore'
+import core, { kalisio } from 'kCore'
 import team, { hooks as teamHooks } from '../src'
 
 // Catch all at higher level
@@ -18,7 +18,7 @@ describe('kTeam', () => {
   before(() => {
     chailint(chai, util)
 
-    app = kaelia()
+    app = kalisio()
     port = app.get('port')
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`
     // Register authorisation hook

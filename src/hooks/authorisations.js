@@ -5,7 +5,7 @@ import { hooks } from 'kCore'
 import { hasAbilities } from '../permissions'
 import makeDebug from 'debug'
 
-const debug = makeDebug('kaelia:kTeam:authorisation')
+const debug = makeDebug('kalisio:kTeam:authorisation')
 
 export function populateSubjects (hook) {
   if (hook.type !== 'before') {

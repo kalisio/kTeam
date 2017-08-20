@@ -3,7 +3,7 @@ import makeDebug from 'debug'
 const servicesPath = path.join(__dirname, '..', '..', 'services')
 const modelsPath = path.join(__dirname, '..', '..', 'models')
 
-const debug = makeDebug('kaelia:kTeam:organisations')
+const debug = makeDebug('kalisio:kTeam:organisations')
 
 export default {
 

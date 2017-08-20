@@ -4,7 +4,7 @@ import LruCache from 'lru-cache'
 import makeDebug from 'debug'
 import { defineAbilitiesForSubject } from '../../permissions'
 
-const debug = makeDebug('kaelia:kTeam:authorisation')
+const debug = makeDebug('kalisio:kTeam:authorisation')
 
 // Global key to store abilities in cache for anonymous users
 const ANONYMOUS_USER = 'anonymous'
