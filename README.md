@@ -1,11 +1,11 @@
 # kTeam
 
-[![Build Status](https://travis-ci.org/kaelia-tech/kTeam.png?branch=master)](https://travis-ci.org/kaelia-tech/kTeam)
+[![Build Status](https://travis-ci.org/kalisio/kTeam.png?branch=master)](https://travis-ci.org/kalisio/kTeam)
 [![Code Climate](https://codeclimate.com/github/kaelia-tech/kTeam/badges/gpa.svg)](https://codeclimate.com/github/kaelia-tech/kTeam)
 [![Test Coverage](https://codeclimate.com/github/kaelia-tech/kTeam/badges/coverage.svg)](https://codeclimate.com/github/kaelia-tech/kTeam/coverage)
-[![Dependency Status](https://img.shields.io/david/kaelia-tech/kTeam.svg?style=flat-square)](https://david-dm.org/kaelia-tech/kTeam)
+[![Dependency Status](https://img.shields.io/david/kalisio/kTeam.svg?style=flat-square)](https://david-dm.org/kalisio/kTeam)
 
-> Basic utils to support Kaelia applications and services
+> Basic utils to support Kalisio applications and services
 
 ## Installation
 
@@ -21,6 +21,6 @@ The [kDocs](https://kaelia-tech.gitbooks.io/kaelia/) are loaded with awesome stu
 
 ## License
 
-Copyright (c) 2017 Kaelia Tech
+Copyright (c) 2017 Kalisio
 
 Licensed under the [MIT license](LICENSE).
