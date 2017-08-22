@@ -14,6 +14,16 @@
         "label": "Name",
         "helper": "Type the group name"
       }
+    },
+    "description": {
+      "type": "string", 
+      "maxLength": 256,
+      "minLength": 3,
+      "field": {
+        "component": "form/KTextareaField",
+        "label": "Description",
+        "helper": "Type the group description"
+      }
     }
   },
   "required": ["name"],
