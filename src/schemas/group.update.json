@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://mynet.com/schemas/group-update.json#",
+  "title": "Group Profile",
+  "description": "Group profile perspective",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string", 
+      "maxLength": 128,
+      "minLength": 3,
+      "field": {
+        "component": "form/KTextField",
+        "label": "Name",
+        "helper": "Type the group name"
+      }
+    }
+  },
+  "required": ["name"],
+  "form": {
+    "type": "object",
+    "properties":  {
+      "icon": false,
+      "label": true,
+      "labelWidth": 3
+    }
+  }
+}
+

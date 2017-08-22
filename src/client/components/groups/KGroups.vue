@@ -29,7 +29,8 @@ export default {
     let loadComponent = Store.get('loadComponent')
     this.$options.components['k-collection'] = loadComponent('collection/KCollection')
     // Retrieve the context for the groups service
-    this.context = Store.get(Store.get('config.users.context'), null)
+    this.service = 'groups'
+    this.context = Store.get(Store.get('organisation'), null)
   }
 }
 </script>
