@@ -69,7 +69,7 @@
     "lru-cache": "^4.1.1",
     "mongodb": "^2.2.26",
     "quasar-extras": "^0.0.7",
-    "quasar-framework": "git+https://git@github.com/quasarframework/quasar-edge.git",
+    "quasar-framework": "^0.14.1",
     "sift": "^5.0.0",
     "uberproto": "^1.2.0",
     "winston": "^2.3.1"
