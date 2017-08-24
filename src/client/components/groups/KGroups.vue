@@ -11,7 +11,6 @@ import { mixins } from 'kCore/client'
 
 export default {
   name: 'k-groups',
-  dependencies: ['store'],
   data () {
     return {
       context: null
@@ -24,13 +23,12 @@ export default {
     mixins.collection.editItem
   ],
   created () {
-    let Store = this.store()
     // Load the required component
-    let loadComponent = Store.get('loadComponent')
+    let loadComponent = this.$store.get('loadComponent')
     this.$options.components['k-collection'] = loadComponent('collection/KCollection')
     // Retrieve the context for the groups service
     this.service = 'groups'
-    this.context = Store.get('organisation')._id
+    this.context = this.$store.get('organisation')._id
   }
 }
 </script>
