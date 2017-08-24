@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../src/client/mixins/index.js"],"names":["authorisation"],"mappings":";;;;;;AAAA;;;;;;kBAEe;AACbA;AADa,C","file":"index.js","sourcesContent":["import authorisationMixin from './mixin.authorisation'\r\n\r\nexport default {\r\n  authorisation: authorisationMixin\r\n}\r\n"]}
