@@ -1,11 +1,11 @@
 language: node_js
 node_js:
-  - '7'
+  - '8'
 services:
   - mongodb
 addons:
   code_climate:
-    repo_token: 'dfbf9577d8524868f798ff00cc97cb0a1bd0f02029981e631ad92192d1f4aee2'
+    repo_token: 'a4ac85dedf43a99ef5353d0cfb2cf1a004d9832acc0f3c7125a51e46e26d24b2'
 notifications:
   email: false
 before_script:
