@@ -1,11 +1,25 @@
 import { merge } from 'feathers-commons'
 import { Forbidden } from 'feathers-errors'
+import _ from 'lodash'
+import { ObjectID } from 'mongodb'
 import { toMongoQuery } from 'casl'
 import { hooks } from 'kCore'
-import { hasAbilities } from '../permissions'
+import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
 import makeDebug from 'debug'
 
 const debug = makeDebug('kalisio:kTeam:authorisation')
+
+// Utility function used to convert from string to MongoDB IDs as required by queries
+function objectifyIDs(query) {
+  _.forOwn(query, (value, key) => {
+    // Process current attributes or  recurse
+    if (typeof value === 'object') {
+      objectifyIDs(value)
+    } else if (key === '_id') {
+      query[key] = new ObjectID(value)
+    }
+  })
+}
 
 export function populateSubjects (hook) {
   if (hook.type !== 'before') {
@@ -34,30 +48,38 @@ export function authorise (hook) {
   }
 
   const action = hook.method
-  const serviceName = hook.service.name
+  const resourceType = hook.service.name
   // Build ability for user
   let authorisationService = hook.app.getService('authorisations')
   const abilities = authorisationService.getAbilitiesForSubject(hook.params.user)
   hook.params.abilities = abilities
 
+  debug('Action is ', action)
+  debug('Resource is ', resourceType)
   debug('User is ', hook.params.user)
   debug('User abilities are ', abilities.rules)
+
+  // Check for access to service fisrt
+  if (!hasServiceAbilities(abilities, hook.service)) {
+    throw new Forbidden(`You are not allowed to access service ${hook.service.getPath()}`)
+  }
 
   if (!hook.id) {
     // In this specific case there is no query to be run,
     // simply check against the object we'd like to create
     if (action === 'create') {
       debug('Target resource is ', hook.data)
-      if (!hasAbilities(abilities, action, hook.data, serviceName)) {
-        throw new Forbidden(`You are not allowed to perform ${action} action on service ${serviceName}`)
+      if (!hasResourceAbilities(abilities, action, hook.data, resourceType)) {
+        throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
       }
     } else {
       // When we find/update/patch/remove multiple items this ensures thet
       // only the ones authorised by constraints on the resources will be fetched
       // This avoid fetching all first then check it one by one
-      const rules = abilities.rulesFor(action, serviceName)
-      debug('Target resource rules are ', rules)
-      merge(hook.params.query, toMongoQuery(rules))
+      const rules = abilities.rulesFor(action, resourceType)
+      const dbQuery = toMongoQuery(rules)
+      debug('Target resource conditions query is ', dbQuery)
+      merge(hook.params.query, objectifyIDs(dbQuery))
     }
   // Some specific services might not expose a get function, in this case we can check for authorisation
   // this has to be implemented by the service itself
@@ -69,8 +91,8 @@ export function authorise (hook) {
     .then(resource => {
       debug('Target resource is ', resource)
       // Then check against the object we'd like to manage
-      if (!hasAbilities(abilities, action, resource, serviceName)) {
-        throw new Forbidden(`You are not allowed to perform ${action} action on service ${serviceName}`)
+      if (!hasResourceAbilities(abilities, action, resource, resourceType)) {
+        throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
       }
       // Avoid fetching again the object in this case
       if (action === 'get') {
