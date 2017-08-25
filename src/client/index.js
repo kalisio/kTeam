@@ -12,6 +12,8 @@ export default function init () {
   // const app = this
 
   Events.$on('user-changed', user => {
+    // Possible after a loggout
+    if (!user) return
     if (user.organisations && user.organisations.length > 0) {
       Store.set('organisation', user.organisations[0])
     } else {

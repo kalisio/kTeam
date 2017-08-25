@@ -89,7 +89,7 @@ describe('kTeam', () => {
       expect(user2Object.organisations).toExist()
       // By default the user manage its own organisation
       expect(user2Object.organisations[0].permissions).to.deep.equal('owner')
-      return orgService.find({ query: { name: 'test-user-2' }, checkAuthorisation: true })
+      return orgService.find({ query: { name: 'test-user-2' }, user: user2Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length > 0).beTrue()
@@ -99,7 +99,7 @@ describe('kTeam', () => {
   it('creates an organisation', () => {
     return orgService.create({ name: 'test-org' }, { user: user1Object, checkAuthorisation: true })
     .then(org => {
-      return orgService.find({ query: { name: 'test-org' }, checkAuthorisation: true })
+      return orgService.find({ query: { name: 'test-org' }, user: user1Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length > 0).beTrue()
@@ -117,11 +117,11 @@ describe('kTeam', () => {
   })
 
   it('non-members cannot access organisation users', () => {
-    return userService.find({ query: { name: user2Object.name }, checkAuthorisation: true })
+    return userService.find({ query: { name: user2Object.name }, user: user1Object, checkAuthorisation: true })
     .then(users => {
       // User is found on the global service
       expect(users.data.length > 0).beTrue()
-      return orgUserService.find({ query: { name: user2Object.name }, checkAuthorisation: true })
+      return orgUserService.find({ query: { name: user2Object.name }, user: user1Object, checkAuthorisation: true })
     })
     .then(users => {
       // User is not found on the org service while no membership
@@ -180,7 +180,7 @@ describe('kTeam', () => {
   })
 
   it('members cannot create an organisation group', (done) => {
-    orgGroupService.create({ name: 'test-group', organisation: orgObject._id.toString() }, { user: user2Object, checkAuthorisation: true })
+    orgGroupService.create({ name: 'test-group' }, { user: user2Object, checkAuthorisation: true })
     .catch(error => {
       expect(error).toExist()
       expect(error.name).to.equal('Forbidden')
@@ -211,9 +211,9 @@ describe('kTeam', () => {
   })
 
   it('manager can create an organisation group', () => {
-    return orgGroupService.create({ name: 'test-group', organisation: orgObject._id.toString() }, { user: user2Object, checkAuthorisation: true })
+    return orgGroupService.create({ name: 'test-group' }, { user: user2Object, checkAuthorisation: true })
     .then(_ => {
-      return orgGroupService.find({ query: { name: 'test-group' }, checkAuthorisation: true })
+      return orgGroupService.find({ query: { name: 'test-group' }, user: user2Object, checkAuthorisation: true })
     })
     .then(groups => {
       expect(groups.data.length > 0).beTrue()
@@ -230,7 +230,7 @@ describe('kTeam', () => {
   it('group owner can remove his organisation group', () => {
     return orgGroupService.remove(groupObject._id, { user: user2Object, checkAuthorisation: true })
     .then(_ => {
-      return orgGroupService.find({ query: { name: groupObject.name }, checkAuthorisation: true })
+      return orgGroupService.find({ query: { name: groupObject.name }, user: user2Object, checkAuthorisation: true })
     })
     .then(groups => {
       expect(groups.data.length === 0).beTrue()
@@ -240,7 +240,7 @@ describe('kTeam', () => {
   it('owner can remove his organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
     .then(org => {
-      return orgService.find({ query: { name: 'test-org' }, checkAuthorisation: true })
+      return orgService.find({ query: { name: 'test-org' }, user: user1Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length === 0).beTrue()
@@ -255,7 +255,7 @@ describe('kTeam', () => {
   it('removes private organisation on user removal', () => {
     return userService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
     .then(org => {
-      return orgService.find({ query: { name: user2Object.name }, checkAuthorisation: true })
+      return orgService.find({ query: { name: user2Object.name }, user: user2Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length === 0).beTrue()
@@ -265,7 +265,7 @@ describe('kTeam', () => {
   it('removes test user', () => {
     return userService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
     .then(org => {
-      return userService.find({ query: { name: user1Object.name }, checkAuthorisation: true })
+      return userService.find({ query: { name: user1Object.name }, user: user1Object, checkAuthorisation: true })
     })
     .then(users => {
       expect(users.data.length === 0).beTrue()
