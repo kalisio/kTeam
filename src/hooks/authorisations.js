@@ -42,65 +42,72 @@ export function authorise (hook) {
     throw new Error(`The 'authorise' hook should only be used as a 'before' hook.`)
   }
 
-  // If called internally we skip authorisation unless explicitely asked for
-  if (!hook.params.checkAuthorisation && (!hook.params.provider || hook.params.authorised)) {
-    return Promise.resolve(hook)
-  }
+  // If called internally we skip authorisation
+  let checkAuthorisation = hook.params.provider
+  // If already checked we skip authorisation
+  if (hook.params.authorised) checkAuthorisation = false
+  // If explicitely asked to skip
+  if (!hook.params.checkAuthorisation) checkAuthorisation = false
+  // We also skip authorisation for built-in Feathers services like authentication
+  if (typeof hook.service.getPath !== 'function') checkAuthorisation = false
+   
+  if (checkAuthorisation) {
+    const action = hook.method
+    const resourceType = hook.service.name
+    // Build ability for user
+    let authorisationService = hook.app.getService('authorisations')
+    const abilities = authorisationService.getAbilitiesForSubject(hook.params.user)
+    hook.params.abilities = abilities
 
-  const action = hook.method
-  const resourceType = hook.service.name
-  // Build ability for user
-  let authorisationService = hook.app.getService('authorisations')
-  const abilities = authorisationService.getAbilitiesForSubject(hook.params.user)
-  hook.params.abilities = abilities
+    debug('Provider is ', hook.params.provider)
+    debug('Action is ', action)
+    debug('Resource is ', resourceType)
+    debug('User is ', hook.params.user)
+    debug('User abilities are ', abilities.rules)
 
-  debug('Action is ', action)
-  debug('Resource is ', resourceType)
-  debug('User is ', hook.params.user)
-  debug('User abilities are ', abilities.rules)
-
-  // Check for access to service fisrt
-  if (!hasServiceAbilities(abilities, hook.service)) {
-    throw new Forbidden(`You are not allowed to access service ${hook.service.getPath()}`)
-  }
-
-  if (!hook.id) {
-    // In this specific case there is no query to be run,
-    // simply check against the object we'd like to create
-    if (action === 'create') {
-      debug('Target resource is ', hook.data)
-      if (!hasResourceAbilities(abilities, action, resourceType, hook.data)) {
-        throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
-      }
-    } else {
-      // When we find/update/patch/remove multiple items this ensures thet
-      // only the ones authorised by constraints on the resources will be fetched
-      // This avoid fetching all first then check it one by one
-      const rules = abilities.rulesFor(action, resourceType)
-      const dbQuery = toMongoQuery(rules)
-      debug('Target resource conditions query is ', dbQuery)
-      merge(hook.params.query, objectifyIDs(dbQuery))
+    // Check for access to service fisrt
+    if (!hasServiceAbilities(abilities, hook.service)) {
+      throw new Forbidden(`You are not allowed to access service ${hook.service.getPath()}`)
     }
-  // Some specific services might not expose a get function, in this case we can check for authorisation
-  // this has to be implemented by the service itself
-  } else if (typeof hook.service.get === 'function') {
-    // In this case (single get/update/patch) we need to fetch the item first
-    // Bypass authorisation otherwise we will loop infinitely
-    hook.params.checkAuthorisation = false
-    return hook.service.get(hook.id, hook.params)
-    .then(resource => {
-      debug('Target resource is ', resource)
-      // Then check against the object we'd like to manage
-      if (!hasResourceAbilities(abilities, action, resourceType, resource)) {
-        throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
+
+    if (!hook.id) {
+      // In this specific case there is no query to be run,
+      // simply check against the object we'd like to create
+      if (action === 'create') {
+        debug('Target resource is ', hook.data)
+        if (!hasResourceAbilities(abilities, action, resourceType, hook.data)) {
+          throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
+        }
+      } else {
+        // When we find/update/patch/remove multiple items this ensures thet
+        // only the ones authorised by constraints on the resources will be fetched
+        // This avoid fetching all first then check it one by one
+        const rules = abilities.rulesFor(action, resourceType)
+        const dbQuery = toMongoQuery(rules)
+        debug('Target resource conditions query is ', dbQuery)
+        merge(hook.params.query, objectifyIDs(dbQuery))
       }
-      // Avoid fetching again the object in this case
-      if (action === 'get') {
-        hook.result = resource
-      }
-      hook.params.authorised = true
-      return hook
-    })
+    // Some specific services might not expose a get function, in this case we can check for authorisation
+    // this has to be implemented by the service itself
+    } else if (typeof hook.service.get === 'function') {
+      // In this case (single get/update/patch) we need to fetch the item first
+      // Bypass authorisation otherwise we will loop infinitely
+      hook.params.checkAuthorisation = false
+      return hook.service.get(hook.id, hook.params)
+      .then(resource => {
+        debug('Target resource is ', resource)
+        // Then check against the object we'd like to manage
+        if (!hasResourceAbilities(abilities, action, resourceType, resource)) {
+          throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
+        }
+        // Avoid fetching again the object in this case
+        if (action === 'get') {
+          hook.result = resource
+        }
+        hook.params.authorised = true
+        return hook
+      })
+    }
   }
 
   hook.params.authorised = true

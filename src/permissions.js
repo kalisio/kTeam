@@ -112,10 +112,24 @@ defineAbilitiesForSubject.unregisterHook = function (hook) {
   hooks = hooks.filter(registeredHook => registeredHook !== hook)
 }
 
+// Register all default hooks
+defineAbilitiesForSubject.registerDefaultHooks = function () {
+  // Default rules for unauthenticated users
+  defineAbilitiesForSubject.registerHook(defineAnonymousAbilitiesForSubject)
+  // Default rules for all authenticated users
+  defineAbilitiesForSubject.registerHook(defineUserAbilitiesForSubject)
+  // Then rules for organisations
+  defineAbilitiesForSubject.registerHook(defineOrganisationAbilitiesForSubject)
+  // Then rules for groups
+  defineAbilitiesForSubject.registerHook(defineGroupAbilitiesForSubject)
+}
+
 export function hasServiceAbilities (abilities, service) {
   // The unique identifier of a service is its path not its name.
   // Indeed we have for instance a 'groups' service in each organisation
-  return abilities.can('service', service.getPath())
+  // Take care that in client we have the service path while on server we have the actual object
+  const path = typeof service === 'string' ? service : service.getPath()
+  return abilities.can('service', path)
 }
 
 export function hasResourceAbilities (abilities, action, resourceType, resource) {
@@ -125,13 +139,3 @@ export function hasResourceAbilities (abilities, action, resourceType, resource)
   if (resource) delete resource[Symbol.for(RESOURCE_TYPE)]
   return result
 }
-
-// Register all default hooks
-// Default rules for unauthenticated users
-defineAbilitiesForSubject.registerHook(defineAnonymousAbilitiesForSubject)
-// Default rules for all authenticated users
-defineAbilitiesForSubject.registerHook(defineUserAbilitiesForSubject)
-// Then rules for organisations
-defineAbilitiesForSubject.registerHook(defineOrganisationAbilitiesForSubject)
-// Then rules for groups
-defineAbilitiesForSubject.registerHook(defineGroupAbilitiesForSubject)

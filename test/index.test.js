@@ -3,7 +3,7 @@ import chailint from 'chai-lint'
 // import request from 'superagent'
 import logger from 'winston'
 import core, { kalisio } from 'kCore'
-import team, { hooks as teamHooks } from '../src'
+import team, { defineAbilitiesForSubject, hooks as teamHooks } from '../src'
 
 // Catch all at higher level
 process.on('unhandledRejection', (reason, p) =>
@@ -17,6 +17,9 @@ describe('kTeam', () => {
 
   before(() => {
     chailint(chai, util)
+
+    // Register all default hooks for authorisation
+    defineAbilitiesForSubject.registerDefaultHooks()
 
     app = kalisio()
     port = app.get('port')
