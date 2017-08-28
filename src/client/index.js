@@ -6,6 +6,7 @@ import { Store } from 'kCore/client'
 // Tracked here : https://github.com/babel/babel/issues/2877
 // We tested the workaround given here https://github.com/babel/babel/issues/2877#issuecomment-270700000 with success so far
 export * from '../permissions'
+export * from './guards'
 export * as mixins from './mixins'
 
 export default function init () {
