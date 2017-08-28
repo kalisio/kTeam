@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://mynet.com/schemas/groups-update.json#",
+  "title": "Group Edition",
+  "description": "Group edition schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string", 
+      "maxLength": 128,
+      "minLength": 3,
+      "field": {
+        "component": "form/KTextField",
+        "label": "Name",
+        "helper": "Type the group name"
+      }
+    },
+    "description": {
+      "type": "string", 
+      "maxLength": 256,
+      "minLength": 3,
+      "field": {
+        "component": "form/KTextareaField",
+        "label": "Description",
+        "helper": "Type the group description"
+      }
+    }
+  },
+  "required": ["name"],
+  "form": {
+    "type": "object",
+    "properties":  {
+      "icon": false,
+      "label": true,
+      "labelWidth": 3
+    }
+  }
+}
+

@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://mynet.com/schemas/group-update.json#",
-  "title": "Group Profile",
-  "description": "Group profile perspective",
+  "$id": "http://mynet.com/schemas/groups-create.json#",
+  "title": "Group Creation",
+  "description": "Group creation schema",
   "type": "object",
   "properties": {
     "name": {
