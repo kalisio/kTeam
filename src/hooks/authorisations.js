@@ -69,7 +69,7 @@ export function authorise (hook) {
     // simply check against the object we'd like to create
     if (action === 'create') {
       debug('Target resource is ', hook.data)
-      if (!hasResourceAbilities(abilities, action, hook.data, resourceType)) {
+      if (!hasResourceAbilities(abilities, action, resourceType, hook.data)) {
         throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
       }
     } else {
@@ -91,7 +91,7 @@ export function authorise (hook) {
     .then(resource => {
       debug('Target resource is ', resource)
       // Then check against the object we'd like to manage
-      if (!hasResourceAbilities(abilities, action, resource, resourceType)) {
+      if (!hasResourceAbilities(abilities, action, resourceType, resource)) {
         throw new Forbidden(`You are not allowed to perform ${action} action on ${resourceType}`)
       }
       // Avoid fetching again the object in this case

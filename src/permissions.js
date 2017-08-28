@@ -118,11 +118,11 @@ export function hasServiceAbilities (abilities, service) {
   return abilities.can('service', service.getPath())
 }
 
-export function hasResourceAbilities (abilities, action, resource, resourceType) {
-  resource[Symbol.for(RESOURCE_TYPE)] = resourceType
-  const result = abilities.can(action, resource)
+export function hasResourceAbilities (abilities, action, resourceType, resource) {
+  if (resource) resource[Symbol.for(RESOURCE_TYPE)] = resourceType
+  const result = abilities.can(action, resource ? resource : resourceType)
   // Not required anymore
-  delete resource[Symbol.for(RESOURCE_TYPE)]
+  if (resource) delete resource[Symbol.for(RESOURCE_TYPE)]
   return result
 }
 
