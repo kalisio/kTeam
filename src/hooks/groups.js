@@ -27,7 +27,7 @@ export function createGroupAuthorisations (hook) {
 export function removeGroupAuthorisations (hook) {
   let app = hook.app
   let authorisationService = app.getService('authorisations')
-  
+
   // Unset membership for the all org users
   return authorisationService.remove(hook.result._id.toString(), {
     query: {

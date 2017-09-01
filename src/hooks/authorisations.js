@@ -10,7 +10,7 @@ import makeDebug from 'debug'
 const debug = makeDebug('kalisio:kTeam:authorisation')
 
 // Utility function used to convert from string to MongoDB IDs as required by queries
-function objectifyIDs(query) {
+function objectifyIDs (query) {
   _.forOwn(query, (value, key) => {
     // Process current attributes or  recurse
     if (typeof value === 'object') {
@@ -53,8 +53,8 @@ export function authorise (hook) {
     checkAuthorisation = hook.params.checkAuthorisation
     // Bypass authorisation for next hooks otherwise we will loop infinitely
     delete hook.params.checkAuthorisation
-  }  
-   
+  }
+
   if (checkAuthorisation) {
     const action = hook.method
     const resourceType = hook.service.name

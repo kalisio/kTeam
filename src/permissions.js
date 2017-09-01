@@ -134,7 +134,7 @@ export function hasServiceAbilities (abilities, service) {
 
 export function hasResourceAbilities (abilities, action, resourceType, resource) {
   if (resource) resource[Symbol.for(RESOURCE_TYPE)] = resourceType
-  const result = abilities.can(action, resource ? resource : resourceType)
+  const result = abilities.can(action, resource || resourceType)
   // Not required anymore
   if (resource) delete resource[Symbol.for(RESOURCE_TYPE)]
   return result
