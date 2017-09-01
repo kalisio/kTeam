@@ -43,13 +43,17 @@ export function authorise (hook) {
   }
 
   // If called internally we skip authorisation
-  let checkAuthorisation = hook.params.provider
+  let checkAuthorisation = (hook.params.provider === 'external')
   // If already checked we skip authorisation
   if (hook.params.authorised) checkAuthorisation = false
-  // If explicitely asked to skip
-  if (!hook.params.checkAuthorisation) checkAuthorisation = false
   // We also skip authorisation for built-in Feathers services like authentication
   if (typeof hook.service.getPath !== 'function') checkAuthorisation = false
+  // If explicitely asked to perform/skip, override defaults
+  if (hook.params.hasOwnProperty('checkAuthorisation')) {
+    checkAuthorisation = hook.params.checkAuthorisation
+    // Bypass authorisation for next hooks otherwise we will loop infinitely
+    delete hook.params.checkAuthorisation
+  }  
    
   if (checkAuthorisation) {
     const action = hook.method
@@ -91,8 +95,6 @@ export function authorise (hook) {
     // this has to be implemented by the service itself
     } else if (typeof hook.service.get === 'function') {
       // In this case (single get/update/patch) we need to fetch the item first
-      // Bypass authorisation otherwise we will loop infinitely
-      hook.params.checkAuthorisation = false
       return hook.service.get(hook.id, hook.params)
       .then(resource => {
         debug('Target resource is ', resource)
@@ -108,6 +110,8 @@ export function authorise (hook) {
         return hook
       })
     }
+  } else {
+    debug('Authorisation skipped')
   }
 
   hook.params.authorised = true

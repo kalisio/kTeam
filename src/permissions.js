@@ -25,7 +25,7 @@ export function defineResourceRules (subject, resource, resourceService, can) {
   }
   if (role >= Roles.manager) {
     can('update', resourceService, { _id: resource._id })
-    can('manage', 'authorisations', { resource: resource._id })
+    can(['create', 'remove'], 'authorisations', { resource: resource._id })
   }
   if (role >= Roles.owner) {
     can('remove', resourceService, { _id: resource._id })
