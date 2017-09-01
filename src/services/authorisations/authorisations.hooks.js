@@ -9,7 +9,7 @@ module.exports = {
     create: [ populateSubjects, populateResource ],
     update: [],
     patch: [],
-    remove: [ populateSubjects ]
+    remove: [ populateSubjects, populateResource ]
   },
 
   after: {

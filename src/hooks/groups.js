@@ -35,7 +35,10 @@ export function removeGroupAuthorisations (hook) {
       subjectsService: hook.service.options.path,
       scope: 'groups'
     },
-    user: hook.params.user
+    user: hook.params.user,
+    // Because we already have resource set it as objects to avoid populating
+    resource: hook.result,
+    resourcesService: hook.service
   })
   .then(authorisation => {
     debug('Authorisations unset for group ' + hook.result._id)

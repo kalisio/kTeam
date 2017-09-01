@@ -240,6 +240,29 @@ describe('kTeam', () => {
     })
   })
 
+  it('owner can remove organisation members', () => {
+    return authorisationService.remove(orgObject._id, {
+      query: {
+        scope: 'organisations',
+        subjects: user2Object._id.toString(),
+        subjectsService: 'users',
+        resourcesService: 'organisations'
+      }
+    }, {
+      user: user1Object, checkAuthorisation: true
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { name: user2Object.name }, checkAuthorisation: true })
+    })
+    .then(users => {
+      expect(users.data.length === 1).beTrue()
+      user2Object = users.data[0]
+      // Only private org remains
+      expect(user2Object.organisations[0]._id).to.equal(user2Object._id.toString())
+    })
+  })
+
   it('owner can remove his organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
     .then(org => {
