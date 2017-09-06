@@ -16,7 +16,10 @@ let groupActionsMixin = {
           'Cancel',
           {
             label: 'Delete',
-            handler: () => { this.serviceRemove(group._id) }
+            handler: () => { 
+              let service = this.$api.getService('groups', this.context)
+              if (service) service.remove(group._id)
+            }
           }
         ]
       })
