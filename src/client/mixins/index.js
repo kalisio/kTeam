@@ -1,5 +1,7 @@
-import authorisationMixin from './mixin.authorisation'
+import authorisation from './mixin.authorisation'
+import groupActions from './mixin.group-actions'
 
 export default {
-  authorisation: authorisationMixin
+  authorisation,
+  groupActions
 }
