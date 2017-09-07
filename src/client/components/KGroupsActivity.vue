@@ -3,11 +3,11 @@
     <k-editor :context="context" service="groups" />
   </div>
   <div v-else-if="operation === 'edit'">
-    <k-nav-bar :tabs="navBarTabs()" selected="Properties" />
+    <k-nav-bar :tabs="navBarTabs()" selected="properties" />
     <k-editor :context="context" service="groups" :id="id" />
   </div>
   <div v-else-if="operation === 'browse'">
-    <k-nav-bar :tabs="navBarTabs()" selected="Members" />
+    <k-nav-bar :tabs="navBarTabs()" selected="members" />
     <k-grid :context="context" service="users" :actions="memberItemActions()" />
     <k-fab :actions="memberActions()" />
   </div>
@@ -44,8 +44,12 @@ export default {
   methods: {
     navBarTabs () {
       return [ 
-        { label: 'Properties', icon: 'description', route: { name: 'groups-activity', params: { context: this.context, operation: 'edit', id: this.id } } },
-        { label: 'Members', icon: 'group', route: { name: 'groups-activity', params: { context: this.context, operation: 'browse', id: this.id } } }      
+        { name: 'properties', label: 'Properties', icon: 'description', route: { 
+          name: 'groups-activity', params: { context: this.context, operation: 'edit', id: this.id } } 
+        },
+        { name: 'members', label: 'Members', icon: 'group', route: 
+          { name: 'groups-activity', params: { context: this.context, operation: 'browse', id: this.id } } 
+        }      
       ]
     },
     groupActions () {
