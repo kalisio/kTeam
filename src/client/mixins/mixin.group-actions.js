@@ -24,16 +24,16 @@ let groupActionsMixin = {
         ]
       })
     },
-    editGroup (group) {
+    manageGroupProperties (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.context, operation: 'edit', id: group._id } 
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'properties' } 
       })
     },
-    browseGroup (group) {
+    manageGroupMembers (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.context, operation: 'browse', id: group._id } 
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'members' } 
       })
     },
     addGroupMember () {
@@ -72,10 +72,10 @@ let groupActionsMixin = {
   created () {
     this.registerAction('createGroup', { label: 'Create', icon: 'add' })
     this.registerAction('deleteGroup', { label: 'Delete', icon: 'delete' })
-    this.registerAction('editGroup', { label: 'Edit', icon: 'create' })
-    this.registerAction('browseGroup', { label: 'Browse', icon: 'group' })
+    this.registerAction('manageGroupProperties', { label: 'Properties', icon: 'create' })
+    this.registerAction('manageGroupMembers', { label: 'Members', icon: 'group' })
     this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })
-    this.registerAction('removeGroupMember', { label: 'Remove', icon: 'delete' })
+    this.registerAction('removeGroupMember', { label: 'Delete', icon: 'delete' })
   }
 }
 

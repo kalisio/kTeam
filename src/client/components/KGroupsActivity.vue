@@ -1,16 +1,26 @@
 <template>
+  <!--
+    Create routing
+   -->
   <div v-if="operation === 'create'">
     <k-editor :context="context" service="groups" />
   </div>
-  <div v-else-if="operation === 'edit'">
-    <k-nav-bar :tabs="navBarTabs()" selected="properties" />
-    <k-editor :context="context" service="groups" :id="id" />
+  <!--
+    Manage routing
+   -->
+  <div v-else-if="operation === 'manage'">
+    <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
+    <div v-if="perspective === 'properties'">
+      <k-editor :context="context" service="groups" :id="id" />
+    </div>
+    <div v-else>
+      <k-grid :context="context" service="users" :actions="memberItemActions()" />
+      <k-fab :actions="memberActions()" />
+    </div>
   </div>
-  <div v-else-if="operation === 'browse'">
-    <k-nav-bar :tabs="navBarTabs()" selected="members" />
-    <k-grid :context="context" service="users" :actions="memberItemActions()" />
-    <k-fab :actions="memberActions()" />
-  </div>
+  <!--
+    Default routing
+   -->
   <div v-else>
     <k-grid :context="context" service="groups" :actions="groupItemActions()" />
     <k-fab :actions="groupActions()" />
@@ -39,16 +49,20 @@ export default {
     id : {
       type: String,
       default: '',
+    },
+    perspective: {
+      type: String,
+      default: '',
     }
   },
   methods: {
     navBarTabs () {
       return [ 
         { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'groups-activity', params: { context: this.context, operation: 'edit', id: this.id } } 
+          name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'properties' } } 
         },
         { name: 'members', label: 'Members', icon: 'group', route: 
-          { name: 'groups-activity', params: { context: this.context, operation: 'browse', id: this.id } } 
+          { name: 'groups-activity', params: { context: this.context, operation: 'manager', id: this.id, perspective: 'members' } } 
         }      
       ]
     },
@@ -56,7 +70,7 @@ export default {
       return this.filterActions(['createGroup'])
     },
     groupItemActions () {
-      return this.filterActions(['editGroup', 'browseGroup', 'deleteGroup'])
+      return this.filterActions(['manageGroupProperties', 'manageGroupMembers', 'deleteGroup'])
     },
     memberActions () {
       return this.filterActions(['addGroupMember'])
