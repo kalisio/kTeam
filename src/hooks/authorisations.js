@@ -26,7 +26,7 @@ export function populateSubjects (hook) {
     throw new Error(`The 'populateSubjects' hook should only be used as a 'before' hook.`)
   }
 
-  return hooks.populateObjects('subjectsService', 'subjects')(hook)
+  return hooks.populateObjects({ serviceField: 'subjectsService', idField: 'subjects', throwOnNotFound: true })(hook)
 }
 
 export function populateResource (hook) {
@@ -34,7 +34,7 @@ export function populateResource (hook) {
     throw new Error(`The 'populateResource' hook should only be used as a 'before' hook.`)
   }
 
-  return hooks.populateObject('resourcesService', 'resource')(hook)
+  return hooks.populateObject({ serviceField: 'resourcesService', idField: 'resource', throwOnNotFound: true })(hook)
 }
 
 export function authorise (hook) {
