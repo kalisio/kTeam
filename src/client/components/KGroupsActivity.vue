@@ -62,7 +62,7 @@ export default {
           name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'properties' } } 
         },
         { name: 'members', label: 'Members', icon: 'group', route: 
-          { name: 'groups-activity', params: { context: this.context, operation: 'manager', id: this.id, perspective: 'members' } } 
+          { name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'members' } } 
         }      
       ]
     },
