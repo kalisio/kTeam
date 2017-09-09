@@ -72,7 +72,7 @@ let groupActionsMixin = {
   created () {
     this.registerAction('createGroup', { label: 'Create', icon: 'add' })
     this.registerAction('deleteGroup', { label: 'Delete', icon: 'delete' })
-    this.registerAction('manageGroupProperties', { label: 'Properties', icon: 'create' })
+    this.registerAction('manageGroupProperties', { label: 'Properties', icon: 'description' })
     this.registerAction('manageGroupMembers', { label: 'Members', icon: 'group' })
     this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })
     this.registerAction('removeGroupMember', { label: 'Delete', icon: 'delete' })
