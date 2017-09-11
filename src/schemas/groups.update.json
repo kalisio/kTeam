@@ -24,6 +24,15 @@
         "label": "Description",
         "helper": "Type the group description"
       }
+    },
+    "tags": { 
+      "type": "array",
+      "scope": "group",
+      "field": {
+        "component": "form/KTagField",
+        "label": "Tags",
+        "helper": "Set some tags"
+      }
     }
   },
   "required": ["name"],

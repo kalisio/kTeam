@@ -28,6 +28,7 @@
     },
     "tags": { 
       "type": "array",
+      "scope": "group",
       "field": {
         "component": "form/KTagField",
         "label": "Tags",
