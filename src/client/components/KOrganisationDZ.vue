@@ -65,7 +65,6 @@ export default {
     this.$options.components['k-modal'] = loadComponent('frame/KModal')
     // Install an object-changed callback
     this.$on('object-changed', _ =>  {
-      console.log('object-changed')
       if (this.getObject()) {
         this.name = this.getObject().name
       } else {

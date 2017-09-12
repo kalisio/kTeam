@@ -64,7 +64,7 @@ export default {
       return services
     },
     onSubjectSelected (subject) {
-      console.log(subject)
+      console.log('TODO')
     },
     onApplyClicked () {
       this.close()
