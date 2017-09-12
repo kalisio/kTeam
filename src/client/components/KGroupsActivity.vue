@@ -1,38 +1,52 @@
 <template>
-  <!--
-    Create routing
-   -->
-  <div v-if="operation === 'create'">
-    <k-editor :context="context" service="groups" />
-  </div>
-  <!--
-    Manage routing
-   -->
-  <div v-else-if="operation === 'manage'">
-    <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
-    <div v-if="perspective === 'properties'">
-      <k-editor :context="context" service="groups" :id="id" />
+  <div>
+    <!--
+      Create routing
+    -->
+    <div v-if="operation === 'create'">
+      <k-editor :context="context" service="groups" />
     </div>
+    <!--
+      Manage routing
+    -->
+    <div v-else-if="operation === 'manage'">
+      <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
+      <div v-if="perspective === 'properties'">
+        <k-editor :context="context" service="groups" :id="id" />
+      </div>
+      <div v-else-if="perspective === 'danger-zone'">
+        <k-group-dz :context="context" service="groups" :id="id" />
+      </div>
+      <div v-else>
+        <k-grid :context="context" service="users" :actions="memberItemActions()" />
+        <k-fab :actions="memberActions()" />
+      </div>
+    </div>
+    <!--
+      Default routing
+    -->
     <div v-else>
-      <k-grid :context="context" service="users" :actions="memberItemActions()" />
-      <k-fab :actions="memberActions()" />
+      <k-grid :context="context" service="groups" :actions="groupItemActions()" />
+      <k-fab :actions="groupActions()" />
     </div>
-  </div>
-  <!--
-    Default routing
-   -->
-  <div v-else>
-    <k-grid :context="context" service="groups" :actions="groupItemActions()" />
-    <k-fab :actions="groupActions()" />
+
+    <!--
+      Modal used to add a member
+    -->
+    <k-authoriser ref="authoriser" />
   </div>
 </template>
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
+import KAuthoriser from './KAuthoriser.vue'
 import mixins from '../mixins'
 
 export default {
   name: 'k-groups-activity',
+  components: {
+    KAuthoriser
+  },
   mixins: [
     kCoreMixins.baseActivity,
     mixins.groupActions
@@ -55,6 +69,11 @@ export default {
       default: '',
     }
   },
+  data () {
+    return {
+      member: ''
+    }
+  },
   methods: {
     navBarTabs () {
       return [ 
@@ -63,14 +82,17 @@ export default {
         },
         { name: 'members', label: 'Members', icon: 'group', route: 
           { name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'members' } } 
-        }      
+        },
+        { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: 
+          { name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'danger-zone' } } 
+        }     
       ]
     },
     groupActions () {
       return this.filterActions(['createGroup'])
     },
     groupItemActions () {
-      return this.filterActions(['manageGroupProperties', 'manageGroupMembers', 'deleteGroup'])
+      return this.filterActions(['manageGroupProperties', 'manageGroupMembers'])
     },
     memberActions () {
       return this.filterActions(['addGroupMember'])
@@ -86,6 +108,7 @@ export default {
     this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
+    this.$options.components['k-group-dz'] = loadComponent('KGroupDZ')
   }
 }
 </script>

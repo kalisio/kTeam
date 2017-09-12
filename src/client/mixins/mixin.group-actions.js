@@ -8,22 +8,6 @@ let groupActionsMixin = {
         params: { context: this.context, operation: 'create' } 
       })
     },
-    deleteGroup (group) {
-      Dialog.create({
-        title: 'Warning',
-        message: 'Are you sure you want to delete the group ' + group.name + ' ?',
-        buttons: [
-          'Cancel',
-          {
-            label: 'Delete',
-            handler: () => { 
-              let service = this.$api.getService('groups', this.context)
-              if (service) service.remove(group._id)
-            }
-          }
-        ]
-      })
-    },
     manageGroupProperties (group) {
       this.$router.push({ 
         name: 'groups-activity', 
@@ -37,20 +21,7 @@ let groupActionsMixin = {
       })
     },
     addGroupMember () {
-      Dialog.create({
-        title: 'Add Members',
-        message: 'Select the users you want to add:',
-        buttons: [
-          'Cancel',
-          {
-            label: 'Add',
-            handler: () => {
-              // delete the required item
-              console.log('TODO')
-            }
-          }
-        ]
-      })
+      this.$refs.authoriser.open()
     },
     removeGroupMember (group) {
       Dialog.create({
@@ -71,7 +42,6 @@ let groupActionsMixin = {
   },
   created () {
     this.registerAction('createGroup', { label: 'Create', icon: 'add' })
-    this.registerAction('deleteGroup', { label: 'Delete', icon: 'delete' })
     this.registerAction('manageGroupProperties', { label: 'Properties', icon: 'description' })
     this.registerAction('manageGroupMembers', { label: 'Members', icon: 'group' })
     this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })

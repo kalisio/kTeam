@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://mynet.com/schemas/groups-update.json#",
-  "title": "Group Edition",
-  "description": "Group edition schema",
+  "$id": "http://mynet.com/schemas/orgs-update.json#",
+  "title": "Organisation Edition",
+  "description": "Organisation edition schema",
   "type": "object",
   "properties": {
     "name": {
