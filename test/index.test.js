@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
@@ -237,6 +238,13 @@ describe('kTeam', () => {
     })
     .then(groups => {
       expect(groups.data.length === 0).beTrue()
+      return userService.find({ query: { name: 'test-user-2' }, checkAuthorisation: true })
+    })
+    .then(users => {
+      expect(users.data.length > 0).beTrue()
+      user2Object = users.data[0]
+      // No more permission set for org groups
+      expect(_.find(user2Object.groups, group => group._id === groupObject._id.toString())).beUndefined()
     })
   })
 
@@ -263,13 +271,22 @@ describe('kTeam', () => {
     })
   })
 
-  it('owner can remove his organisation', () => {
+  it('owner can remove organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
     .then(org => {
       return orgService.find({ query: { name: 'test-org' }, user: user1Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length === 0).beTrue()
+      return userService.find({ query: {}, checkAuthorisation: true })
+    })
+    .then(users => {
+      expect(users.data.length === 2).beTrue()
+      user1Object = users.data[0]
+      user2Object = users.data[1]
+      // No more permission set for org
+      expect(_.find(user1Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
+      expect(_.find(user2Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
       // Should remove associated DB
       return adminDb.listDatabases()
     })

@@ -32,7 +32,7 @@ export function removeGroupAuthorisations (hook) {
   return authorisationService.remove(hook.result._id.toString(), {
     query: {
       // Use the organisation user service to only target org users
-      subjectsService: hook.service.options.path,
+      subjectsService: hook.service.options.path.split('/')[0] + '/users',
       scope: 'groups'
     },
     user: hook.params.user,

@@ -3,21 +3,21 @@ import { Dialog } from 'quasar'
 let groupActionsMixin = {
   methods: {
     createGroup () {
-      this.$router.push({ 
-        name: 'groups-activity', 
-        params: { context: this.context, operation: 'create' } 
+      this.$router.push({
+        name: 'groups-activity',
+        params: { context: this.context, operation: 'create' }
       })
     },
     manageGroupProperties (group) {
-      this.$router.push({ 
-        name: 'groups-activity', 
-        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'properties' } 
+      this.$router.push({
+        name: 'groups-activity',
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'properties' }
       })
     },
     manageGroupMembers (group) {
-      this.$router.push({ 
-        name: 'groups-activity', 
-        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'members' } 
+      this.$router.push({
+        name: 'groups-activity',
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'members' }
       })
     },
     addGroupMember () {

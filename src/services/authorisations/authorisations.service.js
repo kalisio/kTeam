@@ -64,7 +64,7 @@ export default {
       // Then retrieve the right scope on the subject
       let scope = _.get(subject, scopeName, [])
       // Then the target resource
-      scope.filter(sift({ _id: id }))
+      scope = scope.filter(sift({ _id: { $ne: id.toString() } }))
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
