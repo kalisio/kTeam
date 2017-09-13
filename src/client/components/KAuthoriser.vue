@@ -1,5 +1,5 @@
 <template>
-  <k-modal ref="modal" title="Authorize">
+  <k-modal ref="modal" title="Authorize" :actions="['Authorize']">
     <div slot="modal-content" class="column xs-gutter">
       <k-autocomplete :services="services()" @item-selected="onSubjectSelected" />
       <div class="row justify-around">
@@ -14,9 +14,6 @@
             v-model="permission"
             :options="permissions" />
         </div>
-      </div>
-      <div class="self-end">
-        <q-btn color="primary" @click="onApplyClicked">Apply</q-btn>
       </div>
     </div>
   </k-modal>

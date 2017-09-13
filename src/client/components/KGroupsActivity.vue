@@ -15,7 +15,7 @@
         <k-editor :context="context" service="groups" :id="id" />
       </div>
       <div v-else-if="perspective === 'danger-zone'">
-        <k-group-dz :context="context" service="groups" :id="id" />
+        <k-group-dz :context="context" :id="id" />
       </div>
       <div v-else>
         <k-grid :context="context" service="users" :actions="memberItemActions()" />
