@@ -58,8 +58,8 @@ export default {
     onOrganisationClicked (org) {
       // Shall we switch to the clicked organisation ?
       // That is to say, check whether the clicked organisation is different from the current one
-      if (this.current.name !== org.name) {
-        this.current.name = org.name
+      if (this.current !== org.name) {
+        this.current = org.name
         this.$store.set('organisation', org)
         // FIXME: should redirect to 'home' dedicated to the organisation: maybe a default activity ?
         this.$router.push({ name: 'home' })
