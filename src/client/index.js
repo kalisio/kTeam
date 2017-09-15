@@ -11,7 +11,6 @@ export * as mixins from './mixins'
 
 export default function init () {
   // const app = this
-
   Events.$on('user-changed', user => {
     // Possible after a loggout
     if (!user) return
@@ -20,6 +19,17 @@ export default function init () {
     } else {
       logger.debug('empty organisations')
     }
+  })
+
+  // Listen to the 'created' event on the organisation
+  const users = app.getService('organisations')
+  users.on('created', organisation => {
+    Store.set('organisation', organisation)
+    // FIXME: 
+    // Check whether we need to update the current organisation
+    //if (organisation._id === Store.get('user._id')) {
+    //  Store.set('organisation', organisation)
+    //}
   })
 
   logger.debug('Initializing kalisio team')

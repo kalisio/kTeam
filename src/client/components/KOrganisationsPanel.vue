@@ -9,7 +9,7 @@
           <q-item @click="onOrganisationClicked(org)">
             <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
             <q-item-main :label="org.name" />
-            <q-item-side v-if="org.name === current.name" right>
+            <q-item-side v-if="org.name === current" right>
               <q-item-tile  icon="settings" />
             </q-item-side>
           </q-item>
@@ -59,18 +59,21 @@ export default {
       // Shall we switch to the clicked organisation ?
       // That is to say, check whether the clicked organisation is different from the current one
       if (this.current !== org.name) {
-        this.current = org.name
         this.$store.set('organisation', org)
-        // FIXME: should redirect to 'home' dedicated to the organisation: maybe a default activity ?
-        this.$router.push({ name: 'home' })
       } else {
-        // Then mnage the organisation
+        // Then mznage the organisation
         let orgId = this.$store.get('organisation._id')
         this.$router.push({ name: 'organisations-activity', params: { operation: 'manage', id: orgId } })
       }
     },
     createOrganisation () {
       this.$refs.creator.open()
+    },
+    setCurrentOrganisation (organisation) {
+      if (organisation) {
+        this.current = organisation.name
+        this.$router.push({ name: 'organisations-activity', params: { operation: 'welcome', id:organisation._id } })
+      }
     }
   },
   created () {
@@ -91,7 +94,8 @@ export default {
       this.list = user ? user.organisations : []
     })
     Events.$on('organisation-changed', organisation => {
-      this.current = organisation ? organisation.name : ''
+      console.log('oups')
+      this.setCurrentOrganisation(organisation)
     })
   }
 }

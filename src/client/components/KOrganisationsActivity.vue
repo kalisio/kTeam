@@ -1,15 +1,9 @@
 <template>
   <div>
     <!--
-      Create routing
-    -->
-    <div v-if="operation === 'create'">
-      <k-popup-editor service="organisations" />
-    </div>
-    <!--
       Manage routing
     -->
-    <div v-else-if="operation === 'manage'">
+    <div v-if="operation === 'manage'">
       <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
       <div v-if="perspective === 'billing'">
         <k-editor service="organisations" :id="id" perspective="billing" />
