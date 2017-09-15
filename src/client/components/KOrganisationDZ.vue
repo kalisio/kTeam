@@ -52,18 +52,22 @@ export default {
         return "Please note that deleting \'" + this.name + 
                "\' will delete any data attached to this organisation."
       }
-      return "You cannot delete this organisation as it is the default one attached to your account." +
-             "<br>This organisation will be automatically deleted when deleting your account"
+      return "You cannot delete this organisation because it is the default one attached to your account." +
+             "<br>This organisation will be automatically deleted when deleting your account."
     },
     getService () {
       return this.$api.getService('organisations')
     },
     deletionClicked () {
-      this.$refs.confirmModal.open()
+      this.$refs.confirm.open()
     },
     deletionConfirmed () {
-      this.$refs.confirmModal.close()
-      //FIXME: To be implemented
+      this.$refs.confirm.close()
+      this.getService().remove(this.id)
+      .then(_ => {
+        this.$store.set('organisation', null)
+        this.$router.push({name: 'organisations-activity', params: { context: this.context } })
+      })
     }
   },
   created () {

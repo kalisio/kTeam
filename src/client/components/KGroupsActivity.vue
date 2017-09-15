@@ -1,15 +1,9 @@
 <template>
   <div>
     <!--
-      Create routing
-    -->
-    <div v-if="operation === 'create'">
-      <k-editor :context="context" service="groups" />
-    </div>
-    <!--
       Manage routing
     -->
-    <div v-else-if="operation === 'manage'">
+    <div v-if="operation === 'manage'">
       <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
       <div v-if="perspective === 'properties'">
         <k-editor :context="context" service="groups" :id="id" />
@@ -30,22 +24,26 @@
       <k-fab :actions="groupActions()" />
     </div>
 
+    <!-- 
+      Popup to create the new organisation
+    -->
+    <k-popup-editor ref="creator" title="Create a new Group ?" :context="context" service="groups" />
     <!--
       Modal used to add a member
     -->
-    <k-authoriser ref="authoriser" />
+    <!--k-authoriser ref="authoriser" /-->
   </div>
 </template>
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
-import KAuthoriser from './KAuthoriser.vue'
+// import KAuthoriser from './KAuthoriser.vue'
 import mixins from '../mixins'
 
 export default {
   name: 'k-groups-activity',
   components: {
-    KAuthoriser
+    // KAuthoriser
   },
   mixins: [
     kCoreMixins.baseActivity,
@@ -105,6 +103,7 @@ export default {
     // Load the required components
     let loadComponent = this.$store.get('loadComponent')
     this.$options.components['k-editor'] = loadComponent('editor/KEditor')
+    this.$options.components['k-popup-editor'] = loadComponent('editor/KPopupEditor')
     this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')

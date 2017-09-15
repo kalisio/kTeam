@@ -4,7 +4,7 @@
       Create routing
     -->
     <div v-if="operation === 'create'">
-      <k-editor service="organisations" />
+      <k-popup-editor service="organisations" />
     </div>
     <!--
       Manage routing
@@ -20,6 +20,12 @@
       <div v-else>
         <k-editor service="organisations" :id="id" />
       </div>
+    </div>
+    <!-- 
+      Default routing
+     -->
+    <div v-else>
+      Homepage of the organisation
     </div>
   </div>
 </template>
@@ -40,7 +46,14 @@ export default {
     },
     id : {
       type: String,
-      default: '',
+      default: function () {
+        let id = this.$store.get('organisation._id')
+        if (!id) {
+          this.$store.set('organisation', this.$store.get('user.organisations')[0])
+          id = this.$store.get('organisation._id')
+        }
+        return id
+      }
     },
     perspective: {
       type: String,

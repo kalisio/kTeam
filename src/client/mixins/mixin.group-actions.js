@@ -3,10 +3,7 @@ import { Dialog } from 'quasar'
 let groupActionsMixin = {
   methods: {
     createGroup () {
-      this.$router.push({
-        name: 'groups-activity',
-        params: { context: this.context, operation: 'create' }
-      })
+      this.$refs.creator.open()
     },
     manageGroupProperties (group) {
       this.$router.push({
