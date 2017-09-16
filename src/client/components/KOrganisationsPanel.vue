@@ -94,7 +94,6 @@ export default {
       this.list = user ? user.organisations : []
     })
     Events.$on('organisation-changed', organisation => {
-      console.log('oups')
       this.setCurrentOrganisation(organisation)
     })
   }

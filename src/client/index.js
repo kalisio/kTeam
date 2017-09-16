@@ -1,4 +1,5 @@
 import logger from 'loglevel'
+import lodash from 'lodash'
 import { Events } from 'quasar'
 import { Store } from 'kCore/client'
 
@@ -10,7 +11,10 @@ export * from './guards'
 export * as mixins from './mixins'
 
 export default function init () {
-  // const app = this
+  const app = this
+
+  // Listen to the user-changed event in order to assign a default organisation
+  // FIXME: should be done using the storage
   Events.$on('user-changed', user => {
     // Possible after a loggout
     if (!user) return
@@ -24,12 +28,12 @@ export default function init () {
   // Listen to the 'created' event on the organisation
   const users = app.getService('organisations')
   users.on('created', organisation => {
-    Store.set('organisation', organisation)
-    // FIXME: 
-    // Check whether we need to update the current organisation
-    //if (organisation._id === Store.get('user._id')) {
-    //  Store.set('organisation', organisation)
-    //}
+    // Check whether the organisation has been created by the current user
+    // That means the user must have the organisation within its organisation list and must be the owner
+    if (lodash.findIndex(Store.get('user.organisations'), { '_id': organisation._id, 'permissions': 'owner' }) > 0) {
+      // If yes then switch to this new organisation
+      Store.set('organisation', organisation)
+    }
   })
 
   logger.debug('Initializing kalisio team')
