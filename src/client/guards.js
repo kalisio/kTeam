@@ -2,7 +2,7 @@ import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
 
 // Guard unauthorised users
 export function authorisationGuard (app) {
-  return function authorisationGuard (user, to, from, next) {
+  return function authorisationGuard (user, to, from) {
     // Check for access to service first
     if (to.params.service) {
       if (to.params.context) {
