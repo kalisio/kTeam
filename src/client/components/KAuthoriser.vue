@@ -1,7 +1,7 @@
 <template>
-  <k-modal ref="modal" title="Authorize" :actions="['Authorize']">
-    <div slot="modal-content" class="column xs-gutter">
-      <k-autocomplete :services="services()" @item-selected="onSubjectSelected" />
+  <k-dialog ref="dialog" :title="title" :actions="['Authorize']" @action-triggered="onActionTriggered">
+    <div slot="dialog-content" class="column xs-gutter">
+      <k-autocomplete :services="subjectSearchServices()" @item-selected="onSubjectSelected" />
       <div class="row justify-around">
         <div>
           As 
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-  </k-modal>
+  </k-dialog>
 </template>
 
 <script>
@@ -29,6 +29,22 @@ export default {
     QBtn
   },
   props: {
+    title: {
+      type: String,
+      default: 'Authorise...'
+    },
+    scope: {
+      type: String,
+      required: true
+    },
+    resourceId: {
+      type: String,
+      required: true
+    },
+    resourceService: {
+      type: String,
+      required: true
+    },
     permissions: {
       type: Array,
       default: function () {
@@ -42,17 +58,31 @@ export default {
   },
   data () {
     return {
-      permission: 'member'
+      permission: 'member',
+      subject: null
     }
   },
   methods: {
+    onActionTriggered () {
+      // Close this dialog
+      this.close()
+      let authorisationService = this.$api.getService('authorisations')
+      authorisationService.create({
+        scope: this.scope,
+        permissions: this.permission,
+        subjects: this.subject._id,
+        subjectsService: 'users',
+        resource: this.resourceId,
+        resourcesService: this.resourceService
+      })
+    },
     open () {
-      this.$refs.modal.open()
+      this.$refs.dialog.open()
     },
     close () {
-      this.$refs.modal.close()
+      this.$refs.dialog.close()
     },
-    services () {
+    subjectSearchServices () {
       let services = [{
         service: 'users',
         field: 'name',
@@ -61,16 +91,13 @@ export default {
       return services
     },
     onSubjectSelected (subject) {
-      console.log('TODO')
-    },
-    onApplyClicked () {
-      this.close()
+      this.subject = subject
     }
   },
   created () {
     // Load the required components
     let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-modal'] = loadComponent('frame/KModal')
+    this.$options.components['k-dialog'] = loadComponent('frame/KDialog')
     this.$options.components['k-autocomplete'] = loadComponent('collection/KAutocomplete')
   }
 }

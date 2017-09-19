@@ -25,30 +25,40 @@
     </div>
 
     <!-- 
-      Popup to create the new organisation
+      Create group dialog
     -->
-    <k-popup-editor ref="creator" title="Create a new Group ?" :context="context" service="groups" />
-    <!--
-      Modal used to add a member
-    -->
-    <!--k-authoriser ref="authoriser" /-->
+    <k-popup-editor ref="createGroupDialog" 
+      title="Create a new Group ?" 
+      :context="context" 
+      service="groups" 
+    />
+    <!-- 
+      Add member dialog
+     -->
+    <k-authoriser ref="addMemberDialog" 
+      title="Select the member to add"
+      scope="groups"
+      :resource-id="id"
+      resource-service="groups"
+    />
+    <!-- 
+      Remove member dialog
+     -->
+    <k-confirm ref="confirmRemoveDialog" 
+      :title="`Are you sure you want to remove \'${selectionName}\' ?`"
+      action="Remove"
+      :prevent="{ capture: selectionName, label: 'Please enter the name of this member to confim the deletion' }" 
+      @confirmed="removeMemberConfirmed" 
+    />
   </div>
 </template>
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
-// import KAuthoriser from './KAuthoriser.vue'
-import mixins from '../mixins'
 
 export default {
   name: 'k-groups-activity',
-  components: {
-    // KAuthoriser
-  },
-  mixins: [
-    kCoreMixins.baseActivity,
-    mixins.groupActions
-  ],
+  mixins: [kCoreMixins.baseActivity],
   props: {
     context: {
       type: String,
@@ -67,9 +77,14 @@ export default {
       default: '',
     }
   },
+  computed: {
+    selectionName () {
+      return this.selection ? this.selection.name : ''
+    }
+  },
   data () {
     return {
-      member: ''
+      selection: null
     }
   },
   methods: {
@@ -97,6 +112,40 @@ export default {
     },
     memberItemActions () {
       return this.filterActions(['removeGroupMember'])
+    },
+    createGroup () {
+      this.$refs.createGroupDialog.open()
+    },
+    manageGroupProperties (group) {
+      this.$router.push({ 
+        name: 'groups-activity', 
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'properties' } 
+      })
+    },
+    manageGroupMembers (group) {
+      this.$router.push({ 
+        name: 'groups-activity', 
+        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'members' } 
+      })
+    },
+    addGroupMember () {
+      this.$refs.addMemberDialog.open()
+    },
+    removeGroupMember (member) {
+      this.selection = member
+      this.$refs.confirmRemoveDialog.open()
+    },
+    removeMemberConfirmed () {
+      this.$refs.confirmRemoveDialog.close()
+      let authorisationService = this.$api.getService('authorisations')
+      authorisationService.remove(this.$store.get('organisation._id'), {
+        query: {
+          scope: 'groups',
+          subjects: this.selection._id,
+          subjectsService: 'users',
+          resourcesService: 'groups'
+        }
+      })
     }
   },
   created () {
@@ -108,6 +157,14 @@ export default {
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
     this.$options.components['k-group-dz'] = loadComponent('KGroupDZ')
+    this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
+    this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
+    // Register the action
+    this.registerAction('createGroup', { label: 'Create', icon: 'add' })
+    this.registerAction('manageGroupProperties', { label: 'Manage', icon: 'description' })
+    this.registerAction('manageGroupMembers', { label: 'Manage', icon: 'group' })
+    this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })
+    this.registerAction('removeGroupMember', { label: 'Remove', icon: 'delete' })
   }
 }
 </script>

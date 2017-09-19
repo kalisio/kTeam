@@ -28,7 +28,7 @@
     <!-- 
       Popup to create the new organisation
     -->
-    <k-popup-editor ref="creator" title="Create a new organisation ?" service="organisations" />
+    <k-popup-editor ref="editor" title="Create a new organisation ?" service="organisations" />
   </div>
 </template>
 
@@ -67,7 +67,7 @@ export default {
       }
     },
     createOrganisation () {
-      this.$refs.creator.open()
+      this.$refs.editor.open(true)
     },
     setCurrentOrganisation (organisation) {
       if (organisation) {

@@ -26,8 +26,8 @@ export default function init () {
   })
 
   // Listen to the 'created' event on the organisation
-  const users = app.getService('organisations')
-  users.on('created', organisation => {
+  const organisationsService = app.getService('organisations')
+  organisationsService.on('created', organisation => {
     // Check whether the organisation has been created by the current user
     // That means the user must have the organisation within its organisation list and must be the owner
     if (lodash.findIndex(Store.get('user.organisations'), { '_id': organisation._id, 'permissions': 'owner' }) > 0) {

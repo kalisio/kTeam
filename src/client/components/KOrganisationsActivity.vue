@@ -75,6 +75,7 @@ export default {
     this.$options.components['k-editor'] = loadComponent('editor/KEditor')
     this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-organisation-dz'] = loadComponent('KOrganisationDZ')
+    this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
   }
 }
 </script>
