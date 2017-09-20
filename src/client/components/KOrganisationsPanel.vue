@@ -55,13 +55,16 @@ export default {
     }
   },
   methods: {
+    updateOrganisations () {
+      this.list = this.$store.get('user.organisations', [])
+    },
     onOrganisationClicked (org) {
       // Shall we switch to the clicked organisation ?
       // That is to say, check whether the clicked organisation is different from the current one
       if (this.current !== org.name) {
         this.$store.set('organisation', org)
       } else {
-        // Then mznage the organisation
+        // Then manage the organisation
         let orgId = this.$store.get('organisation._id')
         this.$router.push({ name: 'organisations-activity', params: { operation: 'manage', id: orgId } })
       }
@@ -86,12 +89,12 @@ export default {
     this.bgColor = this.$store.get(confPath + '.bgColor', 'bg-light')
     this.textColor = this.$store.get(confPath + '.textColor', 'text-dark')
     // Listen to the user changed event
-    this.list = this.$store.get('user.organisations', [])
-    this.current = this.$store.get('organisation.name', '')
+    this.updateOrganisations()
+    this.setCurrentOrganisation(this.$store.get('organisation'))
   },
   mounted () {
     Events.$on('user-changed', user => {
-      this.list = user ? user.organisations : []
+      this.updateOrganisations()
     })
     Events.$on('organisation-changed', organisation => {
       this.setCurrentOrganisation(organisation)
