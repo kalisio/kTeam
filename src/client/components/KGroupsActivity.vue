@@ -12,7 +12,7 @@
         <k-group-dz :context="context" :id="id" />
       </div>
       <div v-else>
-        <k-grid ref="membersGrid" :context="context" service="users" :base-query="baseQuery" :actions="memberItemActions()" />
+        <k-grid ref="membersGrid" :context="context" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
         <k-fab :actions="memberActions()" />
       </div>
     </div>
@@ -40,6 +40,7 @@
       scope="groups"
       :resource-id="id"
       :resource-service="`${this.context}/groups`"
+      :query="usersQuery"
       @authorised="refreshMembers"
     />
     <!-- 
@@ -82,8 +83,11 @@ export default {
     selectionName () {
       return this.selection ? this.selection.name : ''
     },
-    baseQuery () {
+    membersGridQuery () {
       return { 'groups._id': this.id }
+    },
+    usersQuery () {
+      return { 'organisations._id': { $in: [this.context] }, 'groups._id': { $nin: [this.id] } }
     }
   },
   data () {

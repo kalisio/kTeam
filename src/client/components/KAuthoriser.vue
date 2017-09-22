@@ -54,6 +54,12 @@ export default {
           { label: 'Owner', value: 'owner' }
         ]
       }
+    },
+    query: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   data () {
@@ -88,6 +94,7 @@ export default {
     subjectSearchServices () {
       let services = [{
         service: 'users',
+        baseQuery: this.query,
         field: 'name',
         icon: 'user'
       }]

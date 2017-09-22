@@ -15,6 +15,7 @@
       scope="organisations"
       :resource-id="context"
       resource-service="organisations"
+      :query="usersQuery"
       @authorised="refreshMembers"
     />
     <!-- 
@@ -58,6 +59,9 @@ export default {
   computed: {
     selectionName () {
       return this.selection ? this.selection.name : ''
+    },
+    usersQuery () {
+      return { 'organisations._id': { $nin: [this.context] } }
     }
   },
   data () {
@@ -65,7 +69,7 @@ export default {
       selection: null
     }
   },
-  methods: {
+  methods: {  
     refreshMembers () {
       this.$refs.membersGrid.refresh()
     },
