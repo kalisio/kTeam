@@ -65,7 +65,6 @@ export default {
   methods: {
     onActionTriggered () {
       // Close this dialog
-      this.close()
       let authorisationService = this.$api.getService('authorisations')
       authorisationService.create({
         scope: this.scope,
@@ -75,6 +74,7 @@ export default {
         resource: this.resourceId,
         resourcesService: this.resourceService
       })
+      this.close()
     },
     open () {
       this.$refs.dialog.open()

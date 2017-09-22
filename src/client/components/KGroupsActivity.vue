@@ -39,7 +39,7 @@
       title="Select the member to add"
       scope="groups"
       :resource-id="id"
-      resource-service="groups"
+      :resource-service="`${this.context}/groups`"
     />
     <!-- 
       Remove member dialog
@@ -138,12 +138,12 @@ export default {
     removeMemberConfirmed () {
       this.$refs.confirmRemoveDialog.close()
       let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.$store.get('organisation._id'), {
+      authorisationService.remove(this.id, {
         query: {
           scope: 'groups',
           subjects: this.selection._id,
           subjectsService: 'users',
-          resourcesService: 'groups'
+          resourcesService: this.context + '/groups'
         }
       })
     }

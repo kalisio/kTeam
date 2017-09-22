@@ -14,14 +14,16 @@ export default function init () {
   const app = this
 
   // Listen to the user-changed event in order to assign a default organisation
-  // FIXME: should be done using the storage
   Events.$on('user-changed', user => {
     // Possible after a loggout
     if (!user) return
-    if (user.organisations && user.organisations.length > 0) {
-      Store.set('organisation', user.organisations[0])
-    } else {
-      logger.debug('empty organisations')
+    if (!Store.get('organisation')) {
+      // FIXME: retrieve the last organisation : LocalStorage ?
+      if (user.organisations && user.organisations.length > 0) {
+        Store.set('organisation', user.organisations[0])
+      } else {
+        logger.debug('empty organisations')
+      }
     }
   })
 

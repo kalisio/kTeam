@@ -13,7 +13,7 @@
     <k-authoriser ref="addMember" 
       title="Select the member to add"
       scope="organisations"
-      :resource-id="id"
+      :resource-id="context"
       resource-service="organisations"
     />
     <!-- 
@@ -39,7 +39,7 @@ export default {
   props: {
     context: {
       type: String,
-      default: ''
+      required: true
     },
     operation: {
       type: String,
@@ -47,7 +47,7 @@ export default {
     },
     id : {
       type: String,
-      default: '',
+      default: ''
     },
     perspective: {
       type: String,
@@ -87,7 +87,7 @@ export default {
     removeMemberConfirmed () {
       this.$refs.confirmRemove.close()
       let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.$store.get('organisation._id'), {
+      authorisationService.remove(this.context, {
         query: {
           scope: 'organisations',
           subjects: this.selection._id,
@@ -108,7 +108,7 @@ export default {
     // Register the action
     this.registerAction('manageMember', { label: 'Manage', icon: 'description' })
     this.registerAction('addMember', { label: 'Add', icon: 'add' })
-    this.registerAction('removeMember', { label: 'Remove', icon: 'delete' })
+    this.registerAction('removeMember', { label: 'Remove', icon: 'remove_circle' })
   }
 }
 </script>
