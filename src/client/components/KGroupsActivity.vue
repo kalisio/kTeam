@@ -12,7 +12,7 @@
         <k-group-dz :context="context" :id="id" />
       </div>
       <div v-else>
-        <k-grid :context="context" service="users" :actions="memberItemActions()" />
+        <k-grid ref="membersGrid" :context="context" service="users" :base-query="baseQuery" :actions="memberItemActions()" />
         <k-fab :actions="memberActions()" />
       </div>
     </div>
@@ -20,7 +20,7 @@
       Default routing
     -->
     <div v-else>
-      <k-grid :context="context" service="groups" :actions="groupItemActions()" />
+      <k-grid ref="groupsGrid" :context="context" service="groups" :actions="groupItemActions()" />
       <k-fab :actions="groupActions()" />
     </div>
 
@@ -40,6 +40,7 @@
       scope="groups"
       :resource-id="id"
       :resource-service="`${this.context}/groups`"
+      @authorised="refreshMembers"
     />
     <!-- 
       Remove member dialog
@@ -80,6 +81,9 @@ export default {
   computed: {
     selectionName () {
       return this.selection ? this.selection.name : ''
+    },
+    baseQuery () {
+      return { 'groups._id': this.id }
     }
   },
   data () {
@@ -88,6 +92,9 @@ export default {
     }
   },
   methods: {
+    refreshMembers () {
+      this.$refs.membersGrid.refresh()
+    },
     navBarTabs () {
       return [ 
         { name: 'properties', label: 'Properties', icon: 'description', route: { 
@@ -146,6 +153,9 @@ export default {
           resourcesService: this.context + '/groups'
         }
       })
+      .then(_ => {
+        this.refreshMembers()
+      })
     }
   },
   created () {
@@ -164,7 +174,7 @@ export default {
     this.registerAction('manageGroupProperties', { label: 'Manage', icon: 'description' })
     this.registerAction('manageGroupMembers', { label: 'Manage', icon: 'group' })
     this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })
-    this.registerAction('removeGroupMember', { label: 'Remove', icon: 'delete' })
+    this.registerAction('removeGroupMember', { label: 'Remove', icon: 'remove_circle' })
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <k-editor :context="context" service="users" :id="id" :perspective="perspective" />
     </div>
     <div v-else>
-      <k-grid :context="context" service="users" :actions="memberItemActions()" />
+      <k-grid ref="membersGrid" :context="context" service="users" :actions="memberItemActions()" />
       <k-fab :actions="memberActions()" />
     </div>
     <!-- 
@@ -15,6 +15,7 @@
       scope="organisations"
       :resource-id="context"
       resource-service="organisations"
+      @authorised="refreshMembers"
     />
     <!-- 
       Remove member dialog
@@ -65,6 +66,9 @@ export default {
     }
   },
   methods: {
+    refreshMembers () {
+      this.$refs.membersGrid.refresh()
+    },
     memberActions () {
       return this.filterActions(['addMember'])
     },
@@ -94,6 +98,9 @@ export default {
           subjectsService: 'users',
           resourcesService: 'organisations'
         }
+      })
+      .then(_ => {
+        this.refreshMembers()
       })
     }
   },

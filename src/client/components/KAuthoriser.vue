@@ -74,6 +74,9 @@ export default {
         resource: this.resourceId,
         resourcesService: this.resourceService
       })
+      .then(_ => {
+        this.$emit('authorised')
+      })
       this.close()
     },
     open () {
