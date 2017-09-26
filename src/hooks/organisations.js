@@ -1,5 +1,5 @@
 import makeDebug from 'debug'
-const debug = makeDebug('kalisio:kTeam')
+const debug = makeDebug('kalisio:kTeam:organisations:hooks')
 
 export function createOrganisationServices (hook) {
   let app = hook.app

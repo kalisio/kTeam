@@ -6,11 +6,6 @@ import logger from 'winston'
 import core, { kalisio } from 'kCore'
 import team, { defineAbilitiesForSubject, hooks as teamHooks } from '../src'
 
-// Catch all at higher level
-process.on('unhandledRejection', (reason, p) =>
-  logger.error('Unhandled Rejection at: Promise ', p, reason)
-)
-
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
     userService, orgService, authorisationService, orgGroupService, orgUserService,

@@ -7,7 +7,7 @@ import { hooks } from 'kCore'
 import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
 import makeDebug from 'debug'
 
-const debug = makeDebug('kalisio:kTeam:authorisation')
+const debug = makeDebug('kalisio:kTeam:authorisations:hooks')
 
 // Utility function used to convert from string to MongoDB IDs as required by queries
 function objectifyIDs (query) {
