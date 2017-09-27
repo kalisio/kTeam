@@ -2,7 +2,6 @@ import _ from 'lodash'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
-import logger from 'winston'
 import core, { kalisio } from 'kCore'
 import team, { defineAbilitiesForSubject, hooks as teamHooks } from '../src'
 
