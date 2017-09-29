@@ -37,7 +37,6 @@ export function createOrganisationAuthorisations (hook) {
   let app = hook.app
   let authorisationService = app.getService('authorisations')
   let userService = app.getService('users')
-
   // Set membership for the owner
   return authorisationService.create({
     scope: 'organisations',
@@ -101,11 +100,10 @@ export function removeOrganisationAuthorisations (hook) {
 export function createPrivateOrganisation (hook) {
   let app = hook.app
   let organisationService = app.getService('organisations')
-
   // Create a private organisation for the user
   return organisationService.create({
     _id: hook.result._id, // Same ID as user, fine because in another service
-    name: hook.result.name // Same name as user
+    name: hook.result.profile.name // Same name as user
   }, {
     user: hook.result
   })
@@ -117,7 +115,7 @@ export function createPrivateOrganisation (hook) {
 export function removePrivateOrganisation (hook) {
   let app = hook.app
   let organisationService = app.getService('organisations')
-  // Create a private organisation for the user
+  // Remove the private user's organisation
   return organisationService.remove(hook.result._id.toString(), {
     user: hook.result
   })

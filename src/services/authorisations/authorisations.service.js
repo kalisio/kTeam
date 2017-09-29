@@ -31,7 +31,6 @@ export default {
       // On first authorisation create the resource in scope
       if (!resource) {
         resource = {
-          name: params.resource.name,
           _id: params.resource._id.toString()
         }
         scope.push(resource)

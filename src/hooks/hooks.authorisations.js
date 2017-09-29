@@ -1,25 +1,11 @@
 import { merge } from 'feathers-commons'
 import { Forbidden } from 'feathers-errors'
-import _ from 'lodash'
-import { ObjectID } from 'mongodb'
 import { toMongoQuery } from 'casl'
-import { hooks } from 'kCore'
+import { hooks, objectifyIDs } from 'kCore'
 import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
 import makeDebug from 'debug'
 
 const debug = makeDebug('kalisio:kTeam:authorisations:hooks')
-
-// Utility function used to convert from string to MongoDB IDs as required by queries
-function objectifyIDs (query) {
-  _.forOwn(query, (value, key) => {
-    // Process current attributes or  recurse
-    if (typeof value === 'object') {
-      objectifyIDs(value)
-    } else if (key === '_id') {
-      query[key] = new ObjectID(value)
-    }
-  })
-}
 
 export function populateSubjects (hook) {
   if (hook.type !== 'before') {

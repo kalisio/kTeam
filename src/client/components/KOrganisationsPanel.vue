@@ -5,7 +5,7 @@
         <!-- 
           Organisations list
         -->
-        <template v-for="org in list">
+        <template v-for="org in items">
           <q-item @click="onOrganisationClicked(org)">
             <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
             <q-item-main :label="org.name" />
@@ -33,8 +33,10 @@
 </template>
 
 <script>
+import lodash from 'lodash'
 import { Events, QCollapsible, QList, QItem, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
+import { mixins as kCoreMixins } from 'kCore/client'
 
 export default {
   name: 'k-organisations-panel',
@@ -48,6 +50,7 @@ export default {
     QItemSeparator,
     Avatar
   },
+  mixins: [kCoreMixins.baseCollection],
   data () {
     return {
       current: '',
@@ -55,8 +58,12 @@ export default {
     }
   },
   methods: {
+    getService () {
+      return this.$api.getService('organisations')
+    },
     updateOrganisations () {
       this.list = this.$store.get('user.organisations', [])
+      this.filterQuery = { _id: {$in : this.list.map(org => { return org._id }) } }
     },
     onOrganisationClicked (org) {
       // Shall we switch to the clicked organisation ?
@@ -91,6 +98,7 @@ export default {
     // Listen to the user changed event
     this.updateOrganisations()
     this.setCurrentOrganisation(this.$store.get('organisation'))
+    this.refresh()
   },
   mounted () {
     Events.$on('user-changed', user => {
@@ -98,6 +106,9 @@ export default {
     })
     Events.$on('organisation-changed', organisation => {
       this.setCurrentOrganisation(organisation)
+    })
+    Events.$on('organisation-patched', organisation => {
+      // Update the current organisation if needed
     })
   }
 }
