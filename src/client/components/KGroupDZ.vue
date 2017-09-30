@@ -16,8 +16,7 @@
      -->
      <k-confirm ref="confirm" 
       :title="`Are you sure you want to delete \'${name}\' ?`"
-      action="Delete"
-      :prevent="{ capture: name, label: 'Please enter the name of this group to confim the deletion' }" 
+      action="Yes"
       @confirmed="deletionConfirmed" />
   </div>
 </template>

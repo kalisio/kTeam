@@ -21,10 +21,9 @@
     <!-- 
       Remove member dialog
      -->
-    <k-confirm ref="confirmRemove" 
+    <k-confirm ref="removeMember" 
       :title="`Are you sure you want to remove \'${selectionName}\' ?`"
-      action="Remove"
-      :prevent="{ capture: selectionName, label: 'Please enter the name of this member to confim the deletion' }" 
+      action="Yes"
       @confirmed="removeMemberConfirmed" 
     />
   </div>
@@ -90,7 +89,7 @@ export default {
     },
     removeMember (member) {
       this.selection = member
-      this.$refs.confirmRemove.open()
+      this.$refs.removeMember.open()
     },
     removeMemberConfirmed () {
       this.$refs.confirmRemove.close()

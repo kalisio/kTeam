@@ -33,7 +33,7 @@
       service="groups" 
     />
     <!-- 
-      Add member dialog
+      Add group member dialog
      -->
     <k-authoriser ref="addMemberDialog" 
       title="Select the member to add"
@@ -44,12 +44,11 @@
       @authorised="refreshMembers"
     />
     <!-- 
-      Remove member dialog
+      Remove group member dialog
      -->
-    <k-confirm ref="confirmRemoveDialog" 
+    <k-confirm ref="removeMemberDialog" 
       :title="`Are you sure you want to remove \'${selectionName}\' ?`"
-      action="Remove"
-      :prevent="{ capture: selectionName, label: 'Please enter the name of this member to confim the deletion' }" 
+      action="Yes"
       @confirmed="removeMemberConfirmed" 
     />
   </div>
@@ -144,7 +143,7 @@ export default {
     },
     removeGroupMember (member) {
       this.selection = member
-      this.$refs.confirmRemoveDialog.open()
+      this.$refs.removeMemberDialog.open()
     },
     removeMemberConfirmed () {
       this.$refs.confirmRemoveDialog.close()

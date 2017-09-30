@@ -104,6 +104,9 @@ export default {
     Events.$on('user-changed', user => {
       this.updateOrganisations()
     })
+    Events.$on('user-patched', user => {
+      this.updateOrganisations()
+    })
     Events.$on('organisation-changed', organisation => {
       this.setCurrentOrganisation(organisation)
     })

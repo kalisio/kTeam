@@ -115,7 +115,6 @@ describe('kTeam', () => {
   })
 
   it('non-members cannot access organisation users', () => {
-
     return userService.find({ query: { 'profile.name': user2Object.name }, user: user1Object, checkAuthorisation: true })
     .then(users => {
       // User is found on the global service
