@@ -9,8 +9,6 @@ module.exports = async function () {
   app.createService('databases', { servicesPath })
   app.createService('organisations', { modelsPath, servicesPath })
   app.createService('authorisations', { servicesPath })
-  // Add hook to automatically creates a new organisation when creating a new user
-  app.configureService('users', app.getService('users'), servicesPath)
 
   await app.getService('organisations').configureOrganisations()
 }
