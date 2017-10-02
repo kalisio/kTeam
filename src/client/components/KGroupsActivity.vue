@@ -86,7 +86,7 @@ export default {
       return { 'groups._id': this.id }
     },
     usersQuery () {
-      return { 'organisations._id': { $in: [this.context] }, 'groups._id': { $nin: [this.id] } }
+      return { 'organisations._id': { $in: [this.context] }, 'groups._id': { $nin: [this.id] }, $select: ['profile'] }
     }
   },
   data () {

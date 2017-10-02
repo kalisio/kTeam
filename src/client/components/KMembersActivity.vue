@@ -60,7 +60,7 @@ export default {
       return this.selection ? this.selection.name : ''
     },
     usersQuery () {
-      return { 'organisations._id': { $nin: [this.context] } }
+      return { 'organisations._id': { $nin: [this.context] }, $select: ['profile'] }
     }
   },
   data () {
@@ -92,7 +92,7 @@ export default {
       this.$refs.removeMember.open()
     },
     removeMemberConfirmed () {
-      this.$refs.confirmRemove.close()
+      this.$refs.removeMember.close()
       let authorisationService = this.$api.getService('authorisations')
       authorisationService.remove(this.context, {
         query: {

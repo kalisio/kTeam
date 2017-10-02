@@ -95,7 +95,7 @@ export default {
       let services = [{
         service: 'users',
         baseQuery: this.query,
-        field: 'name',
+        field: 'profile.name',
         icon: 'user'
       }]
       return services
