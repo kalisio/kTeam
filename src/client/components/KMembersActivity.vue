@@ -1,10 +1,10 @@
 <template>
   <div>
     <div v-if="operation === 'manage'">
-      <k-editor :context="context" service="users" :id="id" :perspective="perspective" />
+      <k-editor :context="contextId" service="users" :id="id" :perspective="perspective" />
     </div>
     <div v-else>
-      <k-grid ref="membersGrid" :context="context" service="users" :actions="memberItemActions()" />
+      <k-grid ref="membersGrid" :context="contextId" service="users" :actions="memberItemActions()" />
       <k-fab :actions="memberActions()" />
     </div>
     <!-- 
@@ -13,7 +13,7 @@
     <k-authoriser ref="addMember" 
       title="Select the member to add"
       scope="organisations"
-      :resource-id="context"
+      :resource-id="contextId"
       resource-service="organisations"
       :query="usersQuery"
       @authorised="refreshMembers"
@@ -38,7 +38,7 @@ export default {
     kCoreMixins.baseActivity
   ],
   props: {
-    context: {
+    contextId: {
       type: String,
       required: true
     },
@@ -60,7 +60,7 @@ export default {
       return this.selection ? this.selection.name : ''
     },
     usersQuery () {
-      return { 'organisations._id': { $nin: [this.context] }, $select: ['profile'] }
+      return { 'organisations._id': { $nin: [this.contextId] }, $select: ['profile'] }
     }
   },
   data () {
@@ -70,7 +70,7 @@ export default {
   },
   methods: {  
     refreshMembers () {
-      this.$refs.membersGrid.refresh()
+      this.$refs.membersGrid.refreshCollection()
     },
     memberActions () {
       return this.filterActions(['addMember'])
@@ -81,7 +81,7 @@ export default {
     manageMember (member) {
       this.$router.push({ 
         name: 'members-activity', 
-        params: { context: this.context, operation: 'manage', id: member._id, perspective: 'profile' } 
+        params: { context: this.contextId, operation: 'manage', id: member._id, perspective: 'profile' } 
       })
     },
     addMember () {
@@ -94,7 +94,7 @@ export default {
     removeMemberConfirmed () {
       this.$refs.removeMember.close()
       let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.context, {
+      authorisationService.remove(this.contextId, {
         query: {
           scope: 'organisations',
           subjects: this.selection._id,

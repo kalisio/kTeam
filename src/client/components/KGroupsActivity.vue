@@ -6,13 +6,13 @@
     <div v-if="operation === 'manage'">
       <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
       <div v-if="perspective === 'properties'">
-        <k-editor :context="context" service="groups" :id="id" />
+        <k-editor :context="contextId" service="groups" :id="id" />
       </div>
       <div v-else-if="perspective === 'danger-zone'">
-        <k-group-dz :context="context" :id="id" />
+        <k-group-dz :context="contextId" :id="id" />
       </div>
       <div v-else>
-        <k-grid ref="membersGrid" :context="context" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
+        <k-grid ref="membersGrid" :context="contextId" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
         <k-fab :actions="memberActions()" />
       </div>
     </div>
@@ -20,7 +20,7 @@
       Default routing
     -->
     <div v-else>
-      <k-grid ref="groupsGrid" :context="context" service="groups" :actions="groupItemActions()" />
+      <k-grid ref="groupsGrid" :context="contextId" service="groups" :actions="groupItemActions()" />
       <k-fab :actions="groupActions()" />
     </div>
 
@@ -29,7 +29,7 @@
     -->
     <k-popup-editor ref="createGroupDialog" 
       title="Create a new Group ?" 
-      :context="context" 
+      :context="contextId" 
       service="groups" 
     />
     <!-- 
@@ -39,7 +39,7 @@
       title="Select the member to add"
       scope="groups"
       :resource-id="id"
-      :resource-service="`${this.context}/groups`"
+      :resource-service="`${this.contextId}/groups`"
       :query="usersQuery"
       @authorised="refreshMembers"
     />
@@ -61,7 +61,7 @@ export default {
   name: 'k-groups-activity',
   mixins: [kCoreMixins.baseActivity],
   props: {
-    context: {
+    contextId: {
       type: String,
       default: ''
     },
@@ -86,7 +86,7 @@ export default {
       return { 'groups._id': this.id }
     },
     usersQuery () {
-      return { 'organisations._id': { $in: [this.context] }, 'groups._id': { $nin: [this.id] }, $select: ['profile'] }
+      return { 'organisations._id': { $in: [this.contextId] }, 'groups._id': { $nin: [this.id] }, $select: ['profile'] }
     }
   },
   data () {
@@ -96,18 +96,18 @@ export default {
   },
   methods: {
     refreshMembers () {
-      this.$refs.membersGrid.refresh()
+      this.$refs.membersGrid.refreshCollection()
     },
     navBarTabs () {
       return [ 
         { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'properties' } } 
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'properties' } } 
         },
         { name: 'members', label: 'Members', icon: 'group', route: 
-          { name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'members' } } 
+          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'members' } } 
         },
         { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: 
-          { name: 'groups-activity', params: { context: this.context, operation: 'manage', id: this.id, perspective: 'danger-zone' } } 
+          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'danger-zone' } } 
         }     
       ]
     },
@@ -129,13 +129,13 @@ export default {
     manageGroupProperties (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'properties' } 
+        params: { context: this.contextId, operation: 'manage', id: group._id, perspective: 'properties' } 
       })
     },
     manageGroupMembers (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.context, operation: 'manage', id: group._id, perspective: 'members' } 
+        params: { context: this.contextId, operation: 'manage', id: group._id, perspective: 'members' } 
       })
     },
     addGroupMember () {
@@ -153,7 +153,7 @@ export default {
           scope: 'groups',
           subjects: this.selection._id,
           subjectsService: 'users',
-          resourcesService: this.context + '/groups'
+          resourcesService: this.contextId + '/groups'
         }
       })
       .then(_ => {

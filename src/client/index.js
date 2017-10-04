@@ -12,31 +12,6 @@ export * as mixins from './mixins'
 
 export default function init () {
   const app = this
-
-  // Listen to the user-changed event in order to assign a default organisation
-  Events.$on('user-changed', user => {
-    // Possible after a loggout
-    if (!user) return
-    if (!Store.get('organisation')) {
-      // FIXME: retrieve the last organisation : LocalStorage ?
-      if (user.organisations && user.organisations.length > 0) {
-        Store.set('organisation', user.organisations[0])
-      } else {
-        logger.debug('empty organisations')
-      }
-    }
-  })
-
-  // Listen to the 'created' event on the organisation
-  const organisationsService = app.getService('organisations')
-  organisationsService.on('created', organisation => {
-    // Check whether the organisation has been created by the current user
-    // That means the user must have the organisation within its organisation list and must be the owner
-    if (lodash.findIndex(Store.get('user.organisations'), { '_id': organisation._id, 'permissions': 'owner' }) > 0) {
-      // If yes then switch to this new organisation
-      Store.set('organisation', organisation)
-    }
-  })
-
+  
   logger.debug('Initializing kalisio team')
 }

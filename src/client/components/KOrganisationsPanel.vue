@@ -1,18 +1,18 @@
 <template>
   <div>
-    <q-collapsible ref="collapsible" :icon="icon" :label="current" :class="[bgColor, textColor]">
+    <q-collapsible ref="collapsible" :icon="icon" :label="currentName" :class="[bgColor, textColor]">
       <q-list link no-border>
         <!-- 
           Organisations list
         -->
         <template v-for="org in items">
-          <q-item @click="onOrganisationClicked(org)">
+          <q-side-link item :key="org._id" :to="{name: 'organisation', params: {contextId: org._id}}">
             <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
             <q-item-main :label="org.name" />
-            <q-item-side v-if="org.name === current" right>
-              <q-item-tile  icon="settings" />
+            <q-item-side v-if="org.name === currentName" right>
+              <q-item-tile  icon="check" />
             </q-item-side>
-          </q-item>
+          </q-side-link>
         </template>
         <q-item-separator />
         <!--
@@ -34,7 +34,7 @@
 
 <script>
 import lodash from 'lodash'
-import { Events, QCollapsible, QList, QItem, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
+import { Events, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 import { mixins as kCoreMixins } from 'kCore/client'
 
@@ -44,6 +44,7 @@ export default {
     QCollapsible,
     QList,
     QItem,
+    QSideLink,
     QItemMain,
     QItemSide,
     QItemTile,
@@ -53,7 +54,8 @@ export default {
   mixins: [kCoreMixins.baseCollection],
   data () {
     return {
-      current: '',
+      currentId: '',
+      currentName: '',
       list: []
     }
   },
@@ -64,26 +66,15 @@ export default {
     updateOrganisations () {
       this.list = this.$store.get('user.organisations', [])
       this.filterQuery = { _id: {$in : this.list.map(org => { return org._id }) } }
+      this.refreshCollection()
     },
-    onOrganisationClicked (org) {
-      // Shall we switch to the clicked organisation ?
-      // That is to say, check whether the clicked organisation is different from the current one
-      if (this.current !== org.name) {
-        this.$store.set('organisation', org)
-      } else {
-        // Then manage the organisation
-        let orgId = this.$store.get('organisation._id')
-        this.$router.push({ name: 'organisations-activity', params: { operation: 'manage', id: orgId } })
-      }
+    syncCurrentOrganisation () {
+      let currentOrganisationIndex = lodash.findIndex(this.items, {'_id': this.currentId})
+      if (currentOrganisationIndex !== -1) this.currentName = this.items[currentOrganisationIndex].name
+      else this.currentName = 'Undefined'
     },
     createOrganisation () {
       this.$refs.editor.open(true)
-    },
-    setCurrentOrganisation (organisation) {
-      if (organisation) {
-        this.current = organisation.name
-        this.$router.push({ name: 'organisations-activity', params: { operation: 'welcome', id:organisation._id } })
-      }
     }
   },
   created () {
@@ -95,23 +86,27 @@ export default {
     this.icon = this.$store.get(confPath + '.icon', 'domain')
     this.bgColor = this.$store.get(confPath + '.bgColor', 'bg-light')
     this.textColor = this.$store.get(confPath + '.textColor', 'text-dark')
-    // Listen to the user changed event
+    // Setup the default organisation
+    // this.currentId = this.$store.get('context._id')
+    this.currentId = this.$store.get('context._id')
+    // Update the list of organisations
     this.updateOrganisations()
-    this.setCurrentOrganisation(this.$store.get('organisation'))
-    this.refresh()
   },
   mounted () {
-    Events.$on('user-changed', user => {
-      this.updateOrganisations()
-    })
+    // Route to the default organisation if needed
+    if (this.$route.path === '/home') {
+      let user = this.$store.get('user')
+      if (user) this.$router.push({name: 'organisation', params: {contextId: user.organisations[0]._id}})
+    }
     Events.$on('user-patched', user => {
       this.updateOrganisations()
     })
-    Events.$on('organisation-changed', organisation => {
-      this.setCurrentOrganisation(organisation)
+    Events.$on('context-id-changed', id => {
+      this.currentId = id
+      this.syncCurrentOrganisation()
     })
-    Events.$on('organisation-patched', organisation => {
-      // Update the current organisation if needed
+    this.$on('collection-refreshed', _ => {
+      this.syncCurrentOrganisation()
     })
   }
 }
