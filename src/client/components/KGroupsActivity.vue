@@ -146,7 +146,7 @@ export default {
       this.$refs.removeMemberDialog.open()
     },
     removeMemberConfirmed () {
-      this.$refs.confirmRemoveDialog.close()
+      this.$refs.removeMemberDialog.close()
       let authorisationService = this.$api.getService('authorisations')
       authorisationService.remove(this.id, {
         query: {
