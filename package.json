@@ -70,10 +70,12 @@
     "lru-cache": "^4.1.1",
     "mongodb": "^2.2.26",
     "quasar-extras": "^0.0.7",
-    "quasar-framework": "^0.14.1",
+    "quasar-framework": "0.14.5",
     "sift": "^5.0.0",
     "uberproto": "^1.2.0",
+    "vue": "2.5.2",
     "vue-avatar": "^2.0.0",
+    "vue-template-compiler": "2.5.2",
     "winston": "^2.3.1"
   },
   "devDependencies": {

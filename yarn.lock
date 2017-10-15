@@ -1078,6 +1078,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+de-indent@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
+
 debug-log@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
@@ -2009,6 +2013,10 @@ hawk@~3.1.3:
     cryptiles "2.x.x"
     hoek "2.x.x"
     sntp "1.x.x"
+
+he@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
 hoek@2.x.x:
   version "2.16.3"
@@ -3085,9 +3093,9 @@ quasar-extras@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/quasar-extras/-/quasar-extras-0.0.7.tgz#2fbb5a6fe719af8c06999d7034d48c50359c3cc0"
 
-quasar-framework@^0.14.1:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/quasar-framework/-/quasar-framework-0.14.1.tgz#93ba5d8638da7233626d7d599914a9d758c2b148"
+quasar-framework@0.14.5:
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/quasar-framework/-/quasar-framework-0.14.5.tgz#277d40a6577509aaddb1528078ef7620cfd50571"
 
 randomatic@^1.1.3:
   version "1.1.7"
@@ -3802,6 +3810,17 @@ vue-avatar@^2.0.0:
   dependencies:
     babel-runtime "^5.8.0"
     vue "^2.0.0"
+
+vue-template-compiler@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.2.tgz#6f198ebc677b8f804315cd33b91e849315ae7177"
+  dependencies:
+    de-indent "^1.0.2"
+    he "^1.1.0"
+
+vue@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.2.tgz#fd367a87bae7535e47f9dc5c9ec3b496e5feb5a4"
 
 vue@^2.0.0:
   version "2.4.2"
