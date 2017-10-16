@@ -6,7 +6,7 @@
           Organisations list
         -->
         <template v-for="org in items">
-          <q-side-link item :key="org._id" :to="{name: 'organisation', params: {contextId: org._id}}">
+          <q-side-link item :key="org._id" :to="{name: 'organisation-view', params: {contextId: org._id}}">
             <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
             <q-item-main :label="org.name" />
             <q-item-side v-if="org.name === currentName" right>
@@ -96,7 +96,7 @@ export default {
     // Route to the default organisation if needed
     if (this.$route.path === '/home') {
       let user = this.$store.get('user')
-      if (user) this.$router.push({name: 'organisation', params: {contextId: user.organisations[0]._id}})
+      if (user) this.$router.push({name: 'organisation-view', params: {contextId: user.organisations[0]._id}})
     }
     Events.$on('user-patched', user => {
       this.updateOrganisations()
