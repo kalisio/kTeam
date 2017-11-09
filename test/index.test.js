@@ -41,6 +41,12 @@ describe('kTeam', () => {
   it('registers the global services', (done) => {
     app.configure(core)
     userService = app.getService('users')
+    userService.hooks({
+      after: {
+        create: [ teamHooks.updateAbilities, teamHooks.createPrivateOrganisation ],
+        remove: [ teamHooks.removePrivateOrganisation ]
+      }
+    })
     expect(userService).toExist()
     app.configure(team)
     orgService = app.getService('organisations')

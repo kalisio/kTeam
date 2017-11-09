@@ -1,7 +1,4 @@
 import logger from 'loglevel'
-import lodash from 'lodash'
-import { Events } from 'quasar'
-import { Store } from 'kCore/client'
 
 // We faced a bug in babel so that transform-runtime with export * from 'x' generates import statements in transpiled code
 // Tracked here : https://github.com/babel/babel/issues/2877
@@ -11,7 +8,7 @@ export * from './guards'
 export * as mixins from './mixins'
 
 export default function init () {
-  const app = this
-  
+  // const app = this
+
   logger.debug('Initializing kalisio team')
 }
