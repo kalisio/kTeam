@@ -14,13 +14,16 @@ export function createOrganisationServices (hook) {
   })
   .then(db => {
     debug('DB created for organisation ' + hook.result.name)
-    organisationService.createOrganisationServices(hook.result)
+    // Jump from infos/stats to real DB object
+    db = app.db.instance.db(hook.result._id.toString())
+    organisationService.createOrganisationServices(hook.result, db)
     return hook
   })
 }
 
 export function removeOrganisationServices (hook) {
   let app = hook.app
+  let organisationService = hook.service
   let databaseService = app.getService('databases')
 
   // Then we remove the organisation DB
@@ -29,6 +32,7 @@ export function removeOrganisationServices (hook) {
   })
   .then(db => {
     debug('DB removed for organisation ' + hook.result.name)
+    organisationService.removeOrganisationServices(hook.result)
     return hook
   })
 }

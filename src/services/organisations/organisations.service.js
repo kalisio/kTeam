@@ -7,8 +7,7 @@ const debug = makeDebug('kalisio:kTeam:organisations')
 
 export default {
 
-  createOrganisationServices (organisation) {
-    let organisationDb = this.app.db.instance.db(organisation._id.toString())
+  createOrganisationServices (organisation, db) {
     this.app.createService('users', {
       servicesPath,
       path: organisation._id.toString() + '/users',
@@ -22,16 +21,24 @@ export default {
       modelsPath,
       servicesPath,
       path: organisation._id.toString() + '/groups',
-      db: organisationDb
+      db
     })
     debug('Groups service created for organisation ' + organisation.name)
+  },
+
+  removeOrganisationServices (organisation) {
+    // TODO
   },
 
   configureOrganisations () {
     // Reinstanciated services for all organisations
     return this.find({ paginate: false })
     .then(organisations => {
-      organisations.forEach(organisation => this.createOrganisationServices(organisation))
+      organisations.forEach(organisation => {
+        // Get org DB
+        let db = this.app.db.instance.db(organisation._id.toString())
+        this.createOrganisationServices(organisation, db)
+      })
     })
   }
 }
