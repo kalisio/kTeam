@@ -47,7 +47,7 @@
       Remove group member dialog
      -->
     <k-confirm ref="removeMemberDialog" 
-      :title="`Are you sure you want to remove \'${selectionName}\' ?`"
+      :title="`Are you sure you want to remove '${selectionName}' ?`"
       action="Yes"
       @confirmed="removeMemberConfirmed" 
     />

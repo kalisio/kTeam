@@ -16,7 +16,7 @@
       Confim section
      -->
      <k-confirm ref="confirm" 
-      :title="`Are you sure you want to delete \'${name}\' ?`"
+      :title="`Are you sure you want to delete '${name}' ?`"
       action="Delete"
       :prevent="{ textToMatch: name, label: 'Please enter the name of this account to confim the deletion' }" 
       @confirmed="deletionConfirmed" />

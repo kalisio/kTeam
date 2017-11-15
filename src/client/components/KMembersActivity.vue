@@ -22,7 +22,7 @@
       Remove member dialog
      -->
     <k-confirm ref="removeMember" 
-      :title="`Are you sure you want to remove \'${selectionName}\' ?`"
+      :title="`Are you sure you want to remove '${selectionName}' ?`"
       action="Yes"
       @confirmed="removeMemberConfirmed" 
     />
