@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://mynet.com/schemas/orgs-create.json#",
-  "title": "Organisation Creation",
-  "description": "Organisation creation schema",
+  "title": "Group Creation",
+  "description": "Group creation schema",
   "type": "object",
   "properties": {
     "name": {
