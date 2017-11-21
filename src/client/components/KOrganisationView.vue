@@ -35,7 +35,7 @@ export default {
   },
   created () {
     this.actions = this.$store.get('config.organisationView.actions', [])
-    this.organisation = this.$store.get('context.subject')
+    this.organisation = this.$store.get('context.object')
     this.updateView()
   },
   mounted () {

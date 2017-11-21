@@ -96,7 +96,7 @@ export default {
         service: 'users',
         baseQuery: this.query,
         field: 'profile.name',
-        icon: 'user'
+        icon: 'perm_identity'
       }]
       return services
     },

@@ -8,7 +8,11 @@ export * from './guards'
 export * as mixins from './mixins'
 
 export default function init () {
-  // const app = this
+  const api = this
 
   logger.debug('Initializing kalisio team')
+  
+  api.declareService('organisations')
+  api.declareService('authorisations')
+  api.declareService('groups', { context: true })
 }

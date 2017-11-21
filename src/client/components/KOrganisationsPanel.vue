@@ -6,7 +6,7 @@
           Organisations list
         -->
         <template v-for="org in items">
-          <q-side-link item :key="org._id" :to="{name: 'organisation-view', params: {contextId: org._id}}">
+          <q-side-link item :key="org._id" :to="{ name: 'organisation-view', params: { contextId: org._id } }">
             <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
             <q-item-main :label="org.name" />
             <q-item-side v-if="org.name === currentName" right>
@@ -65,7 +65,7 @@ export default {
     },
     updateOrganisations () {
       this.list = this.$store.get('user.organisations', [])
-      this.filterQuery = { _id: {$in : this.list.map(org => { return org._id }) } }
+      this.filterQuery = { _id: { $in : this.list.map(org => { return org._id }) } }
       this.refreshCollection()
     },
     syncCurrentOrganisation () {
@@ -96,7 +96,10 @@ export default {
     // Route to the default organisation if needed
     if (this.$route.path === '/home') {
       let user = this.$store.get('user')
-      if (user) this.$router.push({name: 'organisation-view', params: {contextId: user.organisations[0]._id}})
+      let organisations = user ? user.organisations : null
+      if (organisations && organisations.length > 0) {
+        this.$router.push({ name: 'organisation-view', params: { contextId: organisations[0]._id } })
+      }
     }
     Events.$on('user-patched', user => {
       this.updateOrganisations()

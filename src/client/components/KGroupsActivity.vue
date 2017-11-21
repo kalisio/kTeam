@@ -6,13 +6,13 @@
     <div v-if="operation === 'manage'">
       <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
       <div v-if="perspective === 'properties'">
-        <k-editor :context="contextId" service="groups" :id="id" />
+        <k-editor service="groups" :id="id" />
       </div>
       <div v-else-if="perspective === 'danger-zone'">
         <k-group-dz :context="contextId" :id="id" />
       </div>
       <div v-else>
-        <k-grid ref="membersGrid" :context="contextId" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
+        <k-grid ref="membersGrid" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
         <k-fab :actions="memberActions()" />
       </div>
     </div>
@@ -20,7 +20,7 @@
       Default routing
     -->
     <div v-else>
-      <k-grid ref="groupsGrid" :context="contextId" service="groups" :actions="groupItemActions()" />
+      <k-grid ref="groupsGrid" service="groups" :actions="groupItemActions()" />
       <k-fab :actions="groupActions()" />
     </div>
 
@@ -29,7 +29,6 @@
     -->
     <k-popup-editor ref="createGroupDialog" 
       title="Create a new Group ?" 
-      :context="contextId" 
       service="groups" 
     />
     <!-- 

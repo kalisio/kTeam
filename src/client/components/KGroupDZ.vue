@@ -7,7 +7,7 @@
       <k-block class="col-10"
         color="red" 
         title="Delete this group ?"
-        :text="`Please note that deleting \'${name}\' will delete any data attached to this group.`"
+        :text="`Please note that deleting '${name}' will delete any data attached to this group.`"
         action="Delete"
         @action-triggered="deletionClicked" />
     </div>
@@ -15,7 +15,7 @@
       Confim section
      -->
      <k-confirm ref="confirm" 
-      :title="`Are you sure you want to delete \'${name}\' ?`"
+      :title="`Are you sure you want to delete '${name}' ?`"
       action="Yes"
       @confirmed="deletionConfirmed" />
   </div>
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     getService () {
-      return this.$api.getService('groups', this.context)
+      return this.$api.getService('groups')
     },
     deletionClicked () {
       this.$refs.confirm.open()
@@ -57,7 +57,7 @@ export default {
       this.$refs.confirm.close()
       this.getService().remove(this.id)
       .then(_ => {
-        this.$router.push({name: 'groups-activity', params: { context: this.context } })
+        this.$router.push({name: 'groups-activity', params: { context: this.$store.get('context._id') } })
       })
     }
   },

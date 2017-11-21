@@ -65,7 +65,9 @@ export default {
       this.$refs.confirm.close()
       this.getService().remove(this.id)
       .then(_ => {
-        this.$router.push({name: 'organisation-view', params: {contextId: this.$store.get('user').organisations[0]._id}})
+        const organisations = this.$store.get('user').organisations
+        const newCurrentOrg = organisations.length > 0 ? organisations[0] : null
+        this.$router.push({ name: 'organisation-view', params: { contextId: newCurrentOrg ? newCurrentOrg._id : '' } })
       })
     }
   },
