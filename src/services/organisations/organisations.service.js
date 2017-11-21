@@ -8,9 +8,9 @@ const debug = makeDebug('kalisio:kTeam:organisations')
 export default {
 
   createOrganisationServices (organisation, db) {
-    this.app.createService('users', {
+    this.app.createService('members', {
       servicesPath,
-      path: organisation._id.toString() + '/users',
+      path: organisation._id.toString() + '/members',
       proxy: {
         service: this.app.getService('users'),
         params: { query: { 'organisations._id': organisation._id.toString() } }

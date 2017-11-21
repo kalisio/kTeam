@@ -14,5 +14,6 @@ export default function init () {
   
   api.declareService('organisations')
   api.declareService('authorisations')
+  api.declareService('members', { context: true })
   api.declareService('groups', { context: true })
 }

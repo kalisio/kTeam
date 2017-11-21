@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http:/www.kalisio.xyz/schemas/users.update-profile#",
+  "title": "Member Profile",
+  "description": "Member profile perspective",
+  "type": "object",
+  "properties": {
+    "tags": { 
+      "type": "array",
+      "scope": "users",
+      "field": {
+        "component": "form/KTagField",
+        "label": "Tags",
+        "helper": "Enter some tags to qualify yourself"
+      }
+    }
+  },
+  "required": []
+}
+

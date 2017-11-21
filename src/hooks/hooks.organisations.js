@@ -71,7 +71,7 @@ export function removeOrganisationAuthorisations (hook) {
       // Unset membership on group for the all org users
       return authorisationService.remove(group._id.toString(), {
         query: {
-          subjectsService: hook.result._id.toString() + '/users',
+          subjectsService: hook.result._id.toString() + '/members',
           scope: 'groups'
         },
         user: hook.params.user,
@@ -86,7 +86,7 @@ export function removeOrganisationAuthorisations (hook) {
     // Unset membership for the all org users
     return authorisationService.remove(hook.result._id.toString(), {
       query: {
-        subjectsService: hook.result._id.toString() + '/users',
+        subjectsService: hook.result._id.toString() + '/members',
         scope: 'organisations'
       },
       user: hook.params.user,

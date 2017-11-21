@@ -62,7 +62,7 @@ export function defineOrganisationAbilitiesForSubject (subject, can, cannot) {
       if (role >= Roles.member) {
         // The unique identifier of a service is its path not its name.
         // Indeed we have for instance a 'groups' service in each organisation.
-        can('service', organisation._id.toString() + '/users')
+        can('service', organisation._id.toString() + '/members')
       }
       if (role >= Roles.manager) {
         // The unique identifier of a service is its path not its name.

@@ -113,7 +113,7 @@ describe('kTeam', () => {
       orgGroupService = app.getService('groups', orgObject)
       expect(orgGroupService).toExist()
       // This should create a service for organisation users
-      orgUserService = app.getService('users', orgObject)
+      orgUserService = app.getService('members', orgObject)
       expect(orgUserService).toExist()
       // We do not test creation of the DB here since MongoDB does not actually
       // creates it until the first document has been inserted (see next test)

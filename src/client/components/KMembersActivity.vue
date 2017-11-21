@@ -1,10 +1,10 @@
 <template>
   <div>
     <div v-if="operation === 'manage'">
-      <k-editor :context="contextId" service="users" :id="id" :perspective="perspective" />
+      <k-editor service="members" :id="id" :perspective="perspective" />
     </div>
     <div v-else>
-      <k-grid ref="membersGrid" :context="contextId" service="users" :actions="memberItemActions()" />
+      <k-grid ref="membersGrid" service="members" :actions="memberItemActions()" />
       <k-fab :actions="memberActions()" />
     </div>
     <!-- 
