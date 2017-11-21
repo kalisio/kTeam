@@ -26,14 +26,6 @@
     },
     "tags": { 
       "type": "array",
-      "field": {
-        "component": "form/KTagField",
-        "label": "Tags",
-        "helper": "Add some tags"
-      }
-    },
-    "tags": { 
-      "type": "array",
       "scope": "groups",
       "field": {
         "component": "form/KTagField",
