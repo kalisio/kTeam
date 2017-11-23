@@ -76,14 +76,9 @@ export default {
     let loadComponent = this.$store.get('loadComponent')
     this.$options.components['k-block'] = loadComponent('frame/KBlock')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
-    // Install an object-changed callback
-    this.$on('object-changed', _ =>  {
-      if (this.getObject()) {
-        this.name = this.getObject().name
-      } else {
-        this.name = ''
-      }
-    })
+    // Update underlying object
+    this.loadObject()
+    .then(object => this.name = object.name)
   }
 }
 </script>

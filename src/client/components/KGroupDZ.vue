@@ -23,7 +23,7 @@
 
 <script>
 import { QInput, QBtn } from 'quasar'
-import { mixins as kCoreMixins } from 'kCore/client'
+import { mixins } from 'kCore/client'
 
 export default {
   name: 'k-group-dz',
@@ -32,7 +32,8 @@ export default {
     QBtn
   },
   mixins: [
-    kCoreMixins.objectProxy
+    mixins.service,
+    mixins.objectProxy
   ],
   props: {
     context: {
@@ -47,8 +48,8 @@ export default {
     }
   },
   methods: {
-    getService () {
-      return this.$api.getService('groups')
+    loadService () {
+      return this._service = this.$api.getService('groups')
     },
     deletionClicked () {
       this.$refs.confirm.open()
@@ -66,14 +67,9 @@ export default {
     let loadComponent = this.$store.get('loadComponent')
     this.$options.components['k-block'] = loadComponent('frame/KBlock')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
-    // Install an object-changed callback
-    this.$on('object-changed', _ =>  {
-      if (this.getObject()) {
-        this.name = this.getObject().name
-      } else {
-        this.name = ''
-      }
-    })
+    // Update underlying object
+    this.loadObject()
+    .then(object => this.name = object.name)
   }
 }
 </script>

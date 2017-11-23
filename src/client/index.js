@@ -11,7 +11,7 @@ export default function init () {
   const api = this
 
   logger.debug('Initializing kalisio team')
-  
+
   api.declareService('organisations')
   api.declareService('authorisations')
   api.declareService('members', { context: true })

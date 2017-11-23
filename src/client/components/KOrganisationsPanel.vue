@@ -36,7 +36,7 @@
 import lodash from 'lodash'
 import { Events, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
-import { mixins as kCoreMixins } from 'kCore/client'
+import { mixins } from 'kCore/client'
 
 export default {
   name: 'k-organisations-panel',
@@ -51,7 +51,10 @@ export default {
     QItemSeparator,
     Avatar
   },
-  mixins: [kCoreMixins.baseCollection],
+  mixins: [
+    mixins.service,
+    mixins.baseCollection
+  ],
   data () {
     return {
       currentId: '',
@@ -60,8 +63,8 @@ export default {
     }
   },
   methods: {
-    getService () {
-      return this.$api.getService('organisations')
+    loadService () {
+      return this._service = this.$api.getService('organisations')
     },
     updateOrganisations () {
       this.list = this.$store.get('user.organisations', [])
