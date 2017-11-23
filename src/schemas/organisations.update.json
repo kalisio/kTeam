@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://mynet.com/schemas/orgs-update.json#",
+  "$id": "http://www.kalisio.xyz/schemas/organisations.update.json#",
   "title": "Organisation Edition",
   "description": "Organisation edition schema",
   "type": "object",
