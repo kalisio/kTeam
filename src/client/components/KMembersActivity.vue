@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="operation === 'manage'">
+    <div v-if="operation === 'edit'">
       <k-editor service="members" :id="id" :perspective="perspective" />
     </div>
     <div v-else>
@@ -81,7 +81,7 @@ export default {
     manageMember (member) {
       this.$router.push({ 
         name: 'members-activity', 
-        params: { context: this.contextId, operation: 'manage', id: member._id, perspective: 'profile' } 
+        params: { context: this.contextId, operation: 'edit', id: member._id, perspective: 'profile' } 
       })
     },
     addMember () {

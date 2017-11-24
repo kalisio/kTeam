@@ -3,7 +3,7 @@
     <!--
       Manage routing
     -->
-    <div v-if="operation === 'manage'">
+    <div v-if="operation === 'edit'">
       <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
       <div v-if="perspective === 'properties'">
         <k-editor service="groups" :id="id" />
@@ -100,13 +100,13 @@ export default {
     navBarTabs () {
       return [ 
         { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'properties' } } 
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } } 
         },
         { name: 'members', label: 'Members', icon: 'group', route: 
-          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'members' } } 
+          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } } 
         },
         { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: 
-          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'manage', id: this.id, perspective: 'danger-zone' } } 
+          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } } 
         }     
       ]
     },
@@ -128,13 +128,13 @@ export default {
     manageGroupProperties (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.contextId, operation: 'manage', id: group._id, perspective: 'properties' } 
+        params: { context: this.contextId, operation: 'edit', id: group._id, perspective: 'properties' } 
       })
     },
     manageGroupMembers (group) {
       this.$router.push({ 
         name: 'groups-activity', 
-        params: { context: this.contextId, operation: 'manage', id: group._id, perspective: 'members' } 
+        params: { context: this.contextId, operation: 'edit', id: group._id, perspective: 'members' } 
       })
     },
     addGroupMember () {
