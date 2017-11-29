@@ -3,7 +3,7 @@ import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
 import core, { kalisio } from 'kCore'
-import team, { defineAbilitiesForSubject, hooks as teamHooks } from '../src'
+import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
@@ -14,8 +14,13 @@ describe('kTeam', () => {
     chailint(chai, util)
 
     // Register all default hooks for authorisation
-    defineAbilitiesForSubject.registerDefaultHooks()
-
+    // Default rules for all users
+    teamPermissions.defineAbilities.registerHook(teamPermissions.defineUserAbilities)
+    // Then rules for organisations
+    teamPermissions.defineAbilities.registerHook(teamPermissions.defineOrganisationAbilities)
+    // Then rules for groups
+    teamPermissions.defineAbilities.registerHook(teamPermissions.defineGroupAbilities)
+    
     app = kalisio()
     port = app.get('port')
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`

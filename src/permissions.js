@@ -4,6 +4,7 @@ import { Ability, AbilityBuilder } from 'casl'
 Ability.addAlias('update', 'patch')
 Ability.addAlias('read', ['get', 'find'])
 Ability.addAlias('remove', 'delete')
+Ability.addAlias('all', ['read', 'create', 'update', 'remove'])
 
 export const Roles = {
   member: 0,
@@ -32,61 +33,63 @@ export function defineResourceRules (subject, resource, resourceService, can) {
   }
 }
 
-// Hook computing anonymous abilities for a given user
-export function defineAnonymousAbilitiesForSubject (subject, can, cannot) {
+// Hook computing default abilities for a given user
+export function defineUserAbilities (subject, can, cannot) {
   // Register
   can('service', 'users')
   can('create', 'users')
-}
 
-// Hook computing default abilities for a given user
-export function defineUserAbilitiesForSubject (subject, can, cannot) {
   if (subject) {
     // Read/Update user profile, etc.
-    can(['update', 'remove'], 'users', { _id: subject._id })
-    // Create new organisations and associated DB
-    can('service', 'organisations')
-    can('create', 'organisations')
-    can('service', 'authorisations')
+    can(['read', 'update', 'remove'], 'users', { _id: subject._id })
   }
 }
 
 // Hook computing organisation abilities for a given user
-export function defineOrganisationAbilitiesForSubject (subject, can, cannot) {
-  if (subject && subject.organisations) {
-    subject.organisations.forEach(organisation => {
-      // Generic rules for resources
-      defineResourceRules(subject, organisation, 'organisations', can)
-      // Specific rules for organiations
-      const role = Roles[organisation.permissions]
-      if (role >= Roles.member) {
-        // The unique identifier of a service is its path not its name.
-        // Indeed we have for instance a 'groups' service in each organisation.
-        can('service', organisation._id.toString() + '/members')
-      }
-      if (role >= Roles.manager) {
-        // The unique identifier of a service is its path not its name.
-        // Indeed we have for instance a 'groups' service in each organisation.
-        can('service', organisation._id.toString() + '/groups')
-        can('create', 'groups')
-      }
-    })
+export function defineOrganisationAbilities (subject, can, cannot) {
+  if (subject) {
+    // Create new organisations
+    can('service', 'organisations')
+    can('create', 'organisations')
+    can('service', 'authorisations')
+
+    if (subject.organisations) {
+      subject.organisations.forEach(organisation => {
+        // Generic rules for resources
+        defineResourceRules(subject, organisation, 'organisations', can)
+        // Specific rules for organisations
+        const role = Roles[organisation.permissions]
+        if (role >= Roles.member) {
+          // The unique identifier of a service is its path not its name.
+          // Indeed we have for instance a 'groups' service in each organisation.
+          can('service', organisation._id.toString() + '/members')
+        }
+        if (role >= Roles.manager) {
+          // The unique identifier of a service is its path not its name.
+          // Indeed we have for instance a 'groups' service in each organisation.
+          can('service', organisation._id.toString() + '/groups')
+          can('create', 'groups')
+        }
+      })
+    }
   }
 }
 
 // Hook computing group abilities for a given user
-export function defineGroupAbilitiesForSubject (subject, can, cannot) {
-  if (subject && subject.groups) {
-    subject.groups.forEach(group => {
-      // Generic rules for resources
-      defineResourceRules(subject, group, 'groups', can)
-      // Np specific rules for groups
-    })
+export function defineGroupAbilities (subject, can, cannot) {
+  if (subject) {
+    if (subject.groups) {
+      subject.groups.forEach(group => {
+        // Generic rules for resources
+        defineResourceRules(subject, group, 'groups', can)
+        // No specific rules for groups
+      })
+    }
   }
 }
 
 // Compute abilities for a given user
-export function defineAbilitiesForSubject (subject) {
+export function defineAbilities (subject) {
   const { rules, can, cannot } = AbilityBuilder.extract()
 
   // Run registered hooks
@@ -102,26 +105,14 @@ export function defineAbilitiesForSubject (subject) {
   }})
 }
 
-defineAbilitiesForSubject.registerHook = function (hook) {
+defineAbilities.registerHook = function (hook) {
   if (!hooks.includes(hook)) {
     hooks.push(hook)
   }
 }
 
-defineAbilitiesForSubject.unregisterHook = function (hook) {
+defineAbilities.unregisterHook = function (hook) {
   hooks = hooks.filter(registeredHook => registeredHook !== hook)
-}
-
-// Register all default hooks
-defineAbilitiesForSubject.registerDefaultHooks = function () {
-  // Default rules for unauthenticated users
-  defineAbilitiesForSubject.registerHook(defineAnonymousAbilitiesForSubject)
-  // Default rules for all authenticated users
-  defineAbilitiesForSubject.registerHook(defineUserAbilitiesForSubject)
-  // Then rules for organisations
-  defineAbilitiesForSubject.registerHook(defineOrganisationAbilitiesForSubject)
-  // Then rules for groups
-  defineAbilitiesForSubject.registerHook(defineGroupAbilitiesForSubject)
 }
 
 export function hasServiceAbilities (abilities, service) {
@@ -132,9 +123,9 @@ export function hasServiceAbilities (abilities, service) {
   return abilities.can('service', path)
 }
 
-export function hasResourceAbilities (abilities, action, resourceType, resource) {
+export function hasResourceAbilities (abilities, operation, resourceType, resource) {
   if (resource) resource[Symbol.for(RESOURCE_TYPE)] = resourceType
-  const result = abilities.can(action, resource || resourceType)
+  const result = abilities.can(operation, resource || resourceType)
   // Not required anymore
   if (resource) delete resource[Symbol.for(RESOURCE_TYPE)]
   return result

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import sift from 'sift'
 import LruCache from 'lru-cache'
 import makeDebug from 'debug'
-import { defineAbilitiesForSubject } from '../../permissions'
+import { defineAbilities } from '../../permissions'
 
 const debug = makeDebug('kalisio:kTeam:authorisations')
 
@@ -41,7 +41,7 @@ export default {
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
-      this.updateAbilitiesForSubject(subject)
+      this.updateAbilities(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
@@ -67,7 +67,7 @@ export default {
       // This cover the case when we create the scope on the first auth,
       // so that if the caller want to get back the update subject he can have it
       _.set(subject, scopeName, scope)
-      this.updateAbilitiesForSubject(subject)
+      this.updateAbilities(subject)
       return params.subjectsService.patch(subject._id, {
         [scopeName]: scope
       }, {
@@ -92,7 +92,7 @@ export default {
 
   // Compute abilities for a given user and set it in cache the first time
   // or get it from cache if found
-  getAbilitiesForSubject (subject) {
+  getAbilities (subject) {
     if (this.cache) {
       if (subject) {
         if (this.cache.has(subject._id.toString())) return this.cache.get(subject._id.toString())
@@ -101,7 +101,7 @@ export default {
       }
     }
 
-    let abilities = defineAbilitiesForSubject(subject)
+    let abilities = defineAbilities(subject)
 
     if (this.cache) {
       if (subject) {
@@ -115,7 +115,7 @@ export default {
   },
 
   // Compute abilities for a given user and update it in cache
-  updateAbilitiesForSubject (subject) {
+  updateAbilities (subject) {
     if (this.cache) {
       if (subject) {
         this.cache.del(subject._id.toString())
@@ -124,6 +124,6 @@ export default {
       }
     }
 
-    return this.getAbilitiesForSubject(subject)
+    return this.getAbilities(subject)
   }
 }

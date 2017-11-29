@@ -13,7 +13,7 @@ export function authorisationGuard (app) {
         return false
       }
       // Then check for access to operation
-      if (to.params.action && !hasResourceAbilities(user.abilities, to.params.action, to.params.service)) {
+      if (to.params.operation && !hasResourceAbilities(user.abilities, to.params.operation, to.params.service)) {
         return false
       }
     }

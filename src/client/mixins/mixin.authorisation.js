@@ -1,14 +1,14 @@
 import logger from 'loglevel'
 import { Events } from 'quasar'
 import { Store } from 'kCore/client'
-import { defineAbilitiesForSubject, hasAbilities } from '../../permissions'
+import { defineAbilities, hasAbilities } from '../../permissions'
 
 let authorisationMixin = {
   methods: {
-    hasAbilities (action, resource, serviceName) {
+    hasAbilities (operation, resource, serviceName) {
       const abilities = Store.get('user.abilities', null)
       if (abilities) {
-        return hasAbilities(abilities, action, resource, serviceName)
+        return hasAbilities(abilities, operation, resource, serviceName)
       }
       return false
     },
@@ -16,7 +16,7 @@ let authorisationMixin = {
       const user = Store.get('user', null)
       let abilities = null
       if (user) {
-        abilities = defineAbilitiesForSubject(user)
+        abilities = defineAbilities(user)
         Store.set('user.abilities', abilities)
       }
       if (abilities) {

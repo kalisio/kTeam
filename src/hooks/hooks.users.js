@@ -4,7 +4,7 @@ export function updateAbilities (hook) {
   }
 
   let authorisationService = hook.app.getService('authorisations')
-  authorisationService.updateAbilitiesForSubject(hook.params.user)
+  authorisationService.updateAbilities(hook.params.user)
 
   return hook
 }
