@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { merge } from 'feathers-commons'
 import { Forbidden } from 'feathers-errors'
 import { toMongoQuery } from 'casl'
@@ -93,7 +94,7 @@ export function authorise (hook) {
     // this has to be implemented by the service itself
     } else if (typeof hook.service.get === 'function') {
       // In this case (single get/update/patch) we need to fetch the item first
-      return hook.service.get(hook.id, Object.assign({ checkAuthorisation: false }, hook.params))
+      return hook.service.get(hook.id, Object.assign({ checkAuthorisation: false }, _.omit(hook.params, ['provider'])))
       .then(resource => {
         debug('Target resource is', resource)
         // Then check against the object we'd like to manage
