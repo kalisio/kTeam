@@ -4,24 +4,24 @@
       Manage routing
     -->
     <div v-if="operation === 'edit'">
-      <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
+      <k-nav-bar :tabs="actions.tab" :selected="perspective" />
       <div v-if="perspective === 'properties'">
         <k-editor service="groups" :id="id" />
       </div>
       <div v-else-if="perspective === 'danger-zone'">
-        <k-group-dz :context="contextId" :id="id" />
+        <k-group-dz :contextId="contextId" :id="id" />
       </div>
       <div v-else>
-        <k-grid ref="membersGrid" service="users" :base-query="membersGridQuery" :actions="memberItemActions()" />
-        <k-fab :actions="memberActions()" />
+        <k-grid ref="membersGrid" service="users" :base-query="membersGridQuery" :actions="actions.member" />
+        <k-fab :actions="actions.members" />
       </div>
     </div>
     <!--
       Default routing
     -->
     <div v-else>
-      <k-grid ref="groupsGrid" service="groups" :actions="groupItemActions()" />
-      <k-fab :actions="groupActions()" />
+      <k-grid ref="groupsGrid" service="groups" :actions="actions.group" />
+      <k-fab :actions="actions.groups" />
     </div>
 
     <!-- 
@@ -94,48 +94,34 @@ export default {
     }
   },
   methods: {
+    refreshActions () {
+      this.clearActions()
+      this.registerAction('groups', { name: 'create-group', label: 'Create', icon: 'add', handler: this.createGroup })
+      this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
+        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' } }
+      })
+      this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
+        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' } }
+      })
+      this.registerAction('members', { name: 'add-group-member', label: 'Add', icon: 'add', handler: this.addGroupMember })
+      this.registerAction('member', { name: 'remove-group-member', label: 'Remove', icon: 'remove_circle', handler: this.removeGroupMember })
+      if (this.id) {
+        this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: {
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } }
+        })
+        this.registerAction('tab', { name: 'members', label: 'Members', icon: 'group', route: {
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } }
+        })
+        this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: {
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } }
+        })
+      }
+    },
     refreshMembers () {
       this.$refs.membersGrid.refreshCollection()
     },
-    navBarTabs () {
-      return [ 
-        { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } } 
-        },
-        { name: 'members', label: 'Members', icon: 'group', route: 
-          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } } 
-        },
-        { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: 
-          { name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } } 
-        }     
-      ]
-    },
-    groupActions () {
-      return this.filterActions(['createGroup'])
-    },
-    groupItemActions () {
-      return this.filterActions(['manageGroupProperties', 'manageGroupMembers'])
-    },
-    memberActions () {
-      return this.filterActions(['addGroupMember'])
-    },
-    memberItemActions () {
-      return this.filterActions(['removeGroupMember'])
-    },
     createGroup () {
       this.$refs.createGroupDialog.open()
-    },
-    manageGroupProperties (group) {
-      this.$router.push({ 
-        name: 'groups-activity', 
-        params: { context: this.contextId, operation: 'edit', id: group._id, perspective: 'properties' } 
-      })
-    },
-    manageGroupMembers (group) {
-      this.$router.push({ 
-        name: 'groups-activity', 
-        params: { context: this.contextId, operation: 'edit', id: group._id, perspective: 'members' } 
-      })
     },
     addGroupMember () {
       this.$refs.addMemberDialog.open()
@@ -171,12 +157,8 @@ export default {
     this.$options.components['k-group-dz'] = loadComponent('KGroupDZ')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
-    // Register the action
-    this.registerAction('createGroup', { label: 'Create', icon: 'add' })
-    this.registerAction('manageGroupProperties', { label: 'Manage', icon: 'description' })
-    this.registerAction('manageGroupMembers', { label: 'Manage', icon: 'group' })
-    this.registerAction('addGroupMember', { label: 'Add', icon: 'add' })
-    this.registerAction('removeGroupMember', { label: 'Remove', icon: 'remove_circle' })
+    // Register the actions
+    this.refreshActions()
   }
 }
 </script>

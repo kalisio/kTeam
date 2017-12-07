@@ -36,7 +36,7 @@ export default {
     mixins.objectProxy
   ],
   props: {
-    context: {
+    contextId: {
       type: String,
       required: true,
     }
@@ -58,7 +58,7 @@ export default {
       this.$refs.confirm.close()
       this.getService().remove(this.id)
       .then(_ => {
-        this.$router.push({name: 'groups-activity', params: { context: this.$store.get('context._id') } })
+        this.$router.push({ name: 'groups-activity', params: { contextId: this.contextId } })
       })
     }
   },

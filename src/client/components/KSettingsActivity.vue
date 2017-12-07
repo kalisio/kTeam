@@ -1,6 +1,6 @@
 <template>
   <div>
-    <k-nav-bar :tabs="navBarTabs()" :selected="perspective" />
+    <k-nav-bar :tabs="actions.tab" :selected="perspective" />
     <div v-if="perspective === 'properties'">
      <k-editor service="organisations" :id="contextId" />
     </div>
@@ -34,18 +34,17 @@ export default {
     }
   },
   methods: {
-    navBarTabs () {
-      return [ 
-        { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
-        },
-        { name: 'billing', label: 'Billing', icon: 'credit_card', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' } } 
-        },
-        { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' } } 
-        }       
-      ]
+    refreshActions () {
+      this.clearActions()
+      this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: { 
+        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
+      })
+      this.registerAction('tab', { name: 'billing', label: 'Billing', icon: 'credit_card', route: { 
+        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' } } 
+      })
+      this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: { 
+        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' } } 
+      })
     }
   },
   created () {
@@ -55,6 +54,8 @@ export default {
     this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-organisation-dz'] = loadComponent('KOrganisationDZ')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
+    // Register the actions
+    this.refreshActions()
   }
 }
 </script>

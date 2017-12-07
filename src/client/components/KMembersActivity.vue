@@ -4,8 +4,8 @@
       <k-editor service="members" :id="id" :perspective="perspective" />
     </div>
     <div v-else>
-      <k-grid ref="membersGrid" service="members" :actions="memberItemActions()" />
-      <k-fab :actions="memberActions()" />
+      <k-grid ref="membersGrid" service="members" :actions="actions.member" />
+      <k-fab :actions="actions.members" />
     </div>
     <!-- 
       Add member dialog
@@ -69,20 +69,16 @@ export default {
     }
   },
   methods: {  
+    refreshActions () {
+      this.clearActions()
+      this.registerAction('members', { name: 'add-member', label: 'Add', icon: 'add', handler: this.addMember })
+      this.registerAction('member', { name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember })
+      this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
+        name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', id: member._id, perspective: 'profile' } }
+      })
+    },
     refreshMembers () {
       this.$refs.membersGrid.refreshCollection()
-    },
-    memberActions () {
-      return this.filterActions(['addMember'])
-    },
-    memberItemActions () {
-      return this.filterActions(['manageMember', 'removeMember'])
-    },
-    manageMember (member) {
-      this.$router.push({ 
-        name: 'members-activity', 
-        params: { context: this.contextId, operation: 'edit', id: member._id, perspective: 'profile' } 
-      })
     },
     addMember () {
       this.$refs.addMember.open()
@@ -115,10 +111,8 @@ export default {
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
-    // Register the action
-    this.registerAction('manageMember', { label: 'Manage', icon: 'description' })
-    this.registerAction('addMember', { label: 'Add', icon: 'add' })
-    this.registerAction('removeMember', { label: 'Remove', icon: 'remove_circle' })
+    // Register the actions
+    this.refreshActions()
   }
 }
 </script>
