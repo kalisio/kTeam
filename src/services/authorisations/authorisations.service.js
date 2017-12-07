@@ -2,7 +2,7 @@ import _ from 'lodash'
 import sift from 'sift'
 import LruCache from 'lru-cache'
 import makeDebug from 'debug'
-import { defineAbilities } from '../../permissions'
+import { defineAbilities } from '../../common/permissions'
 
 const debug = makeDebug('kalisio:kTeam:authorisations')
 

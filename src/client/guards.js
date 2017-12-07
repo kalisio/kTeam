@@ -1,4 +1,4 @@
-import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
+import { hasServiceAbilities, hasResourceAbilities } from '../common/permissions'
 
 // Guard unauthorised users
 export function authorisationGuard (app) {

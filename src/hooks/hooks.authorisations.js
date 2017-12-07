@@ -3,7 +3,7 @@ import { merge } from 'feathers-commons'
 import { Forbidden } from 'feathers-errors'
 import { toMongoQuery } from 'casl'
 import { hooks, objectifyIDs } from 'kCore'
-import { hasServiceAbilities, hasResourceAbilities } from '../permissions'
+import { hasServiceAbilities, hasResourceAbilities } from '../common/permissions'
 import makeDebug from 'debug'
 
 const debug = makeDebug('kalisio:kTeam:authorisations:hooks')

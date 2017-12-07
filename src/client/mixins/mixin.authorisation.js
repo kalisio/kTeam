@@ -1,14 +1,19 @@
 import logger from 'loglevel'
 import { Events } from 'quasar'
 import { Store } from 'kCore/client'
-import { defineAbilities, hasAbilities } from '../../permissions'
+import { defineAbilities, hasServiceAbilities, hasResourceAbilities } from '../../common/permissions'
 
 let authorisationMixin = {
   methods: {
     hasAbilities (operation, resource, serviceName) {
       const abilities = Store.get('user.abilities', null)
       if (abilities) {
-        return hasAbilities(abilities, operation, resource, serviceName)
+        // Check for access to service fisrt
+        if (!hasServiceAbilities(abilities, serviceName)) {
+          return false
+        }
+        // Then for access to resource
+        return hasResourceAbilities(abilities, operation, serviceName, resource)
       }
       return false
     },
