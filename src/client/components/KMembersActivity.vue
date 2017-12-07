@@ -74,7 +74,7 @@ export default {
       this.registerAction('members', { name: 'add-member', label: 'Add', icon: 'add', handler: this.addMember })
       this.registerAction('member', { name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember })
       this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
-        name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', id: member._id, perspective: 'profile' } }
+        name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'profile' } }
       })
     },
     refreshMembers () {
