@@ -4,6 +4,8 @@
 [![Code Climate](https://codeclimate.com/github/kalisio/kTeam/badges/gpa.svg)](https://codeclimate.com/github/kalisio/kTeam)
 [![Test Coverage](https://codeclimate.com/github/kalisio/kTeam/badges/coverage.svg)](https://codeclimate.com/github/kalisio/kTeam/coverage)
 [![Dependency Status](https://img.shields.io/david/kalisio/kTeam.svg?style=flat-square)](https://david-dm.org/kalisio/kTeam)
+[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen.svg)](https://kalisio.gitbooks.io/kalisio/api)
+[![Known Vulnerabilities](https://snyk.io/test/github/kalisio/kTeam/badge.svg)](https://snyk.io/test/github/kalisio/kTeam)
 
 > Basic utils to support organization management for Kalisio applications and services
 
