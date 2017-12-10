@@ -1,9 +1,8 @@
 import _ from 'lodash'
 import { merge } from 'feathers-commons'
 import { Forbidden } from 'feathers-errors'
-import { toMongoQuery } from 'casl'
 import { hooks, objectifyIDs } from 'kCore'
-import { hasServiceAbilities, hasResourceAbilities } from '../common/permissions'
+import { hasServiceAbilities, hasResourceAbilities, getQueryForAbilities } from '../common/permissions'
 import makeDebug from 'debug'
 
 const debug = makeDebug('kalisio:kTeam:authorisations:hooks')
@@ -52,10 +51,11 @@ export function authorise (hook) {
 
   const operation = hook.method
   const resourceType = hook.service.name
+  const context = hook.service.context
   debug('Provider is', hook.params.provider)
-  debug('User is', hook.params.user)
+  if (hook.params.user) debug('User is', hook.params.user)
   debug('Operation is', operation)
-  debug('Resource type is', resourceType)
+  if (resourceType) debug('Resource type is', resourceType)
     
   if (checkAuthorisation) {
     
@@ -75,8 +75,9 @@ export function authorise (hook) {
       // In this specific case there is no query to be run,
       // simply check against the object we'd like to create
       if (operation === 'create') {
-        debug('Target resource is ', hook.data)
-        if (!hasResourceAbilities(abilities, operation, resourceType, hook.data)) {
+        let resource = hook.data
+        debug('Target resource is ', resource)
+        if (!hasResourceAbilities(abilities, operation, resourceType, context, resource)) {
           debug('Resource acces not granted')
           throw new Forbidden(`You are not allowed to perform ${operation} operation on ${resourceType}`)
         }
@@ -84,8 +85,7 @@ export function authorise (hook) {
         // When we find/update/patch/remove multiple items this ensures thet
         // only the ones authorised by constraints on the resources will be fetched
         // This avoid fetching all first then check it one by one
-        const rules = abilities.rulesFor(operation, resourceType)
-        const dbQuery = objectifyIDs(toMongoQuery(rules))
+        const dbQuery = objectifyIDs(getQueryForAbilities(abilities, operation, resourceType))
         debug('Target resource conditions are ', dbQuery)
         merge(hook.params.query, dbQuery)
       }
@@ -98,7 +98,7 @@ export function authorise (hook) {
       .then(resource => {
         debug('Target resource is', resource)
         // Then check against the object we'd like to manage
-        if (!hasResourceAbilities(abilities, operation, resourceType, resource)) {
+        if (!hasResourceAbilities(abilities, operation, resourceType, context, resource)) {
           debug('Resource acces not granted')
           throw new Forbidden(`You are not allowed to perform ${operation} operation on ${resourceType}`)
         }

@@ -36,15 +36,17 @@ export default {
   methods: {
     refreshActions () {
       this.clearActions()
-      this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: { 
-        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
-      })
-      this.registerAction('tab', { name: 'billing', label: 'Billing', icon: 'credit_card', route: { 
-        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' } } 
-      })
-      this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: { 
-        name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' } } 
-      })
+      if (this.$can('update', 'organisations', null, { _id: this.contextId })) {
+        this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: { 
+          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
+        })
+        this.registerAction('tab', { name: 'billing', label: 'Billing', icon: 'credit_card', route: { 
+          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' } } 
+        })
+        this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: { 
+          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' } } 
+        })
+      }
     }
   },
   created () {
@@ -54,8 +56,6 @@ export default {
     this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-organisation-dz'] = loadComponent('KOrganisationDZ')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
-    // Register the actions
-    this.refreshActions()
   }
 }
 </script>

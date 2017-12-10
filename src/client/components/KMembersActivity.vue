@@ -71,11 +71,17 @@ export default {
   methods: {  
     refreshActions () {
       this.clearActions()
-      this.registerAction('members', { name: 'add-member', label: 'Add', icon: 'add', handler: this.addMember })
-      this.registerAction('member', { name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember })
-      this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
-        name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'profile' } }
-      })
+      if (this.$can('create', 'authorisations', this.contextId)) {
+        this.registerAction('members', { name: 'add-member', label: 'Add', icon: 'add', handler: this.addMember })
+      }
+      if (this.$can('remove', 'authorisations', this.contextId)) {
+        this.registerAction('member', { name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember })
+      }
+      if (this.$can('update', 'members', this.contextId)) {
+        this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
+          name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'profile' } }
+        })
+      }
     },
     refreshMembers () {
       this.$refs.membersGrid.refreshCollection()
@@ -111,8 +117,6 @@ export default {
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
-    // Register the actions
-    this.refreshActions()
   }
 }
 </script>

@@ -1,4 +1,5 @@
-import { Ability, AbilityBuilder } from 'casl'
+import _ from 'lodash'
+import { Ability, AbilityBuilder, toMongoQuery } from 'casl'
 
 // Define some alias to simplify ability definitions
 Ability.addAlias('update', 'patch')
@@ -15,8 +16,9 @@ export const Roles = {
 // Hooks that can be added to customize abilities computation
 let hooks = []
 
-// Get the unique global symbol to store resource type on a resource object
+// Get the unique global symbol to store resource type / context on a resource object
 export const RESOURCE_TYPE = 'type'
+export const RESOURCE_TYPE_KEY = Symbol.for(RESOURCE_TYPE)
 
 export function defineResourceRules (subject, resource, resourceService, can) {
   const role = Roles[resource.permissions]
@@ -40,8 +42,10 @@ export function defineUserAbilities (subject, can, cannot) {
   can('create', 'users')
 
   if (subject) {
-    // Read/Update user profile, etc.
-    can(['read', 'update', 'remove'], 'users', { _id: subject._id })
+    // Read user profiles for authorizing
+    can('read', 'users')
+    // Update user profile and destroy it
+    can(['update', 'remove'], 'users', { _id: subject._id })
   }
 }
 
@@ -68,7 +72,7 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('service', organisation._id.toString() + '/groups')
-          can('create', 'groups')
+          can('create', 'groups', { context: organisation._id })
         }
       })
     }
@@ -101,7 +105,7 @@ export function defineAbilities (subject) {
     if (!resource || typeof resource === 'string') {
       return resource
     }
-    return resource[Symbol.for(RESOURCE_TYPE)]
+    return resource[RESOURCE_TYPE_KEY]
   }})
 }
 
@@ -116,6 +120,7 @@ defineAbilities.unregisterHook = function (hook) {
 }
 
 export function hasServiceAbilities (abilities, service) {
+  if (!abilities) return false
   // The unique identifier of a service is its path not its name.
   // Indeed we have for instance a 'groups' service in each organisation
   // Take care that in client we have the service path while on server we have the actual object
@@ -123,10 +128,40 @@ export function hasServiceAbilities (abilities, service) {
   return abilities.can('service', path)
 }
 
-export function hasResourceAbilities (abilities, operation, resourceType, resource) {
-  if (resource) resource[Symbol.for(RESOURCE_TYPE)] = resourceType
-  const result = abilities.can(operation, resource || resourceType)
-  // Not required anymore
-  if (resource) delete resource[Symbol.for(RESOURCE_TYPE)]
+export function hasResourceAbilities (abilities, operation, resourceType, context, resource) {
+  if (!abilities) return false
+  // Create a shallow copy adding context and type
+  let object = Object.assign({}, resource)
+  object[RESOURCE_TYPE_KEY] = resourceType
+  // Add a virtual context to take it into account
+  if (context) object.context = context
+  
+  const result = abilities.can(operation, object)
+
   return result
+}
+
+// Utility function used to remove the virtual context from query
+export function removeContext (query) {
+  _.forOwn(query, (value, key) => {
+    // Process current attributes or recurse
+    // Take care to nested fields like 'field._id'
+    if (key === 'context') {
+      delete query.context
+    } else if (Array.isArray(value)) {
+      value.forEach(item => removeContext(item))
+    } else if (typeof value === 'object') {
+      removeContext(value)
+    }
+  })
+  return query
+}
+
+export function getQueryForAbilities (abilities, operation, resourceType) {
+  if (!abilities) return {}
+
+  const rules = abilities.rulesFor(operation, resourceType)
+  let query = toMongoQuery(rules) || {}
+  // Remove any context to avoid taking it into account because it is not really stored on objects
+  return removeContext(query)
 }

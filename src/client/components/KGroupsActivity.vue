@@ -96,25 +96,37 @@ export default {
   methods: {
     refreshActions () {
       this.clearActions()
-      this.registerAction('groups', { name: 'create-group', label: 'Create', icon: 'add', handler: this.createGroup })
-      this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
-        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' } }
-      })
-      this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
-        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' } }
-      })
-      this.registerAction('members', { name: 'add-group-member', label: 'Add', icon: 'add', handler: this.addGroupMember })
-      this.registerAction('member', { name: 'remove-group-member', label: 'Remove', icon: 'remove_circle', handler: this.removeGroupMember })
+      if (this.$can('create', 'groups', this.contextId)) {
+        this.registerAction('groups', { name: 'create-group', label: 'Create', icon: 'add', handler: this.createGroup })
+      }
+      if (this.$can('update', 'groups', this.contextId)) {
+        this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' } }
+        })
+      }
+      if (this.$can(['create', 'remove'], 'authorisations', this.contextId)) {
+        this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
+          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' } }
+        })
+      }
+      if (this.$can('create', 'authorisations', this.contextId)) {
+        this.registerAction('members', { name: 'add-group-member', label: 'Add', icon: 'add', handler: this.addGroupMember })
+      }
+      if (this.$can('remove', 'authorisations', this.contextId)) {
+        this.registerAction('member', { name: 'remove-group-member', label: 'Remove', icon: 'remove_circle', handler: this.removeGroupMember })
+      }
       if (this.id) {
-        this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } }
-        })
-        this.registerAction('tab', { name: 'members', label: 'Members', icon: 'group', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } }
-        })
-        this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } }
-        })
+        if (this.$can('update', 'groups', this.contextId, { resource: this._id })) {
+          this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: {
+            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } }
+          })
+          this.registerAction('tab', { name: 'members', label: 'Members', icon: 'group', route: {
+            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } }
+          })
+          this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: {
+            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } }
+          })
+        }
       }
     },
     refreshMembers () {
@@ -157,8 +169,6 @@ export default {
     this.$options.components['k-group-dz'] = loadComponent('KGroupDZ')
     this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
     this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
-    // Register the actions
-    this.refreshActions()
   }
 }
 </script>

@@ -1,25 +1,13 @@
 import logger from 'loglevel'
 import { Events } from 'quasar'
 import { Store } from 'kCore/client'
-import { defineAbilities, hasServiceAbilities, hasResourceAbilities } from '../../common/permissions'
+import { defineAbilities } from '../../common/permissions'
 
 let authorisationMixin = {
   methods: {
-    hasAbilities (operation, resource, serviceName) {
-      const abilities = Store.get('user.abilities', null)
-      if (abilities) {
-        // Check for access to service fisrt
-        if (!hasServiceAbilities(abilities, serviceName)) {
-          return false
-        }
-        // Then for access to resource
-        return hasResourceAbilities(abilities, operation, serviceName, resource)
-      }
-      return false
-    },
     updateAbilities () {
-      const user = Store.get('user', null)
-      let abilities = null
+      const user = Store.get('user')
+      let abilities
       if (user) {
         abilities = defineAbilities(user)
         Store.set('user.abilities', abilities)
@@ -32,7 +20,7 @@ let authorisationMixin = {
   },
   mounted () {
     // Check if abilities are already computed
-    let abilities = Store.get('user.abilities', null)
+    let abilities = Store.get('user.abilities')
     if (!abilities) {
       // Otherwise try to compute them
       this.updateAbilities()
