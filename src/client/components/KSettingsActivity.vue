@@ -36,7 +36,7 @@ export default {
   methods: {
     refreshActions () {
       this.clearActions()
-      if (this.$can('update', 'organisations', null, { _id: this.contextId })) {
+      if (this.$can('update', 'organisations', this.contextId, { _id: this.contextId })) {
         this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: { 
           name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
         })
