@@ -94,6 +94,14 @@ export default {
     this.currentId = this.$store.get('context._id')
     // Update the list of organisations
     this.updateOrganisations()
+    Events.$on('user-changed', this.updateOrganisations)
+    Events.$on('context-id-changed', id => {
+      this.currentId = id
+      this.syncCurrentOrganisation()
+    })
+    this.$on('collection-refreshed', _ => {
+      this.syncCurrentOrganisation()
+    })
   },
   mounted () {
     // Route to the default organisation if needed
@@ -104,16 +112,9 @@ export default {
         this.$router.push({ name: 'organisation-view', params: { contextId: organisations[0]._id } })
       }
     }
-    Events.$on('user-patched', user => {
-      this.updateOrganisations()
-    })
-    Events.$on('context-id-changed', id => {
-      this.currentId = id
-      this.syncCurrentOrganisation()
-    })
-    this.$on('collection-refreshed', _ => {
-      this.syncCurrentOrganisation()
-    })
+  },
+  beforeDestroy() {
+    Events.$off('user-changed', this.updateOrganisations)
   }
 }
 </script>

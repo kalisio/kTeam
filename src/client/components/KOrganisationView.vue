@@ -22,30 +22,24 @@ export default {
     }
   },
   methods: {
-    updateView () {
-      // update the app bar
+    refreshContext (context) {
+      this.organisation = context
+      // Update the app bar actions with new context
       if (this.organisation !== null) {
-        this.actions.forEach(action => {
-          action.route.params['contextId'] = this.contextId
-        })
+        this.actions.forEach(action => action.route.params['contextId'] = this.contextId)
         this.$store.set('appBar', { title: this.organisation.name, subtitle: '', actions: this.actions })
+      } else {
+        this.$store.set('appBar', null)
       }
-      else this.$store.set('appBar', null)
     }
   },
   created () {
     this.actions = this.$store.get('config.organisationView.actions', [])
-    this.organisation = this.$store.get('context.object')
-    this.updateView()
-  },
-  mounted () {
-    Events.$on('context-changed', context => {
-      this.organisation = context
-      this.updateView()
-    })
-    
+    this.refreshContext(this.$store.get('context.object'))
+    Events.$on('context-changed', this.refreshContext)
   },
   beforeDestroy () {
+    Events.$off('context-changed', this.refreshContext)
     this.$store.set('appBar', null)
   }
 }
