@@ -1,19 +1,17 @@
 <template>
   <div>
-    <q-collapsible ref="collapsible" :icon="icon" :label="currentName" :class="[bgColor, textColor]">
+    <q-collapsible ref="collapsible" :icon="icon" :label="currentOrganisationName" :class="[bgColor, textColor]">
       <q-list link no-border>
         <!-- 
           Organisations list
         -->
-        <template v-for="org in items">
-          <q-side-link item :key="org._id" :to="{ name: 'organisation-view', params: { contextId: org._id } }">
-            <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
-            <q-item-main :label="org.name" />
-            <q-item-side v-if="org.name === currentName" right>
-              <q-item-tile  icon="check" />
-            </q-item-side>
-          </q-side-link>
-        </template>
+        <q-item v-for="org in items" :key="org._id" @click="setCurrentOrganisation(org)">
+          <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
+          <q-item-main :label="org.name"/>
+          <q-item-side v-if="org._id === currentOrgId" right>
+            <q-item-tile  icon="check" />
+          </q-item-side>
+        </q-item>
         <q-item-separator />
         <!--
           Create link
@@ -51,30 +49,45 @@ export default {
     QItemSeparator,
     Avatar
   },
-  mixins: [
-    mixins.service,
-    mixins.baseCollection
-  ],
+  mixins: [ mixins.baseCollection ],
   data () {
     return {
-      currentId: '',
-      currentName: '',
-      list: []
+      currentOrgId: ''
     }
+  },
+  computed: {
+    currentOrganisationName () {
+      let current = this.findOrganisation(this.currentOrgId)
+      return current ? current.name : ''
+    },
   },
   methods: {
     loadService () {
-      return this._service = this.$api.getService('organisations')
+      this._service = this.$api.getService('organisations')
+      return this._service
+    },
+    findOrganisation (id) {
+      return this.items.find(org => org._id === id)
     },
     updateOrganisations () {
-      this.list = this.$store.get('user.organisations', [])
-      this.filterQuery = { _id: { $in : this.list.map(org => { return org._id }) } }
+      let list = this.$store.get('user.organisations', [])
+      this.filterQuery = { _id: { $in : list.map(org => { return org._id }) } }
       this.refreshCollection()
     },
-    syncCurrentOrganisation () {
-      let currentOrganisationIndex = lodash.findIndex(this.items, {'_id': this.currentId})
-      if (currentOrganisationIndex !== -1) this.currentName = this.items[currentOrganisationIndex].name
-      else this.currentName = 'Undefined'
+    updateCurrentOrganisation () {
+      // Check if current still exist
+      if (this.currentOrgId) {
+        if (!this.findOrganisation(this.currentOrgId)) {
+          this.setCurrentOrganisation(this.items[0])
+        }
+      } else if (this.items.length > 0) {
+        // Select the first one otherwise
+        this.setCurrentOrganisation(this.items[0])
+      }
+    },
+    setCurrentOrganisation (org) {
+      this.currentOrgId = org._id
+      this.$router.push({ name: 'organisation-view', params: { contextId: org._id } })
     },
     createOrganisation () {
       this.$refs.editor.open(true)
@@ -89,32 +102,17 @@ export default {
     this.icon = this.$store.get(confPath + '.icon', 'domain')
     this.bgColor = this.$store.get(confPath + '.bgColor', 'bg-light')
     this.textColor = this.$store.get(confPath + '.textColor', 'text-dark')
-    // Setup the default organisation
-    // this.currentId = this.$store.get('context._id')
-    this.currentId = this.$store.get('context._id')
+    if (this.$route.params.contextId) this.currentOrgId = this.$route.params.contextId
     // Update the list of organisations
     this.updateOrganisations()
+    // Required when user permissions change
     Events.$on('user-changed', this.updateOrganisations)
-    Events.$on('context-id-changed', id => {
-      this.currentId = id
-      this.syncCurrentOrganisation()
-    })
-    this.$on('collection-refreshed', _ => {
-      this.syncCurrentOrganisation()
-    })
-  },
-  mounted () {
-    // Route to the default organisation if needed
-    if (this.$route.path === '/home') {
-      let user = this.$store.get('user')
-      let organisations = user ? user.organisations : null
-      if (organisations && organisations.length > 0) {
-        this.$router.push({ name: 'organisation-view', params: { contextId: organisations[0]._id } })
-      }
-    }
+    // Required to get the org objects first
+    this.$on('collection-refreshed', this.updateCurrentOrganisation)
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
+    this.$off('collection-refreshed', this.updateOrganisations)
   }
 }
 </script>

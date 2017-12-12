@@ -18,7 +18,7 @@
      <k-confirm ref="confirm" 
       :title="`Are you sure you want to delete '${name}' ?`"
       action="Delete"
-      :prevent="{ textToMatch: name, label: 'Please enter the name of this account to confim the deletion' }" 
+      :prevent="{ textToMatch: name, label: 'Please enter the name of this organisation to confim the deletion' }" 
       @confirmed="deletionConfirmed" />
   </div>
 </template>
@@ -55,7 +55,7 @@ export default {
       return "You cannot delete this organisation because it is the default one attached to your account." +
              "<br>This organisation will be automatically deleted when deleting your account."
     },
-    getService () {
+    loadService () {
       return this.$api.getService('organisations')
     },
     deletionClicked () {
@@ -63,7 +63,7 @@ export default {
     },
     deletionConfirmed () {
       this.$refs.confirm.close()
-      this.getService().remove(this.id)
+      this.loadService().remove(this.id)
       .then(_ => {
         const organisations = this.$store.get('user').organisations
         const newCurrentOrg = organisations.length > 0 ? organisations[0] : null
