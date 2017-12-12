@@ -87,7 +87,7 @@ export default {
     },
     setCurrentOrganisation (org) {
       this.currentOrgId = org._id
-      this.$router.push({ name: 'organisation-view', params: { contextId: org._id } })
+      this.$router.push({ name: 'context', params: { contextId: org._id } })
     },
     createOrganisation () {
       this.$refs.editor.open(true)
