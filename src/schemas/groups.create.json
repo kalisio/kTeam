@@ -24,15 +24,6 @@
         "label": "Description",
         "helper": "Enter the description"
       }
-    },
-    "tags": { 
-      "type": "array",
-      "scope": "groups",
-      "field": {
-        "component": "form/KTagField",
-        "label": "Tags",
-        "helper": "Add some tags"
-      }
     }
   },
   "required": ["name"]

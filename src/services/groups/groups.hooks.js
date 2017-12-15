@@ -1,4 +1,3 @@
-import { hooks } from 'kCore'
 import { createGroupAuthorisations, removeGroupAuthorisations } from '../../hooks'
 const { authenticate } = require('feathers-authentication').hooks
 
@@ -7,9 +6,9 @@ module.exports = {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [ hooks.updateTags ],
-    update: [ hooks.updateTags ],
-    patch: [ hooks.updateTags ],
+    create: [],
+    update: [],
+    patch: [],
     remove: []
   },
 
@@ -20,7 +19,7 @@ module.exports = {
     create: [ createGroupAuthorisations ],
     update: [],
     patch: [],
-    remove: [ hooks.updateTags, removeGroupAuthorisations ]
+    remove: [ removeGroupAuthorisations ]
   },
 
   error: {
