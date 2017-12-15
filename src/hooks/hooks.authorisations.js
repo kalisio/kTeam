@@ -27,7 +27,7 @@ export function authorise (hook) {
   if (hook.type !== 'before') {
     throw new Error(`The 'authorise' hook should only be used as a 'before' hook.`)
   }
-  
+
   // If called internally we skip authorisation
   let checkAuthorisation = hook.params.hasOwnProperty('provider')
   debug('Access check ' + (checkAuthorisation ? 'enabled' : 'disabled') + ' for provider')
@@ -56,9 +56,8 @@ export function authorise (hook) {
   if (hook.params.user) debug('User is', hook.params.user)
   debug('Operation is', operation)
   if (resourceType) debug('Resource type is', resourceType)
-    
+
   if (checkAuthorisation) {
-    
     // Build ability for user
     let authorisationService = hook.app.getService('authorisations')
     const abilities = authorisationService.getAbilities(hook.params.user)

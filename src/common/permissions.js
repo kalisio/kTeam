@@ -135,7 +135,7 @@ export function hasResourceAbilities (abilities, operation, resourceType, contex
   object[RESOURCE_TYPE_KEY] = resourceType
   // Add a virtual context to take it into account
   if (context) object.context = context
-  
+
   const result = abilities.can(operation, object)
 
   return result

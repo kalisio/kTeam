@@ -20,7 +20,7 @@ describe('kTeam', () => {
     teamPermissions.defineAbilities.registerHook(teamPermissions.defineOrganisationAbilities)
     // Then rules for groups
     teamPermissions.defineAbilities.registerHook(teamPermissions.defineGroupAbilities)
-    
+
     app = kalisio()
     port = app.get('port')
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`
