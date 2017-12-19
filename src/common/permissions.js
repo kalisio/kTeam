@@ -67,6 +67,7 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('service', organisation._id.toString() + '/members')
+          can(['read', 'update'], 'members', { context: organisation._id })
         }
         if (role >= Roles.manager) {
           // The unique identifier of a service is its path not its name.
