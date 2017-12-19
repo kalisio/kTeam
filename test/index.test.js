@@ -2,13 +2,14 @@ import _ from 'lodash'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
+import { iffElse } from 'feathers-hooks-common'
 import core, { kalisio } from 'kCore'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
     userService, orgService, authorisationService, orgGroupService, orgUserService,
-    user1Object, user2Object, orgObject, groupObject
+    user1Object, user2Object, user3Object, orgObject, groupObject
 
   before(() => {
     chailint(chai, util)
@@ -48,7 +49,7 @@ describe('kTeam', () => {
     userService = app.getService('users')
     userService.hooks({
       after: {
-        create: [ teamHooks.updateAbilities, teamHooks.createPrivateOrganisation ],
+        create: [ teamHooks.updateAbilities, iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation) ],
         remove: [ teamHooks.removePrivateOrganisation ]
       }
     })
@@ -102,6 +103,17 @@ describe('kTeam', () => {
     })
     .then(orgs => {
       expect(orgs.data.length > 0).beTrue()
+    })
+  })
+
+  it('invites a user to join an organisation', () => {
+    let sponsor = { id: user2Object._id, organisationId: user2Object.organisations[0]._id, roleGranted: 'member' }
+    return userService.create({ email: 'test-3@test.org', name: 'test-user-3', sponsor: sponsor }, { checkAuthorisation: true })
+    .then(user => {
+      user3Object = user
+      expect(user3Object.organisations).toExist()
+      // By default the user manage its own organisation
+      expect(user3Object.organisations[0].permissions).to.deep.equal('member')
     })
   })
 
@@ -286,12 +298,14 @@ describe('kTeam', () => {
       return userService.find({ query: {}, checkAuthorisation: true })
     })
     .then(users => {
-      expect(users.data.length === 2).beTrue()
+      expect(users.data.length === 3).beTrue()
       user1Object = users.data[0]
       user2Object = users.data[1]
+      user3Object = users.data[2]
       // No more permission set for org
       expect(_.find(user1Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
       expect(_.find(user2Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
+      expect(_.find(user3Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
       // Should remove associated DB
       return adminDb.listDatabases()
     })

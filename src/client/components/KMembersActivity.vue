@@ -1,36 +1,17 @@
 <template>
   <div>
-    <div v-if="operation === 'edit'">
-      <k-editor service="members" :id="id" :perspective="perspective" />
-    </div>
-    <div v-else>
-      <k-grid ref="membersGrid" service="members" :actions="actions.member" />
-      <k-fab :actions="actions.members" />
-    </div>
+    <k-grid ref="members" service="members" :actions="actions.member" />
+    <k-fab :actions="actions.members" />
     <!-- 
-      Add member dialog
+      Router view to enable routing to modals
      -->
-    <k-authoriser ref="addMember" 
-      title="Select the member to add"
-      scope="organisations"
-      :resource-id="contextId"
-      resource-service="organisations"
-      :query="usersQuery"
-      @authorised="refreshMembers"
-    />
-    <!-- 
-      Remove member dialog
-     -->
-    <k-confirm ref="removeMember" 
-      :title="`Are you sure you want to remove '${selectionName}' ?`"
-      action="Yes"
-      @confirmed="removeMemberConfirmed" 
-    />
+    <router-view service="members"></router-view>
   </div>
 </template>
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
+import { Dialog } from 'quasar'
 
 export default {
   name: 'k-members-activity',
@@ -41,82 +22,74 @@ export default {
     contextId: {
       type: String,
       required: true
-    },
-    operation: {
-      type: String,
-      default: '',
-    },
-    id : {
-      type: String,
-      default: ''
-    },
-    perspective: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    selectionName () {
-      return this.selection ? this.selection.name : ''
-    },
-    usersQuery () {
-      return { 'organisations._id': { $nin: [this.contextId] }, $select: ['profile'] }
-    }
-  },
-  data () {
-    return {
-      selection: null
     }
   },
   methods: {  
     refreshActions () {
       this.clearActions()
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerAction('members', { name: 'add-member', label: 'Add', icon: 'add', handler: this.addMember })
-      }
-      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember })
-      }
-      if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
-          name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'profile' } }
+        this.registerAction('members', { 
+          name: 'add-member', 
+          label: 'Add', 
+          icon: 'person_add', 
+          route: { name: 'add-member', params: {} } 
+        })
+        this.registerAction('members', { 
+          name: 'invite-member', 
+          label: 'Invite', 
+          icon: 'email', 
+          route: { name: 'invite-member', params: {} } 
         })
       }
-    },
-    refreshMembers () {
-      this.$refs.membersGrid.refreshCollection()
-    },
-    addMember () {
-      this.$refs.addMember.open()
+      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+        this.registerAction('member', { 
+          name: 'remove-member', 
+          label: 'Remove', 
+          icon: 'remove_circle', 
+          handler: this.removeMember 
+        })
+      }
+      //if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
+        this.registerAction('member', { 
+          name: 'edit-member', 
+          label: 'Edit', 
+          icon: 'description', 
+          route: { name: 'edit-member', params: { perspective: 'profile' } }
+        })
+      //}
     },
     removeMember (member) {
-      this.selection = member
-      this.$refs.removeMember.open()
-    },
-    removeMemberConfirmed () {
-      this.$refs.removeMember.close()
-      let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.contextId, {
-        query: {
-          scope: 'organisations',
-          subjects: this.selection._id,
-          subjectsService: 'users',
-          resourcesService: 'organisations'
-        }
-      })
-      .then(_ => {
-        this.refreshMembers()
+      Dialog.create({
+        title: 'Remove ' + member.name + '?',
+        message: 'Are you sure you want to remove ' + member.name + ' from your organisation ?',
+        buttons: [
+          'Cancel',
+          {
+            label: 'Ok',
+            handler: () => {
+              let authorisationService = this.$api.getService('authorisations')
+              authorisationService.remove(this.contextId, {
+              query: {
+                scope: 'organisations',
+                subjects: member._id,
+                subjectsService: 'users',
+                resourcesService: 'organisations'
+              }
+            })
+            .then(_ => {
+              this.$refs.members.refreshCollection()
+            })
+            }
+          }
+        ]
       })
     }
   },
   created () {
     // Load the required components
     let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-editor'] = loadComponent('editor/KEditor')
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
-    this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
-    this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
   }
 }
 </script>
