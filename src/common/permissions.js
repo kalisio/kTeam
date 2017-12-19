@@ -24,6 +24,7 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           // Indeed we have for instance a 'groups' service in each organisation.
           can('service', organisation._id.toString() + '/groups')
           can('create', 'groups', { context: organisation._id })
+          can(['read', 'update'], 'members', { context: organisation._id })
         }
       })
     }
