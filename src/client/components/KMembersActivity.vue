@@ -79,7 +79,7 @@ export default {
       }
       if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { name: 'manage-members', label: 'Manage', icon: 'description', route: {
-          name: 'members-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'profile' } }
+          name: 'members-activity', params: { contextId: this.contextId, operation: 'edit' } }
         })
       }
     },
