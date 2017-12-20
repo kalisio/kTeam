@@ -99,16 +99,12 @@ export default {
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerAction('groups', { name: 'create-group', label: 'Create', icon: 'add', handler: this.createGroup })
       }
-      if (this.$can('update', 'groups', this.contextId)) {
-        this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' } }
-        })
-      }
-      if (this.$can(['create', 'remove'], 'authorisations', this.contextId)) {
-        this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' } }
-        })
-      }
+      this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
+        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' }
+      }, permissions: { operation: 'update', service: 'groups', context: this.contextId } })
+      this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
+        name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' }
+      }, permissions: { operation: 'create', service: 'authorisations', context: this.contextId, id: 'resource' } })
       if (this.$can('create', 'authorisations', this.contextId)) {
         this.registerAction('members', { name: 'add-group-member', label: 'Add', icon: 'add', handler: this.addGroupMember })
       }
@@ -116,7 +112,7 @@ export default {
         this.registerAction('member', { name: 'remove-group-member', label: 'Remove', icon: 'remove_circle', handler: this.removeGroupMember })
       }
       if (this.id) {
-        if (this.$can('update', 'groups', this.contextId, { resource: this._id })) {
+        if (this.$can('update', 'groups', this.contextId, { _id: this.id })) {
           this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: {
             name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } }
           })
