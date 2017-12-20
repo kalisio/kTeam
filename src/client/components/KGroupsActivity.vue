@@ -45,7 +45,7 @@ export default {
       })
       this.$store.patch('tabBar', { currentTab: 'groups' })
       // Collection
-      if (this.$can(['create', 'remove'], 'groups', this.contextId)) {
+      if (this.$can('create', 'groups', this.contextId)) {
         this.registerAction('groups', { 
           name: 'create-group', label: 'Create', icon: 'add', route: { 
             name: 'create-group', params: {} }
@@ -76,32 +76,6 @@ export default {
           }
         ]
       })
-    },
-    refreshMembers () {
-      this.$refs.membersGrid.refreshCollection()
-    },
-    
-    addGroupMember () {
-      this.$refs.addMemberDialog.open()
-    },
-    removeGroupMember (member) {
-      this.selection = member
-      this.$refs.removeMemberDialog.open()
-    },
-    removeMemberConfirmed () {
-      this.$refs.removeMemberDialog.close()
-      let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.id, {
-        query: {
-          scope: 'groups',
-          subjects: this.selection._id,
-          subjectsService: 'users',
-          resourcesService: this.contextId + '/groups'
-        }
-      })
-      .then(_ => {
-        this.refreshMembers()
-      })
     }
   },
   created () {
@@ -109,10 +83,6 @@ export default {
     let loadComponent = this.$store.get('loadComponent')
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
-  },
-  beforeDestroy () {
-    console.log('clear navbar')
-    //this.$store.set('navBar.tabs', [])
   }
 }
 </script>

@@ -37,7 +37,7 @@ export default {
       })
       this.$store.patch('tabBar', { currentTab: 'members' })
       // Collection actions
-      if (this.$can(['create', 'remove'], 'authorisations', this.contextId, { resource: this.contextId })) {
+      if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('members', { 
           name: 'add-member', label: 'Add', icon: 'person_add', route: { 
             name: 'add-member', params: {} } 
