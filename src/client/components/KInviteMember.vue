@@ -98,9 +98,8 @@ export default {
     }
   },
   created () {
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-modal'] = loadComponent('frame/KModal')
-    this.$options.components['k-form'] = loadComponent('form/KForm')
+    this.$options.components['k-modal'] = this.$load('frame/KModal')
+    this.$options.components['k-form'] = this.$load('form/KForm')
   }
 }
 </script>

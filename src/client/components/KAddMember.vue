@@ -29,7 +29,7 @@ export default {
               "service": "users",
               "field": "profile.name",
               "baseQuery": {
-                //"organisations._id": "{ $nin: [" + this.$store.get('context._id') + "] }", 
+                "organisations._id": { "$nin": [this.$store.get('context._id')] }, 
                 "$select": ["profile"]
               }
             }],
@@ -95,9 +95,8 @@ export default {
     }
   },
   created () {
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-modal'] = loadComponent('frame/KModal')
-    this.$options.components['k-form'] = loadComponent('form/KForm')
+    this.$options.components['k-modal'] = this.$load('frame/KModal')
+    this.$options.components['k-form'] = this.$load('form/KForm')
   }
 }
 </script>
