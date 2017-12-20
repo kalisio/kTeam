@@ -1,11 +1,14 @@
 <template>
   <div>
+    <!-- 
+      Members collection
+     -->
     <k-grid ref="members" service="members" :actions="actions.member" />
     <k-fab :actions="actions.members" />
     <!-- 
       Router view to enable routing to modals
      -->
-    <router-view service="members"></router-view>
+    <router-view service="members" backRoute="members-activity"></router-view>
   </div>
 </template>
 
@@ -15,9 +18,7 @@ import { Dialog } from 'quasar'
 
 export default {
   name: 'k-members-activity',
-  mixins: [
-    kCoreMixins.baseActivity
-  ],
+  mixins: [kCoreMixins.baseActivity],
   props: {
     contextId: {
       type: String,
@@ -27,36 +28,34 @@ export default {
   methods: {  
     refreshActions () {
       this.clearActions()
-      if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
+      // Tabbar actions
+      this.registerTabAction({ name: 'members', label: 'Members', icon: 'description', route: { 
+        name: 'members-activity', params: { contextId: this.contextId } } 
+      })
+      this.registerTabAction({ name: 'groups', label: 'Groups', icon: 'credit_card', route: { 
+        name: 'groups-activity', params: { contextId: this.contextId } } 
+      })
+      this.$store.patch('tabBar', { currentTab: 'members' })
+      // Collection actions
+      if (this.$can(['create', 'remove'], 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('members', { 
-          name: 'add-member', 
-          label: 'Add', 
-          icon: 'person_add', 
-          route: { name: 'add-member', params: {} } 
+          name: 'add-member', label: 'Add', icon: 'person_add', route: { 
+            name: 'add-member', params: {} } 
         })
-        this.registerAction('members', { 
-          name: 'invite-member', 
-          label: 'Invite', 
-          icon: 'email', 
-          route: { name: 'invite-member', params: {} } 
+        this.registerAction('members ', { 
+          name: 'invite-member', label: 'Invite', icon: 'email', route: { 
+            name: 'invite-member', params: {} } 
+        })
+        this.registerAction('member', { 
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember 
         })
       }
-      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+      if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { 
-          name: 'remove-member', 
-          label: 'Remove', 
-          icon: 'remove_circle', 
-          handler: this.removeMember 
+          name: 'edit-member', label: 'Edit', icon: 'description', route: { 
+            name: 'edit-member', params: { perspective: 'profile' } }
         })
       }
-      //if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { 
-          name: 'edit-member', 
-          label: 'Edit', 
-          icon: 'description', 
-          route: { name: 'edit-member', params: { perspective: 'profile' } }
-        })
-      //}
     },
     removeMember (member) {
       Dialog.create({
@@ -69,16 +68,13 @@ export default {
             handler: () => {
               let authorisationService = this.$api.getService('authorisations')
               authorisationService.remove(this.contextId, {
-              query: {
-                scope: 'organisations',
-                subjects: member._id,
-                subjectsService: 'users',
-                resourcesService: 'organisations'
-              }
-            })
-            .then(_ => {
-              this.$refs.members.refreshCollection()
-            })
+                query: {
+                  scope: 'organisations',
+                  subjects: member._id,
+                  subjectsService: 'users',
+                  resourcesService: 'organisations'
+                }
+              })
             }
           }
         ]

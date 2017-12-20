@@ -1,5 +1,5 @@
 <template>
-  <k-modal title="Invite a guest to join your organisation" :actions="actions" @close="close">
+  <k-modal title="Invite a guest to join your organisation" :toolbar="toolbar" :buttons="buttons">
     <div slot="modal-content" class="column xs-gutter">
       <k-form ref="form" :schema="schema" />
     </div>
@@ -8,7 +8,6 @@
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
-import { Toast } from 'quasar'
 
 export default {
   name: 'k-invite-member',
@@ -61,12 +60,11 @@ export default {
         },
         "required": ["name", "email", "role"]
       },
-      actions: [
-        { 
-          name: 'Invite', 
-          color: 'primary',
-          handler: (event, done) => this.doInvite(event, done)
-        }
+      toolbar: [
+        { name: 'Close', icon: 'close', label: 'Close this window', handler: () => this.doClose() }
+      ],
+      buttons: [
+        { name: 'Invite', color: 'primary', handler: (event, done) => this.doInvite(event, done) }
       ],
     }
   },
@@ -78,21 +76,24 @@ export default {
         result.values.sponsor = {
           id: this.$store.get('user._id'),
           organisationId: this.$store.get('context._id'),
-          role: result.values.role
+          roleGranted: result.values.role
         }
         // Create the user
         let usersService = this.$api.getService('users')
         usersService.create(result.values)
         .then(_ => {
           done()
-          this.close()
+          this.doClose()
         })
-        .catch(_ => done())
+        .catch(error => {
+          done()
+          throw error
+        })
       } else {
         done()
       }
     },
-    close () {
+    doClose () {
       this.$router.push({ name: 'members-activity' })
     }
   },

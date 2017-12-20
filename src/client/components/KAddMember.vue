@@ -1,7 +1,6 @@
 <template>
-  <k-modal title="Add a member to your organisation" :actions="actions" @close="close">
+  <k-modal title="Add a member to your organisation" :toolbar="toolbar" :buttons="buttons">
     <div slot="modal-content" class="column xs-gutter">
-      <!--k-autocomplete :services="subjectSearchServices()" @item-selected="onSubjectSelected" /-->
       <k-form ref="form" :schema="schema" />
     </div>
   </k-modal>
@@ -9,7 +8,6 @@
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
-import { QBtn, QOptionGroup } from 'quasar'
 
 export default {
   name: 'k-add-member',
@@ -59,12 +57,11 @@ export default {
         },
         "required": ["user", "role"]
       },
-      actions: [
-        { 
-          name: 'Add', 
-          color: 'primary',
-          handler: (event, done) => this.doAdd(event, done)
-        }
+      toolbar: [
+        { name: 'Close', icon: 'close', handler: () => this.doClose() }
+      ],
+      buttons: [
+        { name: 'Add', color: 'primary', handler: (event, done) => this.doAdd(event, done) }
       ],
     }
   },
@@ -83,14 +80,17 @@ export default {
         })
         .then(_ => {
           done()
-          this.close()
+          this.doClose()
         })
-        .catch(_ => done())
+        .catch(error => {
+          done()
+          throw error 
+        })
       } else {
         done()
       }
     },
-    close () {
+    doClose () {
       this.$router.push({ name: 'members-activity' })
     }
   },

@@ -1,60 +1,20 @@
 <template>
   <div>
-    <!--
-      Manage routing
-    -->
-    <div v-if="operation === 'edit'">
-      <k-nav-bar :tabs="actions.tab" :selected="perspective" />
-      <div v-if="perspective === 'properties'">
-        <k-editor service="groups" :id="id" />
-      </div>
-      <div v-else-if="perspective === 'danger-zone'">
-        <k-group-dz :contextId="contextId" :id="id" />
-      </div>
-      <div v-else>
-        <k-grid ref="membersGrid" service="users" :base-query="membersGridQuery" :actions="actions.member" />
-        <k-fab :actions="actions.members" />
-      </div>
-    </div>
-    <!--
-      Default routing
-    -->
-    <div v-else>
-      <k-grid ref="groupsGrid" service="groups" :actions="actions.group" />
-      <k-fab :actions="actions.groups" />
-    </div>
-
     <!-- 
-      Create group dialog
-    -->
-    <k-popup-editor ref="createGroupDialog" 
-      title="Create a new Group ?" 
-      service="groups" 
-    />
-    <!-- 
-      Add group member dialog
+      Groups collection
      -->
-    <k-authoriser ref="addMemberDialog" 
-      title="Select the member to add"
-      scope="groups"
-      :resource-id="id"
-      :resource-service="`${this.contextId}/groups`"
-      :query="usersQuery"
-      @authorised="refreshMembers"
-    />
+    <k-grid ref="groups" service="groups" :actions="actions.group" />
+    <k-fab :actions="actions.groups" />
     <!-- 
-      Remove group member dialog
+      Router view to enable routing to modals
      -->
-    <k-confirm ref="removeMemberDialog" 
-      :title="`Are you sure you want to remove '${selectionName}' ?`"
-      action="Yes"
-      @confirmed="removeMemberConfirmed" 
-    />
+    <router-view service="groups" backRoute="groups-activity"></router-view>
   </div>
 </template>
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
+import { Dialog } from 'quasar'
 
 export default {
   name: 'k-groups-activity',
@@ -63,10 +23,6 @@ export default {
     contextId: {
       type: String,
       default: ''
-    },
-    operation: {
-      type: String,
-      default: '',
     },
     id : {
       type: String,
@@ -77,64 +33,54 @@ export default {
       default: '',
     }
   },
-  computed: {
-    selectionName () {
-      return this.selection ? this.selection.name : ''
-    },
-    membersGridQuery () {
-      return { 'groups._id': this.id }
-    },
-    usersQuery () {
-      return { 'organisations._id': { $in: [this.contextId] }, 'groups._id': { $nin: [this.id] }, $select: ['profile'] }
-    }
-  },
-  data () {
-    return {
-      selection: null
-    }
-  },
   methods: {
     refreshActions () {
       this.clearActions()
-      if (this.$can('create', 'groups', this.contextId)) {
-        this.registerAction('groups', { name: 'create-group', label: 'Create', icon: 'add', handler: this.createGroup })
+      // Tabbar actions
+      this.registerAction('tabs', { name: 'members', label: 'Members', icon: 'description', route: { 
+        name: 'members-activity', params: { contextId: this.contextId } } 
+      })
+      this.registerAction('tabs', { name: 'groups', label: 'Groups', icon: 'credit_card', route: { 
+        name: 'groups-activity', params: { contextId: this.contextId } } 
+      })
+      this.$store.patch('tabBar', { currentTab: 'groups' })
+      // Collection
+      if (this.$can(['create', 'remove'], 'groups', this.contextId)) {
+        this.registerAction('groups', { 
+          name: 'create-group', label: 'Create', icon: 'add', route: { 
+            name: 'create-group', params: {} }
+        }),
+        this.registerAction('group', { 
+          name: 'remove-group', label: 'Remove', icon: 'remove_circle', handler: this.removeGroup 
+        })
       }
       if (this.$can('update', 'groups', this.contextId)) {
-        this.registerAction('group', { name: 'manage-group-properties', label: 'Manage', icon: 'description', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'properties' } }
+        this.registerAction('group', { 
+          name: 'edit-group', label: 'Edit', icon: 'description', route: { 
+            name: 'edit-group', params: { contextId: this.contextId } }
         })
       }
-      if (this.$can(['create', 'remove'], 'authorisations', this.contextId)) {
-        this.registerAction('group', { name: 'manage-group-members', label: 'Manage', icon: 'group', route: {
-          name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', perspective: 'members' } }
-        })
-      }
-      if (this.$can('create', 'authorisations', this.contextId)) {
-        this.registerAction('members', { name: 'add-group-member', label: 'Add', icon: 'add', handler: this.addGroupMember })
-      }
-      if (this.$can('remove', 'authorisations', this.contextId)) {
-        this.registerAction('member', { name: 'remove-group-member', label: 'Remove', icon: 'remove_circle', handler: this.removeGroupMember })
-      }
-      if (this.id) {
-        if (this.$can('update', 'groups', this.contextId, { resource: this._id })) {
-          this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: {
-            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'properties' } }
-          })
-          this.registerAction('tab', { name: 'members', label: 'Members', icon: 'group', route: {
-            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'members' } }
-          })
-          this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: {
-            name: 'groups-activity', params: { contextId: this.contextId, operation: 'edit', id: this.id, perspective: 'danger-zone' } }
-          })
-        }
-      }
+    },
+    removeGroup (group) {
+      Dialog.create({
+        title: 'Remove ' + group.name + '?',
+        message: 'Are you sure you want to remove ' + group.name + ' from your organisation ?',
+        buttons: [
+          'Cancel',
+          {
+            label: 'Ok',
+            handler: () => {
+              let groupsService = this.$api.getService('groups')
+              groupsService.remove(group._id)
+            }
+          }
+        ]
+      })
     },
     refreshMembers () {
       this.$refs.membersGrid.refreshCollection()
     },
-    createGroup () {
-      this.$refs.createGroupDialog.open()
-    },
+    
     addGroupMember () {
       this.$refs.addMemberDialog.open()
     },
@@ -161,14 +107,12 @@ export default {
   created () {
     // Load the required components
     let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-editor'] = loadComponent('editor/KEditor')
-    this.$options.components['k-popup-editor'] = loadComponent('editor/KPopupEditor')
-    this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
     this.$options.components['k-grid'] = loadComponent('collection/KGrid')
     this.$options.components['k-fab'] = loadComponent('collection/KFab')
-    this.$options.components['k-group-dz'] = loadComponent('KGroupDZ')
-    this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
-    this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
+  },
+  beforeDestroy () {
+    console.log('clear navbar')
+    //this.$store.set('navBar.tabs', [])
   }
 }
 </script>
