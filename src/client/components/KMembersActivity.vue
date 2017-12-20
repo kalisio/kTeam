@@ -46,16 +46,17 @@ export default {
           name: 'invite-member', label: 'Invite', icon: 'email', route: { 
             name: 'invite-member', params: {} } 
         })
-        this.registerAction('member', { 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle', handler: this.removeMember 
-        })
       }
-      if (this.$can('update', 'members', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { 
-          name: 'edit-member', label: 'Edit', icon: 'description', route: { 
-            name: 'edit-member', params: { perspective: 'profile' } }
-        })
-      }
+      this.registerAction('member', { 
+        name: 'remove-member', label: 'Remove', icon: 'remove_circle',
+        permissions: { operation: 'remove', service: 'members', context: this.contextId },
+        handler: this.removeMember 
+      })
+      this.registerAction('member', { 
+        name: 'edit-member', label: 'Edit', icon: 'description',
+        permissions: { operation: 'update', service: 'members', context: this.contextId },
+        route: { name: 'edit-member', params: { perspective: 'profile' } }
+      })
     },
     removeMember (member) {
       Dialog.create({

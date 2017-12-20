@@ -37,29 +37,30 @@ export default {
     refreshActions () {
       this.clearActions()
       // Tabbar actions
-      this.registerAction('tabs', { name: 'members', label: 'Members', icon: 'description', route: { 
-        name: 'members-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({ name: 'members', label: 'Members', icon: 'description', 
+        route: { name: 'members-activity', params: { contextId: this.contextId } } 
       })
-      this.registerAction('tabs', { name: 'groups', label: 'Groups', icon: 'credit_card', route: { 
-        name: 'groups-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({ name: 'groups', label: 'Groups', icon: 'credit_card', 
+        route: { name: 'groups-activity', params: { contextId: this.contextId } } 
       })
       this.$store.patch('tabBar', { currentTab: 'groups' })
       // Collection
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerAction('groups', { 
-          name: 'create-group', label: 'Create', icon: 'add', route: { 
-            name: 'create-group', params: {} }
-        }),
-        this.registerAction('group', { 
-          name: 'remove-group', label: 'Remove', icon: 'remove_circle', handler: this.removeGroup 
+          name: 'create-group', label: 'Create', icon: 'add', 
+          route: { name: 'create-group', params: {} }
         })
       }
-      if (this.$can('update', 'groups', this.contextId)) {
-        this.registerAction('group', { 
-          name: 'edit-group', label: 'Edit', icon: 'description', route: { 
-            name: 'edit-group', params: { contextId: this.contextId } }
-        })
-      }
+      this.registerAction('group', { 
+        name: 'remove-group', label: 'Remove', icon: 'remove_circle',
+        permissions: { operation: 'remove', service: 'groups', context: this.contextId },
+        handler: this.removeGroup
+      })
+      this.registerAction('group', { 
+        name: 'edit-group', label: 'Edit', icon: 'description', 
+        permissions: { operation: 'update', service: 'groups', context: this.contextId },
+        route: { name: 'edit-group', params: { contextId: this.contextId } }
+      })
     },
     removeGroup (group) {
       Dialog.create({
