@@ -4,8 +4,6 @@ import logger from 'loglevel'
 // Tracked here : https://github.com/babel/babel/issues/2877
 // We tested the workaround given here https://github.com/babel/babel/issues/2877#issuecomment-270700000 with success so far
 export * from '../common'
-export * from './guards'
-export * as mixins from './mixins'
 
 export default function init () {
   const api = this
@@ -13,7 +11,6 @@ export default function init () {
   logger.debug('Initializing kalisio team')
 
   api.declareService('organisations')
-  api.declareService('authorisations')
   api.declareService('members', { context: true })
   api.declareService('groups', { context: true })
 }

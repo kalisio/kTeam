@@ -2,8 +2,8 @@ import _ from 'lodash'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
+import core, { kalisio, hooks, permissions } from 'kCore'
 import { iffElse } from 'feathers-hooks-common'
-import core, { kalisio } from 'kCore'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 describe('kTeam', () => {
@@ -16,18 +16,18 @@ describe('kTeam', () => {
 
     // Register all default hooks for authorisation
     // Default rules for all users
-    teamPermissions.defineAbilities.registerHook(teamPermissions.defineUserAbilities)
+    permissions.defineAbilities.registerHook(permissions.defineUserAbilities)
     // Then rules for organisations
-    teamPermissions.defineAbilities.registerHook(teamPermissions.defineOrganisationAbilities)
+    permissions.defineAbilities.registerHook(teamPermissions.defineOrganisationAbilities)
     // Then rules for groups
-    teamPermissions.defineAbilities.registerHook(teamPermissions.defineGroupAbilities)
+    permissions.defineAbilities.registerHook(teamPermissions.defineGroupAbilities)
 
     app = kalisio()
     port = app.get('port')
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`
     // Register authorisation hook
     app.hooks({
-      before: { all: teamHooks.authorise }
+      before: { all: hooks.authorise }
       /* For debug
       before: { all: [coreHooks.log, teamHooks.authorise] },
       after: { all: coreHooks.log },

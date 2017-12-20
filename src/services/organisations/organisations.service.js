@@ -1,5 +1,6 @@
 import path from 'path'
 import makeDebug from 'debug'
+import { createTagService } from 'kCore'
 const servicesPath = path.join(__dirname, '..', '..', 'services')
 const modelsPath = path.join(__dirname, '..', '..', 'models')
 
@@ -24,6 +25,8 @@ export default {
       db
     })
     debug('Groups service created for organisation ' + organisation.name)
+    createTagService.call(this.app, organisation, db)
+    debug('Tags service created for organisation ' + organisation.name)
   },
 
   removeOrganisationServices (organisation) {

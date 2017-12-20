@@ -18,7 +18,6 @@
 
 <script>
 import { mixins as kCoreMixins } from 'kCore/client'
-import mixins from '../mixins'
 
 export default {
   name: 'k-settings-activity',
