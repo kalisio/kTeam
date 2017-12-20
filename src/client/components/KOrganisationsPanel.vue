@@ -95,13 +95,11 @@ export default {
   },
   created () {
     // Load the required components
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-popup-editor'] = loadComponent('editor/KPopupEditor')
+    this.$options.components['k-popup-editor'] = this.$load('editor/KPopupEditor')
     // Load the configuration
-    let confPath = 'config.organisationsPanel'
-    this.icon = this.$store.get(confPath + '.icon', 'domain')
-    this.bgColor = this.$store.get(confPath + '.bgColor', 'bg-light')
-    this.textColor = this.$store.get(confPath + '.textColor', 'text-dark')
+    this.icon = this.$config('organisationsPanel.icon', 'domain')
+    this.bgColor = this.$config('organisationsPanel.bgColor', 'bg-light')
+    this.textColor = this.$config('organisationsPanel.textColor', 'text-dark')
     if (this.$route.params.contextId) this.currentOrgId = this.$route.params.contextId
     // Update the list of organisations
     this.updateOrganisations()

@@ -50,11 +50,10 @@ export default {
   },
   created () {
     // Load the required components
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-editor'] = loadComponent('editor/KEditor')
-    this.$options.components['k-nav-bar'] = loadComponent('layout/KNavBar')
-    this.$options.components['k-organisation-dz'] = loadComponent('KOrganisationDZ')
-    this.$options.components['k-authoriser'] = loadComponent('KAuthoriser')
+    this.$options.components['k-editor'] = this.$load('editor/KEditor')
+    this.$options.components['k-nav-bar'] = this.$load('layout/KNavBar')
+    this.$options.components['k-organisation-dz'] = this.$load('KOrganisationDZ')
+    this.$options.components['k-authoriser'] = this.$load('KAuthoriser')
   }
 }
 </script>

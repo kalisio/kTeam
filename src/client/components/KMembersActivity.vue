@@ -51,7 +51,7 @@ export default {
         name: 'remove-member', label: 'Remove', icon: 'remove_circle',
         permissions: { operation: 'remove', service: 'members', context: this.contextId },
         handler: this.removeMember 
-      })
+        })
       this.registerAction('member', { 
         name: 'edit-member', label: 'Edit', icon: 'description',
         permissions: { operation: 'update', service: 'members', context: this.contextId },
@@ -67,15 +67,15 @@ export default {
           {
             label: 'Ok',
             handler: () => {
-              let authorisationService = this.$api.getService('authorisations')
-              authorisationService.remove(this.contextId, {
-                query: {
-                  scope: 'organisations',
+      let authorisationService = this.$api.getService('authorisations')
+      authorisationService.remove(this.contextId, {
+        query: {
+          scope: 'organisations',
                   subjects: member._id,
-                  subjectsService: 'users',
-                  resourcesService: 'organisations'
-                }
-              })
+          subjectsService: 'users',
+          resourcesService: 'organisations'
+        }
+      })
             }
           }
         ]
@@ -84,9 +84,8 @@ export default {
   },
   created () {
     // Load the required components
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-grid'] = loadComponent('collection/KGrid')
-    this.$options.components['k-fab'] = loadComponent('collection/KFab')
+    this.$options.components['k-grid'] = this.$load('collection/KGrid')
+    this.$options.components['k-fab'] = this.$load('collection/KFab')
   }
 }
 </script>

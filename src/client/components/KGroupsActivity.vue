@@ -2,12 +2,12 @@
   <div>
     <!-- 
       Groups collection
-     -->
+    -->
     <k-grid ref="groups" service="groups" :actions="actions.group" />
-    <k-fab :actions="actions.groups" />
+      <k-fab :actions="actions.groups" />
     <!-- 
       Router view to enable routing to modals
-     -->
+    -->
     <router-view service="groups" backRoute="groups-activity"></router-view>
   </div>
 </template>
@@ -55,12 +55,12 @@ export default {
         name: 'remove-group', label: 'Remove', icon: 'remove_circle',
         permissions: { operation: 'remove', service: 'groups', context: this.contextId },
         handler: this.removeGroup
-      })
+          })
       this.registerAction('group', { 
         name: 'edit-group', label: 'Edit', icon: 'description', 
         permissions: { operation: 'update', service: 'groups', context: this.contextId },
         route: { name: 'edit-group', params: { contextId: this.contextId } }
-      })
+          })
     },
     removeGroup (group) {
       Dialog.create({
@@ -73,17 +73,16 @@ export default {
             handler: () => {
               let groupsService = this.$api.getService('groups')
               groupsService.remove(group._id)
-            }
-          }
+        }
+      }
         ]
       })
     }
   },
   created () {
     // Load the required components
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-grid'] = loadComponent('collection/KGrid')
-    this.$options.components['k-fab'] = loadComponent('collection/KFab')
+    this.$options.components['k-grid'] = this.$load('collection/KGrid')
+    this.$options.components['k-fab'] = this.$load('collection/KFab')
   }
 }
 </script>

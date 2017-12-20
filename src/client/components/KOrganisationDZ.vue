@@ -73,9 +73,8 @@ export default {
   },
   created () {
     // Load the components
-    let loadComponent = this.$store.get('loadComponent')
-    this.$options.components['k-block'] = loadComponent('frame/KBlock')
-    this.$options.components['k-confirm'] = loadComponent('frame/KConfirm')
+    this.$options.components['k-block'] = this.$load('frame/KBlock')
+    this.$options.components['k-confirm'] = this.$load('frame/KConfirm')
     // Update underlying object
     this.loadObject()
     .then(object => this.name = object.name)
