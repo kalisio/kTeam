@@ -39,12 +39,12 @@ export default {
       // Collection actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('members', { 
-          name: 'add-member', label: 'Add', icon: 'person_add', route: { 
-            name: 'add-member', params: {} } 
+          name: 'add-member', label: 'Add', icon: 'person_add', 
+          route: { name: 'add-member', params: {} } 
         })
-        this.registerAction('members ', { 
-          name: 'invite-member', label: 'Invite', icon: 'email', route: { 
-            name: 'invite-member', params: {} } 
+        this.registerAction('members', { 
+          name: 'invite-member', label: 'Invite', icon: 'email', 
+          route: { name: 'invite-member', params: {} } 
         })
       }
       this.registerAction('member', { 
