@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid ref="members" service="members" :actions="actions.member" />
+    <k-grid service="members" :actions="actions.member" />
     <k-fab :actions="actions.members" />
     <!-- 
       Router view to enable routing to modals
@@ -29,13 +29,15 @@ export default {
     refreshActions () {
       this.clearActions()
       // Tabbar actions
-      this.registerTabAction({ name: 'members', label: 'Members', icon: 'description', route: { 
-        name: 'members-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({ 
+        name: 'members', label: 'Members', icon: 'group', 
+        route: { name: 'members-activity', params: { contextId: this.contextId },
+        default: true } 
       })
-      this.registerTabAction({ name: 'groups', label: 'Groups', icon: 'credit_card', route: { 
+      this.registerTabAction({ 
+        name: 'groups', label: 'Groups', icon: 'group_work', route: { 
         name: 'groups-activity', params: { contextId: this.contextId } } 
       })
-      this.$store.patch('tabBar', { currentTab: 'members' })
       // Collection actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('members', { 

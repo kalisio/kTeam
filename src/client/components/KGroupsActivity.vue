@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid ref="groups" service="groups" :actions="actions.group" />
+    <k-grid service="groups" :actions="actions.group" />
       <k-fab :actions="actions.groups" />
     <!-- 
       Router view to enable routing to modals
@@ -37,20 +37,23 @@ export default {
     refreshActions () {
       this.clearActions()
       // Tabbar actions
-      this.registerTabAction({ name: 'members', label: 'Members', icon: 'description', 
+      this.registerTabAction({ 
+        name: 'members', label: 'Members', icon: 'group',
         route: { name: 'members-activity', params: { contextId: this.contextId } } 
       })
-      this.registerTabAction({ name: 'groups', label: 'Groups', icon: 'credit_card', 
-        route: { name: 'groups-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({ 
+        name: 'groups', label: 'Groups', icon: 'group_work',
+        route: { name: 'groups-activity', params: { contextId: this.contextId },
+        default: true, } 
       })
-      this.$store.patch('tabBar', { currentTab: 'groups' })
-      // Collection
+      // Fab actions
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerAction('groups', { 
           name: 'create-group', label: 'Create', icon: 'add', 
           route: { name: 'create-group', params: {} }
         })
       }
+      // Item actions
       this.registerAction('group', { 
         name: 'remove-group', label: 'Remove', icon: 'remove_circle',
         permissions: { operation: 'remove', service: 'groups', context: this.contextId },
@@ -73,8 +76,8 @@ export default {
             handler: () => {
               let groupsService = this.$api.getService('groups')
               groupsService.remove(group._id)
-        }
-      }
+            }
+          }
         ]
       })
     }
