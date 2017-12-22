@@ -1,6 +1,5 @@
 <template>
   <div>
-    <k-nav-bar :tabs="actions.tab" :selected="perspective" />
     <div v-if="perspective === 'properties'">
      <k-editor service="organisations" :id="contextId" />
     </div>
@@ -34,16 +33,23 @@ export default {
   },
   methods: {
     refreshActions () {
-      this.clearActions()
+       this.clearActions()
+      // Tabbar actions
       if (this.$can('update', 'organisations', this.contextId, { _id: this.contextId })) {
-        this.registerAction('tab', { name: 'properties', label: 'Properties', icon: 'description', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' } } 
+        this.registerTabAction({ 
+          name: 'properties', label: 'Properties', icon: 'description', 
+          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' },
+          default: this.perspective === 'properties' } 
         })
-        this.registerAction('tab', { name: 'billing', label: 'Billing', icon: 'credit_card', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' } } 
-        })
-        this.registerAction('tab', { name: 'danger-zone', label: 'Danger Zone', icon: 'warning', route: { 
-          name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' } } 
+        this.registerTabAction({ 
+          name: 'billing', label: 'Billing', icon: 'credit_card', 
+          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' },
+          default: this.perspective === 'billing' }
+        }),
+        this.registerTabAction({
+          name: 'danger-zone', label: 'Danger Zone', icon: 'warning', 
+          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' },
+          default: this.perspective === 'danger-zone' }
         })
       }
     }
@@ -51,9 +57,7 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-editor'] = this.$load('editor/KEditor')
-    this.$options.components['k-nav-bar'] = this.$load('layout/KNavBar')
     this.$options.components['k-organisation-dz'] = this.$load('KOrganisationDZ')
-    this.$options.components['k-authoriser'] = this.$load('KAuthoriser')
   }
 }
 </script>
