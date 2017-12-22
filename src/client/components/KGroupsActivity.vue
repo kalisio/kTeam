@@ -58,12 +58,12 @@ export default {
         name: 'remove-group', label: 'Remove', icon: 'remove_circle',
         permissions: { operation: 'remove', service: 'groups', context: this.contextId },
         handler: this.removeGroup
-          })
+      })
       this.registerAction('group', { 
         name: 'edit-group', label: 'Edit', icon: 'description', 
         permissions: { operation: 'update', service: 'groups', context: this.contextId },
         route: { name: 'edit-group', params: { contextId: this.contextId } }
-          })
+      })
     },
     removeGroup (group) {
       Dialog.create({

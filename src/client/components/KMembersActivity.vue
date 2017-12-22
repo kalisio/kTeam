@@ -38,7 +38,7 @@ export default {
         name: 'groups', label: 'Groups', icon: 'group_work', route: { 
         name: 'groups-activity', params: { contextId: this.contextId } } 
       })
-      // Collection actions
+      // Fab actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('members', { 
           name: 'add-member', label: 'Add', icon: 'person_add', 
@@ -49,16 +49,19 @@ export default {
           route: { name: 'invite-member', params: {} } 
         })
       }
-      this.registerAction('member', { 
-        name: 'remove-member', label: 'Remove', icon: 'remove_circle',
-        permissions: { operation: 'remove', service: 'members', context: this.contextId },
-        handler: this.removeMember 
+      // Collection actions
+      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+        this.registerAction('member', { 
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
+          handler: this.removeMember 
         })
-      this.registerAction('member', { 
-        name: 'edit-member', label: 'Edit', icon: 'description',
-        permissions: { operation: 'update', service: 'members', context: this.contextId },
-        route: { name: 'edit-member', params: { perspective: 'profile' } }
-      })
+      }
+      if (this.$can('update', 'members', this.contextId)) {
+        this.registerAction('member', { 
+          name: 'edit-member', label: 'Edit', icon: 'description',
+          route: { name: 'edit-member', params: { perspective: 'profile' } }
+        })
+      }
     },
     removeMember (member) {
       Dialog.create({
@@ -69,15 +72,15 @@ export default {
           {
             label: 'Ok',
             handler: () => {
-      let authorisationService = this.$api.getService('authorisations')
-      authorisationService.remove(this.contextId, {
-        query: {
-          scope: 'organisations',
+              let authorisationService = this.$api.getService('authorisations')
+              authorisationService.remove(this.contextId, {
+                query: {
+                  scope: 'organisations',
                   subjects: member._id,
-          subjectsService: 'users',
-          resourcesService: 'organisations'
-        }
-      })
+                  subjectsService: 'users',
+                  resourcesService: 'organisations'
+                }
+              })
             }
           }
         ]
