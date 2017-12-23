@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://www.kalisio.xyz/schemas/member.update-profile.json#",
+  "$id": "http://www.kalisio.xyz/schemas/members.update-profile.json#",
   "title": "Member Profile",
   "description": "Member profile perspective",
   "type": "object",

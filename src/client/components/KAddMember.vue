@@ -73,7 +73,7 @@ export default {
         authorisationService.create({
           scope: 'organisations',
           permissions: result.values.role,
-          subjects: this.subject._id,
+          subjects: result.values.user[0]._id,
           subjectsService: 'users',
           resource: this.contextId,
           resourcesService: 'organisations'

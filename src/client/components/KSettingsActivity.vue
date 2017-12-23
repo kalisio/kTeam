@@ -1,13 +1,13 @@
 <template>
   <div>
     <div v-if="perspective === 'properties'">
-     <k-editor service="organisations" :id="contextId" />
+      <k-editor service="organisations" :id="contextId" />
     </div>
     <div v-else-if="perspective === 'billing'">
       <k-editor service="organisations" :id="contextId" perspective="billing" />
     </div>
     <div v-else-if="perspective === 'danger-zone'">
-     <k-organisation-dz :id="contextId" />
+      <k-organisation-dz :id="contextId" />
     </div>
     <div v-else>
       <!-- Error -->
@@ -28,7 +28,7 @@ export default {
     },
     perspective: {
       type: String,
-      default: '',
+      default: ''
     }
   },
   methods: {
