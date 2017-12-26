@@ -70,14 +70,14 @@ export default {
         title: 'Remove ' + group.name + '?',
         message: 'Are you sure you want to remove ' + group.name + ' from your organisation ?',
         buttons: [
-          'Cancel',
           {
             label: 'Ok',
             handler: () => {
               let groupsService = this.$api.getService('groups')
               groupsService.remove(group._id)
             }
-          }
+          },
+          'Cancel'
         ]
       })
     }
