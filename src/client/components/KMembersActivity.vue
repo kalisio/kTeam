@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid service="members" :actions="actions.member" />
+    <k-grid ref="membersGrid" service="members" :actions="actions.member" />
     <k-fab :actions="actions.members" />
     <!-- 
       Router view to enable routing to modals
@@ -68,7 +68,6 @@ export default {
         title: 'Remove ' + member.name + '?',
         message: 'Are you sure you want to remove ' + member.name + ' from your organisation ?',
         buttons: [
-          'Cancel',
           {
             label: 'Ok',
             handler: () => {
@@ -81,8 +80,10 @@ export default {
                   resourcesService: 'organisations'
                 }
               })
+              .then(_ => this.$refs.membersGrid.refreshCollection())
             }
-          }
+          },
+          'Cancel'
         ]
       })
     }
