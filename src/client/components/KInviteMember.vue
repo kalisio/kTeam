@@ -14,6 +14,12 @@ export default {
   mixins: [
     kCoreMixins.refsResolver(['form'])
   ],
+  props: {
+    contextId: {
+      type: String,
+      required: true,
+    }
+  },
   data () {
     return {
       schema: {
@@ -75,7 +81,7 @@ export default {
         // Add the sponsor information
         result.values.sponsor = {
           id: this.$store.get('user._id'),
-          organisationId: this.$store.get('context._id'),
+          organisationId: this.contextId,
           roleGranted: result.values.role
         }
         // Create the user

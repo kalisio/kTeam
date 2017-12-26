@@ -14,6 +14,12 @@ export default {
   mixins: [
     kCoreMixins.refsResolver(['form'])
   ],
+  props: {
+    contextId: {
+      type: String,
+      required: true,
+    }
+  },
   data () {
     return {
       schema: {
@@ -29,7 +35,7 @@ export default {
               "service": "users",
               "field": "profile.name",
               "baseQuery": {
-                "organisations._id": { "$nin": [this.$store.get('context._id')] },
+                "organisations._id": { "$nin": [this.contextId] },
                 "$select": ["profile"]
               }
             }],
