@@ -4,7 +4,7 @@
       Groups collection
     -->
     <k-grid service="groups" :actions="actions.group" />
-      <k-fab :actions="actions.groups" />
+    <k-fab :actions="actions.groups" />
     <!-- 
       Router view to enable routing to modals
     -->
