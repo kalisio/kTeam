@@ -4,7 +4,6 @@
       Members collection
      -->
     <k-grid ref="membersGrid" service="members" :actions="actions.member" />
-    <k-fab :actions="actions.members" />
     <!-- 
       Router view to enable routing to modals
      -->
@@ -40,11 +39,11 @@ export default {
       })
       // Fab actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerAction('members', { 
+        this.registerFabAction({ 
           name: 'add-member', label: 'Add a user', icon: 'person_add', 
           route: { name: 'add-member', params: {} } 
         })
-        this.registerAction('members', { 
+        this.registerFabAction({ 
           name: 'invite-member', label: 'Invite a guest', icon: 'email', 
           route: { name: 'invite-member', params: {} } 
         })
@@ -91,7 +90,6 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-grid'] = this.$load('collection/KGrid')
-    this.$options.components['k-fab'] = this.$load('collection/KFab')
   }
 }
 </script>

@@ -4,7 +4,6 @@
       Groups collection
     -->
     <k-grid service="groups" :actions="actions.group" />
-    <k-fab :actions="actions.groups" />
     <!-- 
       Router view to enable routing to modals
     -->
@@ -48,7 +47,7 @@ export default {
       })
       // Fab actions
       if (this.$can('create', 'groups', this.contextId)) {
-        this.registerAction('groups', { 
+        this.registerFabAction({ 
           name: 'create-group', label: 'Create a group', icon: 'add', 
           route: { name: 'create-group', params: { title: 'Create a new group'} }
         })
@@ -85,7 +84,6 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-grid'] = this.$load('collection/KGrid')
-    this.$options.components['k-fab'] = this.$load('collection/KFab')
   }
 }
 </script>
