@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import lodash from 'lodash'
 import { Events, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 import { mixins } from 'kCore/client'
@@ -76,7 +75,6 @@ export default {
       this.$router.push({ name: 'context', params: { contextId: org._id } })
     },
     createOrganisation () {
-      console.log(this.$route)
       this.$router.push({ name: 'create-organisation', params: { title: 'Create a new organisation', service: 'organisations', backRoute: this.$route.name } })
     }
   },
@@ -90,7 +88,7 @@ export default {
     // Required when user permissions change
     Events.$on('user-changed', this.updateOrganisations)
     // Required to get the org objects first
-    this.$on('collection-refreshed', this.updateCurrentOrganisation)
+    // FIXME: this.$on('collection-refreshed', this.updateCurrentOrganisation)
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
