@@ -30,8 +30,8 @@ export default {
       // Tabbar actions
       this.registerTabAction({ 
         name: 'members', label: 'Members', icon: 'group', 
-        route: { name: 'members-activity', params: { contextId: this.contextId },
-        default: true } 
+        route: { name: 'members-activity', params: { contextId: this.contextId } },
+        default: true
       })
       this.registerTabAction({ 
         name: 'groups', label: 'Groups', icon: 'group_work', route: { 

@@ -42,8 +42,8 @@ export default {
       })
       this.registerTabAction({ 
         name: 'groups', label: 'Groups', icon: 'group_work',
-        route: { name: 'groups-activity', params: { contextId: this.contextId },
-        default: true, } 
+        route: { name: 'groups-activity', params: { contextId: this.contextId } },
+        default: true
       })
       // Fab actions
       if (this.$can('create', 'groups', this.contextId)) {
