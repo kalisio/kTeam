@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid ref="membersGrid" service="members" :actions="actions.member" />
+    <k-grid ref="membersGrid" service="members" :renderer="renderer" :actions="actions.member" />
     <!-- 
       Router view to enable routing to modals
      -->
@@ -24,7 +24,21 @@ export default {
       required: true
     }
   },
-  methods: {  
+  data () {
+    return {
+      renderer: { component: 'KMemberCard', props: { groups: [] } }
+    }
+  },
+  methods: { 
+    refreshGroups () {
+      let groupsService = this.$api.getService('groups')
+      groupsService.find({
+        rx: { listStrategy: 'always' }
+      })
+      .subscribe(response => {
+        this.renderer.props.groups = response.data
+      })
+    },
     refreshActions () {
       this.clearActions()
       // Tabbar actions
@@ -49,10 +63,10 @@ export default {
         })
       }
       // Collection actions
-      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+      if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
-          handler: this.removeMember 
+          name: 'join-group', label: 'Join', icon: 'group_work',
+          route: { name: 'join-group', params: {} }
         })
       }
       if (this.$can('update', 'members', this.contextId)) {
@@ -61,6 +75,14 @@ export default {
           route: { name: 'edit-member', params: { perspective: 'profile' } }
         })
       }
+      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+        this.registerAction('member', { 
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
+          handler: this.removeMember 
+        })
+      }
+      // Refresh the group list
+      this.refreshGroups()
     },
     removeMember (member) {
       Dialog.create({
