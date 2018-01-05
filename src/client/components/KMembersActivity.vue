@@ -97,7 +97,7 @@ export default {
                 query: {
                   scope: 'organisations',
                   subjects: member._id,
-                  subjectsService: 'users',
+                  subjectsService: 'members',
                   resourcesService: 'organisations'
                 }
               })

@@ -92,7 +92,7 @@ export default {
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
-    this.$off('collection-refreshed', this.updateOrganisations)
+    // FIXMEthis.$off('collection-refreshed', this.updateOrganisations)
   }
 }
 </script>
