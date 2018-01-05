@@ -1,11 +1,9 @@
-import { hooks } from 'kCore'
 import { createOrganisationServices, removeOrganisationServices, createOrganisationAuthorisations, removeOrganisationAuthorisations } from '../../hooks'
-const { authenticate } = require('feathers-authentication').hooks
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
-    find: [ hooks.processObjectIDs ],
+    all: [],
+    find: [],
     get: [],
     create: [],
     update: [],

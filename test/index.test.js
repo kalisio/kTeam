@@ -284,7 +284,7 @@ describe('kTeam', () => {
       expect(users.data.length === 1).beTrue()
       user2Object = users.data[0]
       // Only private org remains
-      expect(user2Object.organisations[0]._id).to.equal(user2Object._id.toString())
+      expect(user2Object.organisations[0]._id.toString()).to.equal(user2Object._id.toString())
     })
   })
 
