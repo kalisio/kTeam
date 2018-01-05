@@ -193,7 +193,7 @@ describe('kTeam', () => {
   })
 
   it('members can access organisation users', () => {
-    return orgUserService.find({ query: { 'profile.name': user2Object.name }, user: user2Object, checkAuthorisation: true })
+    return orgUserService.find({ query: { 'profile.name': user1Object.name }, user: user2Object, checkAuthorisation: true })
     .then(users => {
       // Found now on the org with membership
       expect(users.data.length > 0).beTrue()
