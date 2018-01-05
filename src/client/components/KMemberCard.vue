@@ -31,11 +31,6 @@ export default {
       default: () => { return [] }
     }
   },
-  computed: {
-    color (group) {
-
-    }
-  },
   data () {
     return {
       memberGroups: []
