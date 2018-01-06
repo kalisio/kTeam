@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     refreshActivity () {
-       this.clearActivity()
-       this.setTitle(this.$store.get('context.name'))
+      this.clearActivity()
+      this.setTitle(this.$store.get('context.name'))
       // Tabbar actions
       if (this.$can('update', 'organisations', this.contextId, { _id: this.contextId })) {
         this.registerTabAction({ 
