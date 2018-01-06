@@ -6,9 +6,6 @@
           <div :key="index">
             <q-btn flat round small color="tertiary">
               <q-icon :name="roleIcons[index]" />
-              <!--q-chip small floating color="tertiary">
-                {{counters[role]}}
-              </q-chip-->
               {{counters[role]}}
             </q-btn>
           </div>
@@ -34,7 +31,6 @@ export default {
   },
   data () {
     return {
-      roles: [],
       counters: {}
     }
   },
@@ -62,7 +58,6 @@ export default {
     // Compute the list of groups this member belongs
     this.roleNames = kCorePermissions.RoleNames
     this.roleIcons = this.$config('roles.icons')
-    this.roleColors = this.$config('roles.colors')
     this.refreshCounters()
   }
 }
