@@ -127,7 +127,6 @@ export default {
     this.loadObject()
     .then(object => {
       this.member = object
-      console.log(_.map(this.member.groups, '_id'))
     })
   }
 }
