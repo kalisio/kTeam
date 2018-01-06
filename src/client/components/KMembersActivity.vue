@@ -40,17 +40,9 @@ export default {
     }
   },
   methods: { 
-    refreshGroups () {
-      let groupsService = this.$api.getService('groups')
-      groupsService.find({
-        rx: { listStrategy: 'always' }
-      })
-      .subscribe(response => {
-        this.renderer.props.groups = response.data
-      })
-    },
-    refreshActions () {
-      this.clearActions()
+    refreshActivity () {
+      this.clearActivity()
+      this.setTitle(this.$store.get('context.name'))
       // Tabbar actions
       this.registerTabAction({ 
         name: 'members', label: 'Members', icon: 'group', 
@@ -93,6 +85,15 @@ export default {
       }
       // Refresh the group list
       this.refreshGroups()
+    },
+    refreshGroups () {
+      let groupsService = this.$api.getService('groups')
+      groupsService.find({
+        rx: { listStrategy: 'always' }
+      })
+      .subscribe(response => {
+        this.renderer.props.groups = response.data
+      })
     },
     removeMember (member) {
       Dialog.create({

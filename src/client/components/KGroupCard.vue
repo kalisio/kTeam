@@ -4,7 +4,7 @@
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
           <div :key="index">
-            <q-btn flat round color="tertiary">
+            <q-btn flat round small color="tertiary">
               <q-icon :name="roleIcons[index]" />
               <!--q-chip small floating color="tertiary">
                 {{counters[role]}}

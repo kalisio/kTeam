@@ -47,8 +47,9 @@ export default {
     }
   },
   methods: {
-    refreshActions () {
-      this.clearActions()
+    refreshActivity () {
+      this.clearActivity()
+      this.setTitle(this.$store.get('context.name'))
       // Tabbar actions
       this.registerTabAction({ 
         name: 'members', label: 'Members', icon: 'group',
