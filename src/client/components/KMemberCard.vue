@@ -33,7 +33,9 @@ export default {
   },
   computed: {
     memberGroups () {
+      // Get the groups for this member
       let groupsOfMember = _.map(this.item.groups, '_id')
+      // Filter the groups against the orfanisation groups
       return  _.filter(this.groups, (group) => {
         return _.includes(groupsOfMember, group._id)
       })
