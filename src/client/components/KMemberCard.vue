@@ -31,18 +31,15 @@ export default {
       default: () => { return [] }
     }
   },
-  data () {
-    return {
-      memberGroups: []
+  computed: {
+    memberGroups () {
+      let groupsOfMember = _.map(this.item.groups, '_id')
+      return  _.filter(this.groups, (group) => {
+        return _.includes(groupsOfMember, group._id)
+      })
     }
   },
   methods: {
-    refreshMemberGroups () {
-      let groupsOfMember = _.map(this.item.groups, '_id')
-      this.memberGroups =  _.filter(this.groups, (group) => {
-        return _.includes(groupsOfMember, group._id)
-      })
-    },
     canLeaveGroup (group) {
       if (this.$can('remove', 'authorisations', this.item._id, { resource: group._id })) return true
       return false
@@ -79,10 +76,6 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-card'] = this.$load('collection/KCard')
-    // Compute the list of groups this member belongs
-    this.roleIcons = this.$config('roles.icons')
-    this.roleColors = this.$config('roles.colors')
-    this.refreshMemberGroups()
   }
 }
 </script>
