@@ -1,10 +1,10 @@
 <template>
   <k-card v-bind="$props">
     <div slot="card-content">
-      <div class="row justify-between items-center xs-gutter" style="padding: 4px">
+      <div class="row justify-around items-center xs-gutter">
         <template v-for="group in memberGroups">
-          <div :key="group._id">  
-            <q-chip small :closable="canLeaveGroup(group)" color="secondary" @close="onLeaveGroup(group)">
+          <div :key="group._id"> 
+            <q-chip small :closable="canLeaveGroup(group)" color="tertiary" @click="onGroupClicked(group)" @close="onLeaveGroup(group)">
               {{group.name}}
             </q-chip>
           </div>
@@ -17,7 +17,7 @@
 <script>
 import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
-import { QChip, Dialog, Events } from 'quasar'
+import { QChip, Dialog } from 'quasar'
 
 export default {
   name: 'k-member-card',
@@ -55,13 +55,14 @@ export default {
           {
             label: 'Ok',
             handler: () => {
+              const contextId = this.$store.get('context._id')
               const authorisationService = this.$api.getService('authorisations')
               authorisationService.remove(group._id, {
                 query: {
                   scope: 'groups',
                   subjects: this.item._id,
-                  subjectsService: this.$store.get('context._id') + '/members',
-                  resourcesService: this.$store.get('context._id') + '/groups'
+                  subjectsService: contextId + '/members',
+                  resourcesService: contextId + '/groups'
                 }
               })
             }
@@ -70,11 +71,17 @@ export default {
         ]
       })
     },
+    onGroupClicked (group) {
+      const contextId = this.$store.get('context._id')
+      this.$router.push({ name: 'edit-group', params: { contextId: contextId, id: group._id } })
+    }
   },
   created () {
     // Load the required components
     this.$options.components['k-card'] = this.$load('collection/KCard')
     // Compute the list of groups this member belongs
+    this.roleIcons = this.$config('roles.icons')
+    this.roleColors = this.$config('roles.colors')
     this.refreshMemberGroups()
   }
 }

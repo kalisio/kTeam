@@ -26,7 +26,17 @@ export default {
   },
   data () {
     return {
-      renderer: { component: 'KMemberCard', props: { groups: [] } }
+      renderer: { 
+        component: 'KMemberCard', 
+        props: { 
+          groups: [],
+          options: {
+            avatar: {
+              size: 96
+            }
+          }
+        }
+      }
     }
   },
   methods: { 

@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid service="groups" :actions="actions.group" />
+    <k-grid service="groups" :renderer="renderer" :actions="actions.group" />
     <!-- 
       Router view to enable routing to modals
     -->
@@ -30,6 +30,20 @@ export default {
     perspective: {
       type: String,
       default: '',
+    }
+  },
+  data () {
+    return {
+      renderer: { 
+        component: 'KGroupCard', 
+        props: {
+          options: {
+            avatar: {
+              size: 96
+            }
+          }
+        } 
+      }
     }
   },
   methods: {
