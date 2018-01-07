@@ -6,7 +6,7 @@
           <div :key="index">
             <q-btn flat round small color="tertiary">
               <q-icon :name="roleIcons[index]" />
-              {{counters[role]}}
+              {{memberStats[role]}}
             </q-btn>
           </div>
         </template>
@@ -19,6 +19,7 @@
 import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
+import { findMembersOfGroup } from '../../common/permissions'
 import { QChip, QBtn, QIcon } from 'quasar'
 
 export default {
@@ -31,24 +32,25 @@ export default {
   },
   data () {
     return {
-      counters: {}
+      memberStats: {}
     }
   },
   methods: {
-    refreshCounters () {
+    refreshStats () {
       // Clear the counters. We use a temporaty object to ensure reactivity
       // see: https://v1.vuejs.org/guide/reactivity.html
-      let tempCounters = {}
-      this.roleNames.forEach(role => tempCounters[role] = 0)
-      const context = this.$store.get('context._id')
-      kCorePermissions.getSubjectsForResource(this.$api, context, 'members', 'groups', this.item._id)
-      .then(response => {
+      let stats = {}
+      this.roleNames.forEach(role => stats[role] = 0)
+      const contextId = this.$store.get('context._id')
+      const membersService = this.$api.getService('members', contextId)
+      findMembersOfGroup(membersService, this.item._id)
+      .then(members => {
         // filter the subjects according the role in order to count them
-        _.forEach(response.data, (user) => {
+        _.forEach(members.data, (user) => {
           let group = _.find(user.groups, { '_id':  this.item._id })
-          tempCounters[group.permissions]++
+          stats[group.permissions]++
         })
-        this.counters = Object.assign({}, tempCounters)
+        this.memberStats = Object.assign({}, stats)
       })
     }
   },
@@ -58,7 +60,7 @@ export default {
     // Compute the list of groups this member belongs
     this.roleNames = kCorePermissions.RoleNames
     this.roleIcons = this.$config('roles.icons')
-    this.refreshCounters()
+    this.refreshStats()
   }
 }
 </script>

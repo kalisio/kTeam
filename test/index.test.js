@@ -137,6 +137,14 @@ describe('kTeam', () => {
     })
   })
 
+  it('checks the subjects as owner on this organisation', () => {
+    return teamPermissions.findMembersOfOrganisation(userService, orgObject._id.toString(), permissions.Roles.owner)
+    .then(members => {
+      expect(members.data.length === 1).beTrue()
+      expect(members.data[0]._id.toString()).to.deep.equal(user1Object._id.toString())
+    })
+  })
+
   it('non-members cannot access organisation users', () => {
     return userService.find({ query: { 'profile.name': user2Object.name }, user: user1Object, checkAuthorisation: true })
     .then(users => {
@@ -245,6 +253,14 @@ describe('kTeam', () => {
     })
     .then(dbs => {
       expect(dbs.databases.find(db => db.name === orgObject._id.toString())).toExist()
+    })
+  })
+
+  it('checks the subjects as owner on this organisation group', () => {
+    return teamPermissions.findMembersOfGroup(userService, groupObject._id.toString(), permissions.Roles.owner)
+    .then(members => {
+      expect(members.data.length === 1).beTrue()
+      expect(members.data[0]._id.toString()).to.deep.equal(user2Object._id.toString())
     })
   })
 
