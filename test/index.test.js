@@ -138,7 +138,7 @@ describe('kTeam', () => {
   })
 
   it('checks the subjects as owner on this organisation', () => {
-    return teamPermissions.findMembersOfOrganisation(userService, orgObject._id.toString(), permissions.Roles.owner)
+    return teamPermissions.findMembersOfOrganisation(userService, orgObject._id, permissions.Roles.owner)
     .then(members => {
       expect(members.data.length === 1).beTrue()
       expect(members.data[0]._id.toString()).to.deep.equal(user1Object._id.toString())
@@ -257,8 +257,9 @@ describe('kTeam', () => {
   })
 
   it('checks the subjects as owner on this organisation group', () => {
-    return teamPermissions.findMembersOfGroup(userService, groupObject._id.toString(), permissions.Roles.owner)
+    return teamPermissions.findMembersOfGroup(userService, groupObject._id, permissions.Roles.owner)
     .then(members => {
+      console.log(members)
       expect(members.data.length === 1).beTrue()
       expect(members.data[0]._id.toString()).to.deep.equal(user2Object._id.toString())
     })
