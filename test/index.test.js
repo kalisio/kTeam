@@ -201,7 +201,7 @@ describe('kTeam', () => {
   })
 
   it('members can access organisation users', () => {
-    return orgUserService.find({ query: { 'profile.name': user2Object.name }, user: user2Object, checkAuthorisation: true })
+    return orgUserService.find({ query: { 'profile.name': user1Object.name }, user: user2Object, checkAuthorisation: true })
     .then(users => {
       // Found now on the org with membership
       expect(users.data.length > 0).beTrue()
@@ -300,7 +300,7 @@ describe('kTeam', () => {
       expect(users.data.length === 1).beTrue()
       user2Object = users.data[0]
       // Only private org remains
-      expect(user2Object.organisations[0]._id).to.equal(user2Object._id.toString())
+      expect(user2Object.organisations[0]._id.toString()).to.equal(user2Object._id.toString())
     })
   })
 
