@@ -259,7 +259,6 @@ describe('kTeam', () => {
   it('checks the subjects as owner on this organisation group', () => {
     return teamPermissions.findMembersOfGroup(userService, groupObject._id, permissions.Roles.owner)
     .then(members => {
-      console.log(members)
       expect(members.data.length === 1).beTrue()
       expect(members.data[0]._id.toString()).to.deep.equal(user2Object._id.toString())
     })
