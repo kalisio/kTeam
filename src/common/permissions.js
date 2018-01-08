@@ -6,7 +6,6 @@ export function defineOrganisationAbilities (subject, can, cannot) {
     // Create new organisations
     can('service', 'organisations')
     can('create', 'organisations')
-    can('service', 'authorisations')
 
     if (subject.organisations) {
       subject.organisations.forEach(organisation => {
@@ -18,14 +17,17 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('service', organisation._id.toString() + '/members')
-          can(['read', 'update'], 'members', { context: organisation._id })
+          can('read', 'members', { context: organisation._id })
+          can('service', organisation._id.toString() + '/tags')
+          can('read', 'tags', { context: organisation._id })
         }
         if (role >= permissions.Roles.manager) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('service', organisation._id.toString() + '/groups')
           can('create', 'groups', { context: organisation._id })
-          can(['read', 'update'], 'members', { context: organisation._id })
+          can('update', 'members', { context: organisation._id })
+          can(['create', 'remove'], 'tags', { context: organisation._id })
         }
       })
     }
