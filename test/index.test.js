@@ -27,7 +27,7 @@ describe('kTeam', () => {
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`
     // Register authorisation hook
     app.hooks({
-      before: { all: hooks.authorise }
+      before: { all: [hooks.processObjectIDs, hooks.authorise] }
       /* For debug
       before: { all: [coreHooks.log, teamHooks.authorise] },
       after: { all: coreHooks.log },
@@ -278,7 +278,7 @@ describe('kTeam', () => {
       expect(users.data.length > 0).beTrue()
       user2Object = users.data[0]
       // No more permission set for org groups
-      expect(_.find(user2Object.groups, group => group._id === groupObject._id.toString())).beUndefined()
+      expect(_.find(user2Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
     })
   })
 
@@ -320,9 +320,9 @@ describe('kTeam', () => {
       user2Object = users.data[1]
       user3Object = users.data[2]
       // No more permission set for org
-      expect(_.find(user1Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
-      expect(_.find(user2Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
-      expect(_.find(user3Object.organisations, org => org._id === orgObject._id.toString())).beUndefined()
+      expect(_.find(user1Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
+      expect(_.find(user2Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
+      expect(_.find(user3Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
       // Should remove associated DB
       return adminDb.listDatabases()
     })
