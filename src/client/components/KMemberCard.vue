@@ -10,13 +10,10 @@
     <div slot="card-content">
       <div class="row justify-start items-center">
         <template v-for="group in memberGroups">
-          <q-btn :key="group._id" flat round color="tertiary" @click="onGroupClicked(group)">
-            <avatar :key="group._id" :username="group.name" :size="32" />
+          <q-btn :key="group._id" flat small round color="tertiary" @click="onGroupClicked(group)">
+            <avatar :key="group._id" :username="group.name" :size="28" />
           </q-btn>
         </template>
-         <q-btn flat round color="tertiary" @click="onGroupsClicked()">
-            <q-icon name="more_horiz" />
-          </q-btn>
       </div>
     </div>
   </k-card>
