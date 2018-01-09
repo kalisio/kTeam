@@ -61,12 +61,12 @@ export function findMembersOfGroup (memberService, groupId, role) {
 
 export function getRoleForOrganisation (user, organisationId) {
   let result = _.find(user.organisations, { '_id': organisationId })
-  if (! _.isUndefined(result)) return result.permissions
+  if (!_.isUndefined(result)) return result.permissions
   return undefined
 }
 
 export function getRoleForGroup (user, organisationId, groupId) {
   let result = _.find(user.groups, { 'context': organisationId, '_id': groupId })
-  if (! _.isUndefined(result)) return result.permissions
+  if (!_.isUndefined(result)) return result.permissions
   return undefined
 }
