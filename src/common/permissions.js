@@ -1,4 +1,5 @@
 import { permissions } from 'kCore/common'
+import _ from 'lodash'
 
 // Hook computing organisation abilities for a given user
 export function defineOrganisationAbilities (subject, can, cannot) {
@@ -56,4 +57,16 @@ export function findMembersOfOrganisation (userService, organisationId, role) {
 // Helper functions to find the members of a given group
 export function findMembersOfGroup (memberService, groupId, role) {
   return permissions.findSubjectsForResource(memberService, 'groups', groupId, role)
+}
+
+export function getRoleForOrganisation (user, organisationId) {
+  let result = _.find(user.organisations, { '_id': organisationId })
+  if (! _.isUndefined(result)) return result.permissions
+  return undefined
+}
+
+export function getRoleForGroup (user, organisationId, groupId) {
+  let result = _.find(user.groups, { 'context': organisationId, '_id': groupId })
+  if (! _.isUndefined(result)) return result.permissions
+  return undefined
 }

@@ -1,5 +1,12 @@
 <template>
   <k-card v-bind="$props">
+        <!--
+      Card icon
+     -->
+    <q-icon slot="card-icon" :name="memberRole" />
+    <!--
+      Card content
+     -->
     <div slot="card-content">
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
@@ -19,7 +26,7 @@
 import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
-import { findMembersOfGroup } from '../../common/permissions'
+import { findMembersOfGroup, getRoleForGroup } from '../../common/permissions'
 import { QChip, QBtn, QIcon } from 'quasar'
 
 export default {
@@ -29,6 +36,15 @@ export default {
     QChip,
     QBtn,
     QIcon
+  },
+  computed: {
+    memberRole () {
+      const contextId = this.$store.get('context._id')
+      const user = this.$store.get('user')
+      let role = getRoleForGroup(user, contextId, this.item._id)
+      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      else return ''
+    }
   },
   data () {
     return {

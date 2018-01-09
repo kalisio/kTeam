@@ -26,7 +26,7 @@
       ref="editor" 
       title="Create a new organisation ?"
       service="organisations"
-      :auto="false"
+      :route="false"
       @applied="onOrganisationCreated" />
   </div>
 </template>
