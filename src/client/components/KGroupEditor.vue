@@ -11,7 +11,7 @@
           <!-- 
             Properties pane
           -->
-          <q-tab name="properties" slot="title" icon="map" />
+          <q-tab name="properties" slot="title" icon="description" />
           <q-tab-pane name="properties">
             <k-editor service="groups" :id="id" />
           </q-tab-pane>
