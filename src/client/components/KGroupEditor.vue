@@ -1,53 +1,42 @@
 <template>
-  <div v-if="group !== null">
-    <k-modal ref="modal" 
-      :title="group.name" 
-      :toolbar="toolbar" 
-      :buttons="buttons" 
-      :options="{minWidth: '80vw', minHeight: '80vh'}"
-      :route="true">
-      <div slot="modal-content">  
-        <q-tabs inverted color="primary" align="justify" v-model="currentTab">
-          <!-- 
-            Properties pane
-          -->
-          <q-tab name="properties" slot="title" icon="description" />
-          <q-tab-pane name="properties">
+  <k-modal ref="modal" 
+    title="Group" 
+    :toolbar="toolbar" 
+    :route="true">
+    <div slot="modal-content">  
+      <q-tabs ref="tabs" inverted color="primary" align="justify" v-model="currentTab">
+        <!-- 
+          Properties pane
+        -->
+        <q-tab name="properties" slot="title" icon="description" />
+        <q-tab-pane name="properties">
+          <div class="colum full-width justify-center">
             <k-editor service="groups" :id="id" />
+          </div>
+        </q-tab-pane>
+        <!-- 
+          Members pane
+        -->
+        <template v-for="(role, index) in roleNames">
+          <q-tab :key="index" :name="role" slot="title" :icon="roleIcons[index]" />
+          <q-tab-pane :key="index" :name="role">
+            <div class="colum full-width justify-center">
+              <k-grid service="members" :renderer="renderer" :base-query="baseQuery(role)" />
+            </div>
           </q-tab-pane>
-          <!-- 
-            Members pane
-          -->
-          <template v-for="(role, index) in roleNames">
-            <q-tab :key="index" :name="role" slot="title" :icon="roleIcons[index]" />
-            <q-tab-pane :key="index" :name="role">
-              <div class="row justify-start items-center xs-gutter">
-                <template v-for="member in members[role]">
-                  <div :key="member._id">
-                    <q-chip small color="tertiary">
-                      {{member.name}}
-                    </q-chip>
-                  </div>
-                </template>
-              </div>
-            </q-tab-pane>
-          </template>
-        </q-tabs>
-      </div>
-    </k-modal>
-  </div>
+        </template>
+      </q-tabs>
+    </div>
+  </k-modal>
 </template>
 
 <script>
 import _ from 'lodash'
-import { mixins as kCoreMixins } from 'kCore/client'
 import { QTabs, QTab, QTabPane, QChip } from 'quasar'
 import { permissions as kCorePermissions } from 'kCore/common'
-import { findMembersOfGroup } from '../../common/permissions'
 
 export default {
-  name: 'k-group-explorer',
-  mixins: [kCoreMixins.objectProxy],
+  name: 'k-group-editor',
   components: {
     QTabs,
     QTab,
@@ -58,6 +47,14 @@ export default {
     contextId: {
       type: String,
       required: true
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    perspective: {
+      type: String,
+      default: 'properties'
     }
   },
   data () {
@@ -67,10 +64,16 @@ export default {
       currentTab: this.perspective,
       toolbar: [
         { name: 'Close', icon: 'close', handler: () => this.doClose() }
-      ]
+      ],
+      renderer: {
+        component: 'collection/KChipItem'
+      }
     }
   },
   methods: {
+    baseQuery (role) {
+      return { 'groups._id': this.id, 'groups.permissions': role }
+    },
     loadService () {
       this._service = this.$api.getService('groups')
       return this._service
@@ -86,25 +89,9 @@ export default {
   created () {
     this.$options.components['k-modal'] = this.$load('frame/KModal')
     this.$options.components['k-editor'] = this.$load('editor/KEditor')
+    this.$options.components['k-grid'] = this.$load('collection/KGrid')
     this.roleNames = kCorePermissions.RoleNames
     this.roleIcons = this.$config('roles.icons')
-    // load the group
-    this.loadObject()
-    .then(object => {
-      this.group = object
-      // Load the members
-      const membersService = this.$api.getService('members')
-      findMembersOfGroup(membersService, this.id)
-      .then(response => {
-        let tempMembers = {}
-        this.roleNames.forEach(role => tempMembers[role] = [])
-        _.forEach(response.data, (member) => {
-          let group = _.find(member.groups, { '_id':  this.id })
-          tempMembers[group.permissions].push(member)
-        })
-        this.members = tempMembers
-      })
-    })
   }
 }
 </script>

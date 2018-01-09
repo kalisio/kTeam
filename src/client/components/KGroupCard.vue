@@ -10,12 +10,10 @@
     <div slot="card-content">
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
-          <div :key="index">
-            <q-btn flat round small color="tertiary" @click="onMembersClicked(role)">
-              <q-icon :name="roleIcons[index]" />
+          <q-btn :key="key(role)" flat round color="tertiary" @click="onMembersClicked(role)">
+            <q-icon :name="roleIcons[index]" />
               {{memberStats[role]}}
-            </q-btn>
-          </div>
+          </q-btn>
         </template>
       </div>
     </div>
@@ -52,6 +50,9 @@ export default {
     }
   },
   methods: {
+    key (role) {
+      return this.item._id + '-' + role
+    },
     refreshStats () {
       // Clear the counters. We use a temporaty object to ensure reactivity
       // see: https://v1.vuejs.org/guide/reactivity.html

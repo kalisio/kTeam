@@ -38,9 +38,7 @@ export default {
         component: 'KGroupCard', 
         props: {
           options: {
-            avatar: {
-              size: 96
-            }
+            avatar: { size: 96 }
           }
         } 
       }
@@ -49,8 +47,8 @@ export default {
   methods: {
     router () {
       return { 
-        onApply: { name:'groups-activity', params: { contextId: this.contextId } },
-        onDismiss: { name:'groups-activity', params: { contextId: this.contextId } }
+        onApply: { name: 'groups-activity', params: { contextId: this.contextId } },
+        onDismiss: { name: 'groups-activity', params: { contextId: this.contextId } }
       }
     },
     refreshActivity () {
@@ -70,7 +68,7 @@ export default {
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerFabAction({ 
           name: 'create-group', label: 'Create a group', icon: 'add', 
-          route: { name: 'create-group', params: { title: 'Create a new group'} }
+          route: { name: 'create-group', params: { contextId: this.contextId, title: 'Create a new group ?'} }
         })
       }
       // Item actions

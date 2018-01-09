@@ -8,14 +8,15 @@
       Card content
      -->
     <div slot="card-content">
-      <div class="row justify-around items-center xs-gutter">
+      <div class="row justify-start items-center">
         <template v-for="group in memberGroups">
-          <div :key="group._id"> 
-            <q-chip small :closable="canLeaveGroup(group)" color="tertiary" @click="onGroupClicked(group)" @close="onLeaveGroup(group)">
-              {{group.name}}
-            </q-chip>
-          </div>
+          <q-btn :key="group._id" flat round color="tertiary" @click="onGroupClicked(group)">
+            <avatar :key="group._id" :username="group.name" :size="32" />
+          </q-btn>
         </template>
+         <q-btn flat round color="tertiary" @click="onGroupsClicked()">
+            <q-icon name="more_horiz" />
+          </q-btn>
       </div>
     </div>
   </k-card>
@@ -26,14 +27,16 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
 import { getRoleForOrganisation } from '../../common/permissions'
-import { QChip, QIcon, Dialog } from 'quasar'
+import { QBtn, QIcon, Dialog } from 'quasar'
+import Avatar from 'vue-avatar/dist/Avatar'
 
 export default {
   name: 'k-member-card',
   mixins: [kCoreMixins.baseItem],
   components: {
-    QChip,
-    QIcon
+    QBtn,
+    QIcon,
+    Avatar
   },
   props: {
     groups: {
