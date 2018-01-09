@@ -19,10 +19,20 @@
         <q-item-main label="New organisation" />
       </q-item>
     </q-list>
+    <!--
+      Create editor
+     -->
+    <k-modal-editor 
+      ref="editor" 
+      title="Create a new organisation ?"
+      service="organisations"
+      :auto="false"
+      @applied="onOrganisationCreated" />
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import { Events, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 import { mixins } from 'kCore/client'
@@ -40,7 +50,18 @@ export default {
     QItemSeparator,
     Avatar
   },
-  mixins: [ mixins.baseCollection ],
+  mixins: [mixins.baseCollection],
+  computed: {
+    route () {
+      return {}
+    }
+  },
+    watch: {
+    '$route' (to, from) {
+      // React to route changes. Checks whether the context is null or not
+      if (! this.$route.params.contextId) this.clearCurrentOrganisation()
+    }
+  },
   data () {
     return {
       currentOrgId: ''
@@ -63,22 +84,28 @@ export default {
       // Check if current still exist
       if (this.currentOrgId) {
         if (!this.findOrganisation(this.currentOrgId)) {
-          this.setCurrentOrganisation(this.items[0])
+          this.clearCurrentOrganisation()
+          this.$router.push({ name: 'home' })
         }
-      } else if (this.items.length > 0) {
-        // Select the first one otherwise
-        this.setCurrentOrganisation(this.items[0])
       }
     },
     setCurrentOrganisation (org) {
       this.currentOrgId = org._id
       this.$router.push({ name: 'context', params: { contextId: org._id } })
     },
+    clearCurrentOrganisation () {
+      this.currentOrgId = ''
+    },
     createOrganisation () {
-      this.$router.push({ name: 'create-organisation', params: { title: 'Create a new organisation', service: 'organisations', backRoute: this.$route.name } })
+      this.$refs.editor.open()
+    },
+    onOrganisationCreated (org) {
+      this.currentOrgId = org._id
+      this.$refs.editor.close(_ => this.$router.push({ name: 'context', params: { contextId: org._id } }))
     }
   },
   created () {
+    this.$options.components['k-modal-editor'] = this.$load('editor/KModalEditor')
     // Load the configuration
     this.bgColor = this.$config('organisationsPanel.bgColor', 'bg-light')
     this.textColor = this.$config('organisationsPanel.textColor', 'text-dark')
@@ -88,11 +115,11 @@ export default {
     // Required when user permissions change
     Events.$on('user-changed', this.updateOrganisations)
     // Required to get the org objects first
-    // FIXME: this.$on('collection-refreshed', this.updateCurrentOrganisation)
+    this.$on('collection-refreshed', this.updateCurrentOrganisation)
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
-    // FIXMEthis.$off('collection-refreshed', this.updateOrganisations)
+    this.$off('collection-refreshed', this.updateOrganisations)
   }
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <div v-if="perspective === 'properties'">
+  <div class="row justify-center full-width">
+    <div v-if="perspective === 'properties'" class="col-11">
       <k-editor service="organisations" :id="contextId" />
     </div>
-    <div v-else-if="perspective === 'billing'">
+    <div v-else-if="perspective === 'billing'" class="col-11">
       <k-editor service="organisations" :id="contextId" perspective="billing" />
     </div>
-    <div v-else-if="perspective === 'danger-zone'">
+    <div v-else-if="perspective === 'danger-zone'" class="col-11">
       <k-organisation-dz :id="contextId" />
     </div>
     <div v-else>

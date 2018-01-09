@@ -1,11 +1,13 @@
 <template>
   <div v-if="name !== ''" class="row items-center justify-center full-width">
-    <k-block class="col-10"
-      color="red" 
-      title="Delete this organisation ?"
-      :text="blockText()"
-      action="Delete"
-      @action-triggered="onDeleteClicked" />
+    <div class="col-12">
+      <k-block
+        color="red" 
+        title="Delete this organisation ?"
+        :text="blockText()"
+        action="Delete"
+        @action-triggered="onDeleteClicked" />
+    </div>
   </div>
 </template>
 

@@ -7,7 +7,7 @@
     <!-- 
       Router view to enable routing to modals
      -->
-    <router-view service="members" backRoute="members-activity"></router-view>
+    <router-view service="members" :router="router()"></router-view>
   </div>
 </template>
 
@@ -39,7 +39,13 @@ export default {
       }
     }
   },
-  methods: { 
+  methods: {
+    router () {
+      return { 
+        onApply: { name:'members-activity', params: { contextId: this.contextId } },
+        onDismiss: { name:'members-activity', params: { contextId: this.contextId } }
+      }
+    },
     refreshActivity () {
       this.clearActivity()
       this.setTitle(this.$store.get('context.name'))

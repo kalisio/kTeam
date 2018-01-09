@@ -1,6 +1,6 @@
 <template>
   <div v-if="member !== null">
-    <k-modal :title="title" :toolbar="toolbar" :buttons="buttons">
+    <k-modal ref="modal" :title="title" :toolbar="toolbar" :buttons="buttons" :route="true">
       <div slot="modal-content" class="column xs-gutter">
         <k-form ref="form" :schema="schema" />
       </div>
@@ -30,11 +30,11 @@ export default {
   },
   computed: {
     title () {
-      if (this.getObject() === null) return ''
+      if (this.member === null) return ''
       return 'Add ' + this.member.name + ' to an existing group ?'
     },
     schema () {
-      if (this.getObject() === null) return {}
+      if (this.member === null) return {}
       return {
         "$schema": "http://json-schema.org/draft-06/schema#",
         "$id": "http://kalisio.xyz/schemas/join-group#",
@@ -117,7 +117,7 @@ export default {
       }
     },
     doClose () {
-      this.$router.push({ name: 'members-activity' })
+      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {

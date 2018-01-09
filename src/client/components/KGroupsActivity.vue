@@ -7,7 +7,7 @@
     <!-- 
       Router view to enable routing to modals
     -->
-    <router-view service="groups" backRoute="groups-activity"></router-view>
+    <router-view service="groups" :router="router()"></router-view>
   </div>
 </template>
 
@@ -47,6 +47,12 @@ export default {
     }
   },
   methods: {
+    router () {
+      return { 
+        onApply: { name:'groups-activity', params: { contextId: this.contextId } },
+        onDismiss: { name:'groups-activity', params: { contextId: this.contextId } }
+      }
+    },
     refreshActivity () {
       this.clearActivity()
       this.setTitle(this.$store.get('context.name'))
@@ -76,7 +82,7 @@ export default {
       this.registerAction('group', { 
         name: 'edit-group', label: 'Edit', icon: 'description', 
         permissions: { operation: 'update', service: 'groups', context: this.contextId },
-        route: { name: 'edit-group', params: { contextId: this.contextId } }
+        route: { name: 'edit-group', params: { contextId: this.contextId, perspective: 'properties' } }
       })
     },
     removeGroup (group) {

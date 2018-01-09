@@ -1,5 +1,5 @@
 <template>
-  <k-modal title="Add a member to your organisation" :toolbar="toolbar" :buttons="buttons">
+  <k-modal ref="modal" title="Add a member to your organisation" :toolbar="toolbar" :buttons="buttons" :route="true">
     <div slot="modal-content" class="column xs-gutter">
       <k-form ref="form" :schema="schema" />
     </div>
@@ -97,7 +97,7 @@ export default {
       }
     },
     doClose () {
-      this.$router.push({ name: 'members-activity' })
+      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {

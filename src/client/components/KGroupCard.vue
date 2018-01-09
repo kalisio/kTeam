@@ -4,7 +4,7 @@
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
           <div :key="index">
-            <q-btn flat round small color="tertiary">
+            <q-btn flat round small color="tertiary" @click="onMembersClicked(role)">
               <q-icon :name="roleIcons[index]" />
               {{memberStats[role]}}
             </q-btn>
@@ -52,6 +52,10 @@ export default {
         })
         this.memberStats = Object.assign({}, stats)
       })
+    },
+    onMembersClicked (role) {
+      const contextId = this.$store.get('context._id')
+      this.$router.push({ name: 'edit-group', params: { contextId: contextId, id: this.item._id, perspective: role } })
     }
   },
   created () {

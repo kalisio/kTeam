@@ -1,5 +1,5 @@
 <template>
-  <k-modal title="Invite a guest to join your organisation" :toolbar="toolbar" :buttons="buttons">
+  <k-modal ref="modal" title="Invite a guest to join your organisation" :toolbar="toolbar" :buttons="buttons" :route="true">
     <div slot="modal-content" class="column xs-gutter">
       <k-form ref="form" :schema="schema" />
     </div>
@@ -67,7 +67,7 @@ export default {
         "required": ["name", "email", "role"]
       },
       toolbar: [
-        { name: 'Close', icon: 'close', label: 'Close this window', handler: () => this.doClose() }
+        { name: 'Close', icon: 'close', handler: () => this.doClose() }
       ],
       buttons: [
         { name: 'Invite', color: 'primary', handler: (event, done) => this.doInvite(event, done) }
@@ -100,7 +100,7 @@ export default {
       }
     },
     doClose () {
-      this.$router.push({ name: 'members-activity' })
+      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {
