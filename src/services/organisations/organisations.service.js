@@ -11,17 +11,17 @@ export default {
   createOrganisationServices (organisation, db) {
     this.app.createService('members', {
       servicesPath,
-      path: organisation._id.toString() + '/members',
+      context: organisation,
       proxy: {
         service: this.app.getService('users'),
         params: { query: { 'organisations._id': organisation._id.toString() } }
       }
     })
-    debug('Users service created for organisation ' + organisation.name)
+    debug('Members service created for organisation ' + organisation.name)
     this.app.createService('groups', {
       modelsPath,
       servicesPath,
-      path: organisation._id.toString() + '/groups',
+      context: organisation,
       db
     })
     debug('Groups service created for organisation ' + organisation.name)
