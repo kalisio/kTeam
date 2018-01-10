@@ -21,12 +21,15 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           can('read', 'members', { context: organisation._id })
           can('service', organisation._id.toString() + '/tags')
           can('read', 'tags', { context: organisation._id })
+          can('service', organisation._id.toString() + '/groups')
+          if (role < permissions.Roles.manager) {
+            can('read', 'groups', { context: organisation._id, '_id': subject.groups._id })
+          }
         }
         if (role >= permissions.Roles.manager) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('update', 'members', { context: organisation._id })
-          can('service', organisation._id.toString() + '/groups')
           can('create', 'groups', { context: organisation._id })
           can(['create', 'remove'], 'tags', { context: organisation._id })
         }
