@@ -72,14 +72,20 @@ export default {
       // Collection actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { 
-          name: 'join-group', label: 'Join', icon: 'group_work',
+          name: 'join-group', label: 'Join', icon: 'add',
           route: { name: 'join-group', params: {} }
         })
       }
       if (this.$can('update', 'members', this.contextId)) {
         this.registerAction('member', { 
-          name: 'edit-member', label: 'Edit', icon: 'description',
-          route: { name: 'edit-member', params: { perspective: 'profile' } }
+          name: 'edit-member', label: 'Edit', icon: 'local_offer',
+          route: { name: 'edit-member', params: { perspective: 'tags' } }
+        })
+      }
+      if (this.$can('update', 'members', this.contextId)) {
+        this.registerAction('member', { 
+          name: 'edit-member', label: 'Edit', icon: 'group_work',
+          route: { name: 'edit-member', params: { perspective: 'groups' } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {

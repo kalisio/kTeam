@@ -21,7 +21,7 @@
           <q-tab :key="index" :name="role" slot="title" :icon="roleIcons[index]" />
           <q-tab-pane :key="index" :name="role">
             <div class="colum full-width justify-center">
-              <k-grid service="members" :renderer="renderer" :base-query="baseQuery(role)" />
+              <k-grid service="members" :renderer="renderer" :base-query="roleQuery(role)" />
             </div>
           </q-tab-pane>
         </template>
@@ -71,17 +71,14 @@ export default {
     }
   },
   methods: {
-    baseQuery (role) {
+    roleQuery (role) {
       return { 'groups._id': this.id, 'groups.permissions': role }
     },
-    loadService () {
-      this._service = this.$api.getService('groups')
-      return this._service
-    },
+    /* FIXME: must implement a global 'done' button
     doDone (event, done) {
       done()
       this.doClose()
-    },
+    },*/
     doClose () {
       this.$refs.modal.close(_ => this.$router.push({ name: 'groups-activity' }))
     }
