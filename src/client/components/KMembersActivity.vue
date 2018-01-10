@@ -31,7 +31,6 @@ export default {
         props: { 
           groups: [],
           options: {
-            layout: 'col-xs-6 col-sm-4 col-lg-4 col-xl-3',
             avatar: { size: 96 }
           }
         }

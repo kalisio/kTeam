@@ -51,12 +51,13 @@ export default {
     Avatar
   },
   mixins: [mixins.baseCollection],
+  inject: ['sideNav'],
   computed: {
     route () {
       return {}
     }
   },
-    watch: {
+  watch: {
     '$route' (to, from) {
       // React to route changes. Checks whether the context is null or not
       if (! this.$route.params.contextId) this.clearCurrentOrganisation()
@@ -85,13 +86,13 @@ export default {
       if (this.currentOrgId) {
         if (!this.findOrganisation(this.currentOrgId)) {
           this.clearCurrentOrganisation()
-          this.$router.push({ name: 'home' })
+          this.sideNav.navigate({ name: 'home' })
         }
       }
     },
     setCurrentOrganisation (org) {
       this.currentOrgId = org._id
-      this.$router.push({ name: 'context', params: { contextId: org._id } })
+      this.sideNav.navigate({ name: 'context', params: { contextId: org._id } })
     },
     clearCurrentOrganisation () {
       this.currentOrgId = ''
@@ -101,7 +102,7 @@ export default {
     },
     onOrganisationCreated (org) {
       this.currentOrgId = org._id
-      this.$refs.editor.close(_ => this.$router.push({ name: 'context', params: { contextId: org._id } }))
+      this.$refs.editor.close(_ => this.sideNav.navigate({ name: 'context', params: { contextId: org._id } }))
     }
   },
   created () {
