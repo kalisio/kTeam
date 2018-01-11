@@ -71,8 +71,10 @@ export default {
       })
     },
     onMembersClicked (role) {
+    /* FIXME
       const contextId = this.$store.get('context._id')
       this.$router.push({ name: 'edit-group', params: { contextId: contextId, id: this.item._id, perspective: role } })
+      */
     }
   },
   created () {

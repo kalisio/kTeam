@@ -75,7 +75,7 @@ export default {
       this.registerAction('group', { 
         name: 'edit-group', label: 'Edit', icon: 'description', 
         permissions: { operation: 'update', service: 'groups', context: this.contextId },
-        route: { name: 'edit-group', params: { contextId: this.contextId, perspective: 'properties' } }
+        route: { name: 'edit-group', params: { contextId: this.contextId } }
       }),
       this.registerAction('group', { 
         name: 'remove-group', label: 'Remove', icon: 'remove_circle',
