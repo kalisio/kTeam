@@ -69,14 +69,12 @@ export default {
         })
       }
       // Collection actions
-     /* FIXME: tags management
      if (this.$can('update', 'members', this.contextId)) {
         this.registerAction('member', { 
           name: 'edit-member', label: 'Edit', icon: 'local_offer',
-          route: { name: 'edit-member', params: { perspective: 'tags' } }
+          route: { name: 'edit-tags', params: { contextId: this.contextId } }
         })
       }
-      */
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { 
           name: 'remove-member', label: 'Remove', icon: 'remove_circle',

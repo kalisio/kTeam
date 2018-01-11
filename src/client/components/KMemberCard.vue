@@ -3,32 +3,45 @@
     <!--
       Card icon
      -->
-    <q-icon slot="card-icon" :name="memberRole" />
+    <q-icon slot="card-icon" :name="roleIcon(role)" />
     <!--
       Card content
      -->
     <div slot="card-content">
-      <div class="row justify-start items-center">
-        <template v-for="(group, index) in memberGroups">
-          <q-btn :key="group._id" flat small round color="tertiary">
-            <avatar :key="group._id" :username="group.name" :size="32" />
-            <q-popover ref="popover">
-              <q-list inset-separator>
-                <q-item>
-                  <q-item-side :icon="roleForGroup(group)" />
-                  <q-item-main :label="group.name" />
-                </q-item>
-                <q-item v-if="canLeaveGroup(group)" link @click="onLeaveGroup(group), $refs.popover[index].close()">
-                  <q-item-side />
-                  <q-item-main label="Leave" />
-                </q-item>
-              </q-list>
-            </q-popover>
+      <div class="column full-width justify-center xs-gutter">
+        <!-- 
+          Tags sections
+        -->
+        <div class="row justify-start items-center">
+          <template v-for="tag in item.tags">
+            <q-chip :key="tagKey(tag)" small color="tertiary" style="margin:2px">{{tag.value}}</q-chip>
+          </template>
+        </div>
+        <div>
+          <q-card-separator />
+        </div>
+        <!-- 
+          Groups section
+         -->
+        <div class="row justify-start items-center">
+          <template v-for="(group, index) in memberGroups">
+            <q-btn :key="groupKey(group)" flat small round color="tertiary">
+              <avatar :username="group.name" :size="32" />
+              <q-popover ref="popover">
+                <q-toolbar color="secondary">
+                  <span><q-icon :name="roleIcon(roleForGroup(group))" /></span>
+                  <span style="margin:8px">{{group.name}}</span>
+                  <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
+                    <q-icon name="remove_circle" />
+                  </q-btn>
+                </q-toolbar>
+              </q-popover>
+            </q-btn>
+          </template>
+          <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
+            <q-icon name="add_circle" color="primary" />
           </q-btn>
-        </template>
-        <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
-          <q-icon name="add_circle" color="faded" />
-        </q-btn>
+        </div>
       </div>
     </div>
   </k-card>
@@ -39,7 +52,7 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
 import { getRoleForOrganisation, getRoleForGroup } from '../../common/permissions'
-import { QBtn, QIcon, QTooltip, QPopover, QList, QItem, QItemMain, QItemSide, Dialog } from 'quasar'
+import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 
 export default {
@@ -48,12 +61,10 @@ export default {
   components: {
     QBtn,
     QIcon,
-    QTooltip,
     QPopover,
-    QList,
-    QItem,
-    QItemMain,
-    QItemSide,
+    QToolbar,
+    QCardSeparator,
+    QChip,
     Avatar
   },
   props: {
@@ -71,28 +82,35 @@ export default {
         return _.includes(groupsOfMember, group._id)
       })
     },
-    memberRole () {
+    role () {
       const contextId = this.$store.get('context._id')
       let role = getRoleForOrganisation(this.item, contextId)
-      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     }
   },
   methods: {
+    tagKey (tag) {
+      return this.item._id + '-' + tag.value
+    },
+    groupKey (group) {
+      return this.item._id + group._id
+    },
+    roleIcon (role) {
+      return this.roleIcons[role]
+    },
     roleForGroup (group) {
       const contextId = this.$store.get('context._id')
       let role = getRoleForGroup(this.item, contextId, group._id)
-      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     },
     canJoinGroup () {
       const contextId = this.$store.get('context._id')
-      if (this.$can('create', 'authorisations', contextId, { resource: contextId })) return true
-      return false
+      return this.$can('create', 'authorisations', contextId, { resource: contextId })
     },
     canLeaveGroup (group) {
-      if (this.$can('remove', 'authorisations', this.item._id, { resource: group._id })) return true
-      return false
+      return this.$can('remove', 'authorisations', this.item._id, { resource: group._id })
     },
     onJoinGroup () {
       const contextId = this.$store.get('context._id')
@@ -121,10 +139,6 @@ export default {
           'Cancel'
         ]
       })
-    },
-    onGroupClicked (group) {
-      const contextId = this.$store.get('context._id')
-      this.$router.push({ name: 'edit-group', params: { contextId: contextId, id: group._id } })
     }
   },
   created () {

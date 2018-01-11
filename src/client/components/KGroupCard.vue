@@ -10,7 +10,7 @@
     <div slot="card-content">
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
-          <q-btn :key="key(role)" flat round color="tertiary" @click="onMembersClicked(role)">
+          <q-btn :key="roleKey(role)" flat small round color="tertiary" @click="onMembersClicked(role)">
             <q-icon :name="roleIcons[index]" />
               {{memberStats[role]}}
           </q-btn>
@@ -50,7 +50,7 @@ export default {
     }
   },
   methods: {
-    key (role) {
+    roleKey (role) {
       return this.item._id + '-' + role
     },
     refreshStats () {
