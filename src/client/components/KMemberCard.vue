@@ -9,26 +9,12 @@
      -->
     <div slot="card-content">
       <div class="column full-width justify-center xs-gutter">
-        <!-- 
-          Tags sections
-        -->
-        <div class="row justify-start items-center">
-          <template v-for="tag in item.tags">
-            <q-chip :key="tagKey(tag)" small color="tertiary" style="margin:2px">{{tag.value}}</q-chip>
-          </template>
-        </div>
-        <div>
-          <q-card-separator />
-        </div>
-        <!-- 
-          Groups section
-         -->
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
-            <q-btn :key="groupKey(group)" flat small round color="tertiary">
+            <q-btn :key="groupKey(group)" flat small round color="faded">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
-                <q-toolbar color="secondary">
+                <q-toolbar color="faded">
                   <span><q-icon :name="roleIcon(roleForGroup(group))" /></span>
                   <span style="margin:8px">{{group.name}}</span>
                   <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
@@ -39,7 +25,7 @@
             </q-btn>
           </template>
           <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
-            <q-icon name="add_circle" color="primary" />
+            <q-icon name="add_circle" color="faded" />
           </q-btn>
         </div>
       </div>

@@ -31,6 +31,7 @@ export default {
         props: { 
           groups: [],
           options: {
+            tags: 'icon',
             avatar: { size: 96 }
           }
         }
@@ -77,7 +78,7 @@ export default {
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerAction('member', { 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle', scope: 'menu',
           handler: this.removeMember 
         })
       }

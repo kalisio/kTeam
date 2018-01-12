@@ -73,12 +73,12 @@ export default {
       }
       // Item actions
       this.registerAction('group', { 
-        name: 'edit-group', label: 'Edit', icon: 'description', 
+        name: 'edit-group', label: 'Edit', icon: 'description', scope: 'pane',
         permissions: { operation: 'update', service: 'groups', context: this.contextId },
         route: { name: 'edit-group', params: { contextId: this.contextId } }
       }),
       this.registerAction('group', { 
-        name: 'remove-group', label: 'Remove', icon: 'remove_circle',
+        name: 'remove-group', label: 'Remove', icon: 'remove_circle', scope: 'menu',
         permissions: { operation: 'remove', service: 'groups', context: this.contextId },
         handler: this.removeGroup
       })
