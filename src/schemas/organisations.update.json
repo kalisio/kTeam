@@ -25,6 +25,6 @@
       }
     }
   },
-  "required": ["name"]
+  "required": ["name", "description"]
 }
 
