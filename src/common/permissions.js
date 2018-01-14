@@ -23,7 +23,7 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           can('read', 'tags', { context: organisation._id })
           can('service', organisation._id.toString() + '/groups')
           if (role < permissions.Roles.manager) {
-            can('read', 'groups', { context: organisation._id, '_id': subject.groups._id })
+            can('read', 'groups', { context: organisation._id })
           }
         }
         if (role >= permissions.Roles.manager) {

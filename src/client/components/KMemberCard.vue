@@ -14,7 +14,7 @@
             <q-btn :key="groupKey(group)" flat small round color="faded">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
-                <q-toolbar color="faded">
+                <q-toolbar inverted color="faded">
                   <span><q-icon :name="roleIcon(roleForGroup(group))" /></span>
                   <span style="margin:8px">{{group.name}}</span>
                   <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">

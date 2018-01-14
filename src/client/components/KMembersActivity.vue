@@ -72,8 +72,8 @@ export default {
       // Collection actions
      if (this.$can('update', 'members', this.contextId)) {
         this.registerAction('member', { 
-          name: 'edit-member', label: 'Edit', icon: 'local_offer',
-          route: { name: 'edit-tags', params: { contextId: this.contextId } }
+          name: 'tag-member', label: 'Tag', icon: 'local_offer', scope: 'pane',
+          route: { name: 'tag-member', params: { contextId: this.contextId } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
