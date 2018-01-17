@@ -70,7 +70,6 @@
     "mongodb": "^2.2.26",
     "quasar-extras": "1.0.0",
     "quasar-framework": "0.14.7",
-    "sift": "^5.0.0",
     "uberproto": "^1.2.0",
     "vue": "2.5.2",
     "vue-avatar": "^2.0.0",
