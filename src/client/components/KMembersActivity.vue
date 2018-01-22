@@ -83,16 +83,24 @@ export default {
         })
       }
       // Refresh the group list
-      this.refreshGroups()
+      this.subscribeGroups()
     },
-    refreshGroups () {
+    subscribeGroups () {
+      // Remove previous listener if any
+      this.unsubscribeGroups()
       let groupsService = this.$api.getService('groups')
-      groupsService.find({
+      this.groupsListener = groupsService.find({
         rx: { listStrategy: 'always' }
       })
       .subscribe(response => {
         this.renderer.props.groups = response.data
       })
+    },
+    unsubscribeGroups () {
+      if (this.groupsListener) {
+        this.groupsListener.unsubscribe()
+        this.groupsListener = null
+      }
     },
     removeMember (member) {
       Dialog.create({
@@ -122,6 +130,9 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-grid'] = this.$load('collection/KGrid')
+  },
+  beforeDestroy() {
+    this.unsubscribeGroups()
   }
 }
 </script>
