@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://www.kalisio.xyz/schemas/organisations.create.json#",
-  "title": "Organisation Creation",
+  "title": "Create a new organisation ?",
   "description": "Organisation creation schema",
   "type": "object",
   "properties": {
@@ -13,7 +13,7 @@
       "field": {
         "component": "form/KTextField",
         "label": "Name",
-        "helper": "Enter the name"
+        "helper": "Enter the name of your new organisation"
       }
     },
     "description": {
@@ -22,7 +22,7 @@
       "field": {
         "component": "form/KTextField",
         "label": "Description",
-        "helper": "Enter the description"
+        "helper": "Enter a brief description about your new organisation"
       }
     }
   },

@@ -68,7 +68,7 @@ export default {
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerFabAction({ 
           name: 'create-group', label: 'Create a group', icon: 'add', 
-          route: { name: 'create-group', params: { contextId: this.contextId, title: 'Create a new group ?'} }
+          route: { name: 'create-group', params: { contextId: this.contextId } }
         })
       }
       // Item actions

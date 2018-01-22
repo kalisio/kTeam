@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://www.kalisio.xyz/schemas/organisations.update-billing.json#",
-  "title": "Organisation Billing",
+  "title": "<%= object.name %>'s billing plan",
   "description": "Organisation billing perspective",
   "type": "object",
   "properties": {

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://www.kalisio.xyz/schemas/groups.update.json#",
-  "title": "Group Edition",
+  "title": "<%= object.name %>",
   "description": "Group edition schema",
   "type": "object",
   "properties": {
