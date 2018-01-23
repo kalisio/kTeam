@@ -24,7 +24,6 @@
      -->
     <k-modal-editor 
       ref="editor" 
-      title="Create a new organisation ?"
       service="organisations"
       :route="false"
       @applied="onOrganisationCreated" />
