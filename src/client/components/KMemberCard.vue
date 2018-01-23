@@ -1,5 +1,5 @@
 <template>
-  <k-card v-bind="$props">
+  <k-card v-bind="$props" :itemActions="actions">
     <!--
       Card icon
      -->
@@ -43,7 +43,7 @@ import Avatar from 'vue-avatar/dist/Avatar'
 
 export default {
   name: 'k-member-card',
-  mixins: [kCoreMixins.baseItem],
+  mixins: [ kCoreMixins.baseItem ],
   components: {
     QBtn,
     QIcon,
@@ -76,6 +76,44 @@ export default {
     }
   },
   methods: {
+    refreshActions () {
+      this.clearActions()
+      if (this.$can('update', 'members', this.contextId)) {
+        this.registerAction('member', { 
+          name: 'tag-member', label: 'Tag', icon: 'local_offer', scope: 'pane',
+          route: { name: 'tag-member', params: { contextId: this.contextId } }
+        })
+      }
+      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
+        this.registerAction('member', { 
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle', scope: 'menu',
+          handler: this.removeMember 
+        })
+      }
+    },
+    removeMember (member) {
+      Dialog.create({
+        title: 'Remove ' + member.name + '?',
+        message: 'Are you sure you want to remove ' + member.name + ' from your organisation ?',
+        buttons: [
+          {
+            label: 'Ok',
+            handler: () => {
+              let authorisationService = this.$api.getService('authorisations')
+              authorisationService.remove(this.contextId, {
+                query: {
+                  scope: 'organisations',
+                  subjects: member._id,
+                  subjectsService: 'members',
+                  resourcesService: 'organisations'
+                }
+              })
+            }
+          },
+          'Cancel'
+        ]
+      })
+    },
     tagKey (tag) {
       return this.item._id + '-' + tag.value
     },

@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid service="groups" :renderer="renderer" :actions="actions.group" />
+    <k-grid service="groups" :renderer="renderer" :contextId="contextId" />
     <!-- 
       Router view to enable routing to modals
     -->
@@ -12,12 +12,11 @@
 </template>
 
 <script>
-import { mixins as kCoreMixins } from 'kCore/client'
-import { Dialog } from 'quasar'
+import { mixins } from 'kCore/client'
 
 export default {
   name: 'k-groups-activity',
-  mixins: [kCoreMixins.baseActivity],
+  mixins: [ mixins.baseActivity ],
   props: {
     contextId: {
       type: String,
@@ -71,33 +70,6 @@ export default {
           route: { name: 'create-group', params: { contextId: this.contextId } }
         })
       }
-      // Item actions
-      this.registerAction('group', { 
-        name: 'edit-group', label: 'Edit', icon: 'description', scope: 'pane',
-        permissions: { operation: 'update', service: 'groups', context: this.contextId },
-        route: { name: 'edit-group', params: { contextId: this.contextId } }
-      }),
-      this.registerAction('group', { 
-        name: 'remove-group', label: 'Remove', icon: 'remove_circle', scope: 'menu',
-        permissions: { operation: 'remove', service: 'groups', context: this.contextId },
-        handler: this.removeGroup
-      })
-    },
-    removeGroup (group) {
-      Dialog.create({
-        title: 'Remove ' + group.name + '?',
-        message: 'Are you sure you want to remove ' + group.name + ' from your organisation ?',
-        buttons: [
-          {
-            label: 'Ok',
-            handler: () => {
-              let groupsService = this.$api.getService('groups')
-              groupsService.remove(group._id)
-            }
-          },
-          'Cancel'
-        ]
-      })
     }
   },
   created () {

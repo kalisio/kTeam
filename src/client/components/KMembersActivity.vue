@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid ref="membersGrid" service="members" :renderer="renderer" :actions="actions.member" />
+    <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" />
     <!-- 
       Router view to enable routing to modals
      -->
@@ -12,12 +12,11 @@
 </template>
 
 <script>
-import { mixins as kCoreMixins } from 'kCore/client'
-import { Dialog } from 'quasar'
+import { mixins } from 'kCore/client'
 
 export default {
   name: 'k-members-activity',
-  mixins: [kCoreMixins.baseActivity],
+  mixins: [ mixins.baseActivity ],
   props: {
     contextId: {
       type: String,
@@ -69,19 +68,6 @@ export default {
           route: { name: 'invite-member', params: {} } 
         })
       }
-      // Collection actions
-     if (this.$can('update', 'members', this.contextId)) {
-        this.registerAction('member', { 
-          name: 'tag-member', label: 'Tag', icon: 'local_offer', scope: 'pane',
-          route: { name: 'tag-member', params: { contextId: this.contextId } }
-        })
-      }
-      if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle', scope: 'menu',
-          handler: this.removeMember 
-        })
-      }
       // Refresh the group list
       this.subscribeGroups()
     },
@@ -101,30 +87,6 @@ export default {
         this.groupsListener.unsubscribe()
         this.groupsListener = null
       }
-    },
-    removeMember (member) {
-      Dialog.create({
-        title: 'Remove ' + member.name + '?',
-        message: 'Are you sure you want to remove ' + member.name + ' from your organisation ?',
-        buttons: [
-          {
-            label: 'Ok',
-            handler: () => {
-              let authorisationService = this.$api.getService('authorisations')
-              authorisationService.remove(this.contextId, {
-                query: {
-                  scope: 'organisations',
-                  subjects: member._id,
-                  subjectsService: 'members',
-                  resourcesService: 'organisations'
-                }
-              })
-              .then(_ => this.$refs.membersGrid.refreshCollection())
-            }
-          },
-          'Cancel'
-        ]
-      })
     }
   },
   created () {

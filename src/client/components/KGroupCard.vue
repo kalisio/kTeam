@@ -1,5 +1,5 @@
 <template>
-  <k-card v-bind="$props">
+  <k-card v-bind="$props" :itemActions="actions">
         <!--
       Card icon
      -->
@@ -25,7 +25,7 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
 import { findMembersOfGroup, getRoleForGroup } from '../../common/permissions'
-import { QChip, QBtn, QIcon } from 'quasar'
+import { QChip, QBtn, QIcon, Dialog } from 'quasar'
 
 export default {
   name: 'k-group-card',
@@ -50,6 +50,37 @@ export default {
     }
   },
   methods: {
+    refreshActions () {
+      this.clearActions()
+      if (this.$can('update', 'groups', this.contextId, this.item)) {
+        this.registerPaneAction({ 
+          name: 'edit-group', label: 'Edit', icon: 'description',
+          route: { name: 'edit-group', params: { contextId: this.contextId } }
+        })
+      }
+      if (this.$can('remove', 'groups', this.contextId, this.item)) {
+        this.registerMenuAction({ 
+          name: 'remove-group', label: 'Remove', icon: 'remove_circle',
+          handler: this.removeGroup
+        })
+      }
+    },
+    removeGroup (group) {
+      Dialog.create({
+        title: 'Remove ' + group.name + '?',
+        message: 'Are you sure you want to remove ' + group.name + ' from your organisation ?',
+        buttons: [
+          {
+            label: 'Ok',
+            handler: () => {
+              let groupsService = this.$api.getService('groups')
+              groupsService.remove(group._id)
+            }
+          },
+          'Cancel'
+        ]
+      })
+    },
     roleKey (role) {
       return this.item._id + '-' + role
     },
