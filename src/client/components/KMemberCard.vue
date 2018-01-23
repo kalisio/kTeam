@@ -79,14 +79,14 @@ export default {
     refreshActions () {
       this.clearActions()
       if (this.$can('update', 'members', this.contextId)) {
-        this.registerAction('member', { 
-          name: 'tag-member', label: 'Tag', icon: 'local_offer', scope: 'pane',
+        this.registerPaneAction({ 
+          name: 'tag-member', label: 'Tag', icon: 'local_offer',
           route: { name: 'tag-member', params: { contextId: this.contextId } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerAction('member', { 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle', scope: 'menu',
+        this.registerMenuAction({ 
+          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
           handler: this.removeMember 
         })
       }
