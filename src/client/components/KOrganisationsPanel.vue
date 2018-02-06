@@ -72,6 +72,9 @@ export default {
       this._service = this.$api.getService('organisations')
       return this._service
     },
+    getCollectionBaseQuery () {
+      return {}
+    },
     findOrganisation (id) {
       return this.items.find(org => org._id === id)
     },
