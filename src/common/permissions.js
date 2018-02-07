@@ -27,7 +27,7 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           // The unique identifier of a service is its path not its name.
           // Indeed we have for instance a 'groups' service in each organisation.
           can('update', 'members', { context: organisation._id })
-          can(['create', 'read'], 'groups', { context: organisation._id })     
+          can(['create', 'read'], 'groups', { context: organisation._id })
           can(['create', 'remove'], 'tags', { context: organisation._id })
         }
       })
