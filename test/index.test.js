@@ -342,7 +342,7 @@ describe('kTeam', () => {
 
   it('removes test user', () => {
     return userService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
-    .then(org => {
+    .then(user => {
       return userService.find({ query: { name: user1Object.name }, user: user1Object, checkAuthorisation: true })
     })
     .then(users => {
