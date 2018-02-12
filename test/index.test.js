@@ -34,6 +34,17 @@ describe('kTeam', () => {
       error: { all: coreHooks.log }
       */
     })
+    // Add hooks for contextual services
+    app.on('service', service => {
+      if (service.name === 'groups') {
+        service.hooks({
+          after: {
+            create: [ teamHooks.createGroupAuthorisations ],
+            remove: [ teamHooks.removeGroupAuthorisations ]
+          }
+        })
+      }
+    })
     return app.db.connect()
     .then(db => {
       adminDb = app.db.instance.admin()
@@ -49,14 +60,25 @@ describe('kTeam', () => {
     userService = app.getService('users')
     userService.hooks({
       after: {
-        create: [ teamHooks.updateAbilities, iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation) ],
-        remove: [ teamHooks.removePrivateOrganisation ]
+        create: [
+          teamHooks.updateAbilities,
+          iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation)
+        ],
+        remove: [
+          teamHooks.removePrivateOrganisation
+        ]
       }
     })
     expect(userService).toExist()
     app.configure(team)
     orgService = app.getService('organisations')
     expect(orgService).toExist()
+    orgService.hooks({
+      after: {
+        create: [ teamHooks.createOrganisationServices, teamHooks.createOrganisationAuthorisations ],
+        remove: [ teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
+      }
+    })
     authorisationService = app.getService('authorisations')
     expect(authorisationService).toExist()
     server = app.listen(port)
@@ -271,7 +293,7 @@ describe('kTeam', () => {
     })
     .then(groups => {
       expect(groups.data.length === 0).beTrue()
-      return userService.find({ query: { 'profile.name': 'test-user-2' }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()

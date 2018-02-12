@@ -1,5 +1,3 @@
-import { createOrganisationServices, removeOrganisationServices, createOrganisationAuthorisations, removeOrganisationAuthorisations } from '../../hooks'
-
 module.exports = {
   before: {
     all: [],
@@ -15,10 +13,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ createOrganisationServices, createOrganisationAuthorisations ],
+    create: [],
     update: [],
     patch: [],
-    remove: [ removeOrganisationServices, removeOrganisationAuthorisations ]
+    remove: []
   },
 
   error: {

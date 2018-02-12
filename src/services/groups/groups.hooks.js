@@ -1,5 +1,3 @@
-import { createGroupAuthorisations, removeGroupAuthorisations } from '../../hooks'
-
 module.exports = {
   before: {
     all: [],
@@ -15,10 +13,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ createGroupAuthorisations ],
+    create: [],
     update: [],
     patch: [],
-    remove: [ removeGroupAuthorisations ]
+    remove: []
   },
 
   error: {
