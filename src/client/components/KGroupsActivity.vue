@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid service="groups" :renderer="renderer" :contextId="contextId" />
+    <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :filter-query="filterQuery" />
     <!-- 
       Router view to enable routing to modals
     -->
@@ -33,6 +33,7 @@ export default {
   },
   data () {
     return {
+      filterQuery: {},
       renderer: { 
         component: 'KGroupCard', 
         props: {
@@ -53,6 +54,9 @@ export default {
     refreshActivity () {
       this.clearActivity()
       this.setTitle(this.$store.get('context.name'))
+      this.setSearch([
+        { service: 'groups', baseQuery: {}, field: 'name'}
+      ])
       // Tabbar actions
       this.registerTabAction({ 
         name: 'members', label: 'Members', icon: 'group',
@@ -70,6 +74,15 @@ export default {
           route: { name: 'create-group', params: { contextId: this.contextId } }
         })
       }
+    },
+    handleSearch () {
+      const search = this.$store.get('search')
+      let query = {}
+      const pattern = this.$store.get('search').pattern
+      if (pattern !== '') {
+        query = { 'name':  { $search: pattern } }
+      }
+      this.filterQuery = Object.assign({}, query)
     }
   },
   created () {
