@@ -4,7 +4,7 @@ import { createTagService } from 'kCore'
 const servicesPath = path.join(__dirname, '..', '..', 'services')
 const modelsPath = path.join(__dirname, '..', '..', 'models')
 
-const debug = makeDebug('kalisio:kTeam:organisations')
+const debug = makeDebug('kalisio:kTeam:organisations:service')
 
 export default {
 
