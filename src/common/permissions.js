@@ -22,6 +22,8 @@ export function defineOrganisationAbilities (subject, can, cannot) {
           can('service', organisation._id.toString() + '/tags')
           can('read', 'tags', { context: organisation._id })
           can('service', organisation._id.toString() + '/groups')
+          can('service', organisation._id.toString() + '/storage')
+          can(['read', 'create', 'remove'], 'storage', { context: organisation._id })
         }
         if (role >= permissions.Roles.manager) {
           // The unique identifier of a service is its path not its name.

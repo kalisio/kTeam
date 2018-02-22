@@ -1,13 +1,15 @@
 import path from 'path'
 import makeDebug from 'debug'
-import { createTagService } from 'kCore'
+import aws from 'aws-sdk'
+import store from 's3-blob-store'
+import BlobService from 'feathers-blob'
+import { createTagService, createStorageService } from 'kCore'
 const servicesPath = path.join(__dirname, '..', '..', 'services')
 const modelsPath = path.join(__dirname, '..', '..', 'models')
 
 const debug = makeDebug('kalisio:kTeam:organisations:service')
 
 export default {
-
   createOrganisationServices (organisation, db) {
     this.app.createService('members', {
       servicesPath,
@@ -27,6 +29,14 @@ export default {
     debug('Groups service created for organisation ' + organisation.name)
     createTagService.call(this.app, organisation, db)
     debug('Tags service created for organisation ' + organisation.name)
+    const config = this.app.get('storage')
+    const blobStore = store({
+      client: this.s3,
+      bucket: config.bucket
+    })
+    const blobService = BlobService({ Model: blobStore, id: '_id' })
+    createStorageService.call(this.app, organisation, blobService)
+    debug('Storage service created for organisation ' + organisation.name)
   },
 
   removeOrganisationServices (organisation) {
@@ -43,5 +53,16 @@ export default {
         this.createOrganisationServices(organisation, db)
       })
     })
+  },
+
+  setup (app) {
+    const config = app.get('storage')
+    this.s3 = new aws.S3({
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey
+    })
+    debug('S3 storage created with config ', config)
   }
 }
+
+

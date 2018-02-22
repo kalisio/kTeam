@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { getBase64DataURI } from 'dauria'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
@@ -8,7 +9,7 @@ import team, { hooks as teamHooks, permissions as teamPermissions } from '../src
 
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
-    userService, orgService, authorisationService, orgGroupService, orgUserService,
+    userService, orgService, authorisationService, orgGroupService, orgUserService, orgStorageService,
     user1Object, user2Object, user3Object, orgObject, groupObject
 
   before(() => {
@@ -154,6 +155,9 @@ describe('kTeam', () => {
       // This should create a service for organisation users
       orgUserService = app.getService('members', orgObject)
       expect(orgUserService).toExist()
+      // This should create a service for organisation storage
+      orgStorageService = app.getService('storage', orgObject)
+      expect(orgStorageService).toExist()
       // We do not test creation of the DB here since MongoDB does not actually
       // creates it until the first document has been inserted (see next test)
     })
@@ -192,6 +196,15 @@ describe('kTeam', () => {
       user: user2Object,
       checkAuthorisation: true
     })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+
+  it('non-members cannot access organisation storage', (done) => {
+    orgStorageService.get('file.txt', { user: user1Object, checkAuthorisation: true })
     .catch(error => {
       expect(error).toExist()
       expect(error.name).to.equal('Forbidden')
@@ -238,6 +251,14 @@ describe('kTeam', () => {
       done()
     })
   })
+
+  it('members can access organisation storage', () => {
+    return orgStorageService.create({ id: 'file.txt', uri: getBase64DataURI(Buffer.from('some buffered data'), 'text/plain') }, { user: user1Object, checkAuthorisation: true })
+    .then(_ => orgStorageService.get('file.txt', { user: user1Object, checkAuthorisation: true }))
+    .then(_ => orgStorageService.remove('file.txt', { user: user1Object, checkAuthorisation: true }))
+  })
+  // Let enough time to process
+  .timeout(5000)
 
   it('owner can add organisation managers', () => {
     return authorisationService.create({

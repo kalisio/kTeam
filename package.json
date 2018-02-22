@@ -55,9 +55,11 @@
     "lib": "lib"
   },
   "dependencies": {
+    "aws-sdk": "^2.200.0",
     "debug": "^2.6.4",
     "feathers": "^2.1.4",
     "feathers-authentication": "^1.2.2",
+    "feathers-blob": "^1.4.0",
     "feathers-errors": "^2.6.3",
     "feathers-hooks": "^2.0.1",
     "feathers-hooks-common": "^3.0.0",
@@ -70,6 +72,7 @@
     "mongodb": "^2.2.26",
     "quasar-extras": "1.0.0",
     "quasar-framework": "0.14.7",
+    "s3-blob-store": "2.1.0",
     "uberproto": "^1.2.0",
     "vue": "2.5.2",
     "vue-avatar": "^2.0.0",
@@ -92,6 +95,7 @@
     "containerized": "^1.0.2",
     "cpx": "^1.5.0",
     "cross-env": "^4.0.0",
+    "dauria": "^2.0.0",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.2.0",
     "npm-run-all": "^4.1.1",
