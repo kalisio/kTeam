@@ -87,7 +87,7 @@ export default {
         // Create the user
         let usersService = this.$api.getService('users')
         usersService.create(result.values)
-        .then(_ => {
+        .then(() => {
           done()
           this.doClose()
         })
@@ -100,7 +100,7 @@ export default {
       }
     },
     doClose () {
-      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {

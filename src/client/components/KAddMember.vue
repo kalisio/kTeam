@@ -84,7 +84,7 @@ export default {
           resource: this.contextId,
           resourcesService: 'organisations'
         })
-        .then(_ => {
+        .then(() => {
           done()
           this.doClose()
         })
@@ -97,7 +97,7 @@ export default {
       }
     },
     doClose () {
-      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {

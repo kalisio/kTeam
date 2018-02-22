@@ -104,7 +104,7 @@ export default {
           resource: result.values.group[0]._id,
           resourcesService: this.contextId + '/groups'
         })
-        .then(_ => {
+        .then(() => {
           done()
           this.doClose()
         })
@@ -117,7 +117,7 @@ export default {
       }
     },
     doClose () {
-      this.$refs.modal.close(_ => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
     }
   },
   created () {

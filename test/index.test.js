@@ -263,7 +263,7 @@ describe('kTeam', () => {
 
   it('manager can create an organisation group', () => {
     return orgGroupService.create({ name: 'test-group' }, { user: user2Object, checkAuthorisation: true })
-    .then(_ => {
+    .then(() => {
       return orgGroupService.find({ query: { name: 'test-group' }, user: user2Object, checkAuthorisation: true })
     })
     .then(groups => {
@@ -288,7 +288,7 @@ describe('kTeam', () => {
 
   it('group owner can remove his organisation group', () => {
     return orgGroupService.remove(groupObject._id, { user: user2Object, checkAuthorisation: true })
-    .then(_ => {
+    .then(() => {
       return orgGroupService.find({ query: { name: groupObject.name }, user: user2Object, checkAuthorisation: true })
     })
     .then(groups => {
