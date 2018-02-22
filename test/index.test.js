@@ -204,7 +204,7 @@ describe('kTeam', () => {
   })
 
   it('non-members cannot access organisation storage', (done) => {
-    orgStorageService.get('file.txt', { user: user1Object, checkAuthorisation: true })
+    orgStorageService.get('file.txt', { user: user2Object, checkAuthorisation: true })
     .catch(error => {
       expect(error).toExist()
       expect(error.name).to.equal('Forbidden')
@@ -253,9 +253,13 @@ describe('kTeam', () => {
   })
 
   it('members can access organisation storage', () => {
-    return orgStorageService.create({ id: 'file.txt', uri: getBase64DataURI(Buffer.from('some buffered data'), 'text/plain') }, { user: user1Object, checkAuthorisation: true })
-    .then(_ => orgStorageService.get('file.txt', { user: user1Object, checkAuthorisation: true }))
-    .then(_ => orgStorageService.remove('file.txt', { user: user1Object, checkAuthorisation: true }))
+    return orgStorageService.create({
+      id: 'file.txt', uri: getBase64DataURI(Buffer.from('some buffered data'), 'text/plain')
+    }, {
+      user: user2Object, checkAuthorisation: true
+    })
+    .then(_ => orgStorageService.get('file.txt', { user: user2Object, checkAuthorisation: true }))
+    .then(_ => orgStorageService.remove('file.txt', { user: user2Object, checkAuthorisation: true }))
   })
   // Let enough time to process
   .timeout(5000)
