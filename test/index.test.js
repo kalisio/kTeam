@@ -262,7 +262,7 @@ describe('kTeam', () => {
     .then(_ => orgStorageService.remove('file.txt', { user: user2Object, checkAuthorisation: true }))
   })
   // Let enough time to process
-  .timeout(5000)
+  .timeout(10000)
 
   it('owner can add organisation managers', () => {
     return authorisationService.create({
