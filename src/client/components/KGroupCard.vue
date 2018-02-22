@@ -55,7 +55,7 @@ export default {
       if (this.$can('update', 'groups', this.contextId, this.item)) {
         this.registerPaneAction({ 
           name: 'edit-group', label: 'Edit', icon: 'description',
-          route: { name: 'edit-group', params: { contextId: this.contextId } }
+          route: { name: 'edit-group', params: { contextId: this.contextId, id: this.item._id } }
         })
       }
       if (this.$can('remove', 'groups', this.contextId, this.item)) {

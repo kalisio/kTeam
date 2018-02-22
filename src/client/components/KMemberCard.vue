@@ -81,7 +81,7 @@ export default {
       if (this.$can('update', 'members', this.contextId)) {
         this.registerPaneAction({ 
           name: 'tag-member', label: 'Tag', icon: 'local_offer',
-          route: { name: 'tag-member', params: { contextId: this.contextId } }
+          route: { name: 'tag-member', params: { contextId: this.contextId, id: this.item._id } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
