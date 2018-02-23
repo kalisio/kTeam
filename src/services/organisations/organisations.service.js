@@ -41,7 +41,7 @@ export default function (name, app, options) {
       const config = this.app.get('storage')
       const blobStore = store({ client, bucket })
       const blobService = BlobService({ Model: blobStore, id: '_id' })
-      createStorageService.call(this.app, organisation, blobService)
+      createStorageService.call(this.app, blobService, organisation)
       debug('Storage service created for organisation ' + organisation.name)
     },
 
