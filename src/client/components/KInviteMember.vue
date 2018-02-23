@@ -109,9 +109,8 @@ export default {
     this.$options.components['k-form'] = this.$load('form/KForm')
      // Initialize the form
     this.loadRefs()
-    .then(() => {
-      this.$refs.form.clear()
-    })
+    .then(() => this.$refs.form.build())
+    .then(() => this.$refs.form.clear())
   }
 }
 </script>
