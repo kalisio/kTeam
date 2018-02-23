@@ -16,7 +16,7 @@ export default function (name, app, options) {
     secretAccessKey: config.secretAccessKey
   })
   const bucket = config.bucket
-  debug('S3 storage created with config ', config)
+  debug('S3 team storage client created with config ', config)
 
   return {
     createOrganisationServices (organisation, db) {
