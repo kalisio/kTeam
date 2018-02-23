@@ -398,11 +398,8 @@ describe('kTeam', () => {
   })
 
   // Cleanup
-  after(() => {
-    if (server) server.close()
-    userService.Model.drop()
-    orgService.Model.drop()
-    orgGroupService.Model.drop()
+  after(async () => {
+    if (server) await server.close()
     app.db.instance.dropDatabase()
   })
 })
