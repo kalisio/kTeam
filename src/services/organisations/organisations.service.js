@@ -9,60 +9,56 @@ const modelsPath = path.join(__dirname, '..', '..', 'models')
 
 const debug = makeDebug('kalisio:kTeam:organisations:service')
 
-export default {
-  createOrganisationServices (organisation, db) {
-    this.app.createService('members', {
-      servicesPath,
-      context: organisation,
-      proxy: {
-        service: this.app.getService('users'),
-        params: { query: { 'organisations._id': organisation._id.toString() } }
-      }
-    })
-    debug('Members service created for organisation ' + organisation.name)
-    this.app.createService('groups', {
-      modelsPath,
-      servicesPath,
-      context: organisation,
-      db
-    })
-    debug('Groups service created for organisation ' + organisation.name)
-    createTagService.call(this.app, organisation, db)
-    debug('Tags service created for organisation ' + organisation.name)
-    const config = this.app.get('storage')
-    const blobStore = store({
-      client: this.s3,
-      bucket: config.bucket
-    })
-    const blobService = BlobService({ Model: blobStore, id: '_id' })
-    createStorageService.call(this.app, organisation, blobService)
-    debug('Storage service created for organisation ' + organisation.name)
-  },
+export default function (name, app, options) {
+  const config = app.get('storage')
+  const client = new aws.S3({
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey
+  })
+  const bucket = config.bucket
+  debug('S3 storage created with config ', config)
 
-  removeOrganisationServices (organisation) {
-    // TODO
-  },
-
-  configureOrganisations () {
-    // Reinstanciated services for all organisations
-    return this.find({ paginate: false })
-    .then(organisations => {
-      organisations.forEach(organisation => {
-        // Get org DB
-        let db = this.app.db.instance.db(organisation._id.toString())
-        this.createOrganisationServices(organisation, db)
+  return {
+    createOrganisationServices (organisation, db) {
+      this.app.createService('members', {
+        servicesPath,
+        context: organisation,
+        proxy: {
+          service: this.app.getService('users'),
+          params: { query: { 'organisations._id': organisation._id.toString() } }
+        }
       })
-    })
-  },
+      debug('Members service created for organisation ' + organisation.name)
+      this.app.createService('groups', {
+        modelsPath,
+        servicesPath,
+        context: organisation,
+        db
+      })
+      debug('Groups service created for organisation ' + organisation.name)
+      createTagService.call(this.app, organisation, db)
+      debug('Tags service created for organisation ' + organisation.name)
+      const config = this.app.get('storage')
+      const blobStore = store({ client, bucket })
+      const blobService = BlobService({ Model: blobStore, id: '_id' })
+      createStorageService.call(this.app, organisation, blobService)
+      debug('Storage service created for organisation ' + organisation.name)
+    },
 
-  setup (app) {
-    const config = app.get('storage')
-    this.s3 = new aws.S3({
-      accessKeyId: config.accessKeyId,
-      secretAccessKey: config.secretAccessKey
-    })
-    debug('S3 storage created with config ', config)
+    removeOrganisationServices (organisation) {
+      // TODO
+    },
+
+    configureOrganisations () {
+      // Reinstanciated services for all organisations
+      return this.find({ paginate: false })
+      .then(organisations => {
+        organisations.forEach(organisation => {
+          // Get org DB
+          let db = this.app.db.instance.db(organisation._id.toString())
+          this.createOrganisationServices(organisation, db)
+        })
+      })
+    }
   }
 }
-
-
