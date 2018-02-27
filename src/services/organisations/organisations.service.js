@@ -38,7 +38,6 @@ export default function (name, app, options) {
       debug('Groups service created for organisation ' + organisation.name)
       createTagService.call(this.app, organisation, db)
       debug('Tags service created for organisation ' + organisation.name)
-      const config = this.app.get('storage')
       const blobStore = store({ client, bucket })
       const blobService = BlobService({ Model: blobStore, id: '_id' })
       createStorageService.call(this.app, blobService, organisation)
