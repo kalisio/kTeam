@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" />
+    <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" :filter-query="searchQuery" />
     <!-- 
       Router view to enable routing to modals
      -->
@@ -46,7 +46,13 @@ export default {
     },
     refreshActivity () {
       this.clearActivity()
+      // Title
       this.setTitle(this.$store.get('context.name'))
+      // Search bar
+      this.setSearchBar('profile.name', [
+        { service: 'groups', field: 'name', baseQuery: {} },
+        { service: 'tags', field: 'value', baseQuery: {} }
+      ])
       // Tabbar actions
       this.registerTabAction({ 
         name: 'members', label: 'Members', icon: 'group', 
