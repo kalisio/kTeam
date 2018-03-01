@@ -50,8 +50,8 @@ export default {
       this.setTitle(this.$store.get('context.name'))
       // Search bar
       this.setSearchBar('profile.name', [
-        { service: 'groups', field: 'name', baseQuery: {} },
-        { service: 'tags', field: 'value', baseQuery: {} }
+        { service: 'groups', field: 'name', baseQuery: {}, icon: { name: 'group_work' } },
+        { service: 'tags', field: 'value', baseQuery: {}, icon: 'label' }
       ])
       // Tabbar actions
       this.registerTabAction({ 

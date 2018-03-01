@@ -49,6 +49,9 @@ export default {
               "field": "name",
               "baseQuery": {
                 "_id": { "$nin": _.map(this.member.groups, '_id') }
+              },
+              "icon": {
+                "name": "group_work"
               }
             }],
             "field": {

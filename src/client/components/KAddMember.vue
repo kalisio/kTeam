@@ -37,6 +37,9 @@ export default {
               "baseQuery": {
                 "organisations._id": { "$nin": [this.contextId] },
                 "$select": ["profile"]
+              },
+              "icon": {
+                "name": "person"
               }
             }],
             "field": {
