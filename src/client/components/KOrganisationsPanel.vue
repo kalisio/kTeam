@@ -32,7 +32,7 @@
 
 <script>
 import _ from 'lodash'
-import { Events, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
+import { Events, Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 import { mixins } from 'kCore/client'
 
@@ -105,6 +105,11 @@ export default {
     onOrganisationCreated (org) {
       this.currentOrgId = org._id
       this.$refs.editor.close(() => this.sideNav.navigate({ name: 'context', params: { contextId: org._id } }))
+    },
+    onOrganisationRemoved (org) {
+       Toast.create.warning({
+        html: 'The organisation ' + org.name + ' has been removed'
+      })
     }
   },
   created () {
@@ -119,10 +124,15 @@ export default {
     Events.$on('user-changed', this.updateOrganisations)
     // Required to get the org objects first
     this.$on('collection-refreshed', this.updateCurrentOrganisation)
+    // Required to get notify when an orga is deleted
+    const organisationsService = this.$api.getService('organisations')
+    organisationsService.on('removed', (org) => this.onOrganisationRemoved(org))
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
     this.$off('collection-refreshed', this.updateOrganisations)
+    const organisationsService = this.$api.getService('organisations')
+    organisationsService.off('removed', this.onOrganisationRemoved)
   }
 }
 </script>
