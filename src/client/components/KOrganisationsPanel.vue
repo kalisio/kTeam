@@ -84,7 +84,6 @@ export default {
       this.refreshCollection()
     },
     updateCurrentOrganisation () {
-      // Check if current still exist
       if (this.currentOrgId) {
         if (!this.findOrganisation(this.currentOrgId)) {
           this.clearCurrentOrganisation()
