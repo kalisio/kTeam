@@ -130,7 +130,7 @@ export default {
   },
   beforeDestroy() {
     Events.$off('user-changed', this.updateOrganisations)
-    this.$off('collection-refreshed', this.updateOrganisations)
+    this.$off('collection-refreshed', this.updateCurrentOrganisation)
     const organisationsService = this.$api.getService('organisations')
     organisationsService.off('removed', this.onOrganisationRemoved)
   }
