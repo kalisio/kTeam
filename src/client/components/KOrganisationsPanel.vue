@@ -16,7 +16,7 @@
       -->
       <q-item @click="createOrganisation">
         <q-item-side icon="add_circle" />
-        <q-item-main label="New organisation" />
+        <q-item-main :label="$t('KOrganisationPanel.NEW_ORGANISATION')" />
       </q-item>
     </q-list>
     <!--
