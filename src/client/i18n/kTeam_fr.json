@@ -1,5 +1,36 @@
 {
+  "MEMBERS": "Membres",
+  "GROUPS": "Groupes",
+  "schemas": {
+    "ORGANISATIONS_CREATE_TITLE": "Créer une nouvelle organisation ?",
+    "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
+    "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Saisissez une description de l'organisation",
+    "ORGANISATIONS_PLAN_FIELD_HELPER": "Choisissez un plan de paiement pour l'organisation",
+    "GROUPS_CREATE_TITLE": "Créer une nouveau groupe ?",
+    "GROUPS_NAME_FIELD_HELPER": "Saisissez le nom du groupe",
+    "GROUPS_DESCRIPTION_FIELD_HELPER": "Saisissez une description du groupe"
+  },
   "KOrganisationPanel": {
     "NEW_ORGANISATION": "Nouvelle organisation"
+  },
+  "KMembersActivity": {
+    "MEMBERS": "$t(MEMBERS)",
+    "GROUPS": "$t(GROUPS)"
+  },
+  "KGroupsActivity": {
+    "MEMBERS": "$t(MEMBERS)",
+    "GROUPS": "$t(GROUPS)"
+  },
+  "KSettingsActivity": {
+    "PROPERTIES": "Propriétés",
+    "BILLING": "Paiement",
+    "DANGER_ZONE": "Zone de danger"
+  },
+  "KOrganisationDZ": {
+    "BLOCK_TITLE": "Supprimer cette organisation ?",
+    "BLOCK_TEXT": "Notez que la suppresion de <b>{{organisation}}</b> entrainera la suppression de toutes les données qui lui sont attachées.<br>La suppression ne peut pas être annulée.",
+    "BLOCK_ACTION": "Supprimer",
+    "DIALOG_TITLE": "Etes vous sûr de vouloir supprimer {{organisation}} ?",
+    "DIALOG_HELPER": "Saisissez le nom de l'organisation pour confirmer sa suppression" 
   }
 }

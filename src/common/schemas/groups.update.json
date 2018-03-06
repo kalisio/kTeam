@@ -11,8 +11,7 @@
       "minLength": 3,
       "field": {
         "component": "form/KTextField",
-        "label": "Name",
-        "helper": "Enter the name"
+        "helper": "schemas.GROUPS_NAME_FIELD_HELPER"
       }
     },
     "description": {
@@ -20,8 +19,7 @@
       "maxLength": 256,
       "field": {
         "component": "form/KTextField",
-        "label": "Description",
-        "helper": "Enter the description"
+        "helper": "schemas.GROUPS_DESCRIPTION_FIELD_HELPER"
       }
     }
   },

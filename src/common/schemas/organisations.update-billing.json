@@ -9,8 +9,7 @@
       "type": "string",
       "field": {
         "component": "form/KSelectField",
-        "label": "Plan",
-        "helper": "Select your plan",
+        "helper": "schemas.ORGANISATION_PLAN_FIELD_HELPER",
         "options": [
           { "label": "Gold", "value": "gold", "color": "yellow" },
           { "label": "Silver", "value": "silver", "color": "grey" },

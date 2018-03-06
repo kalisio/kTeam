@@ -3,9 +3,9 @@
     <div class="col-12">
       <k-block
         color="red" 
-        title="Delete this organisation ?"
-        :text="blockText()"
-        action="Delete"
+        :title="$t('KOrganisationDZ.BLOCK_TITLE')"
+        :text="$t('KOrganisationDZ.BLOCK_TEXT', {organisation: name})"
+        :action="$t('KOrganisationDZ.BLOCK_ACTION')"
         @action-triggered="onDeleteClicked" />
     </div>
   </div>
@@ -20,32 +20,26 @@ export default {
   mixins: [
     kCoreMixins.objectProxy
   ],
-  computed: {
-    disable () {
-      return false
-    }
-  },
   data () {
     return {
       name: '',
     }
   },
   methods: {
-    blockText () {
-      return "Please note that deleting \'" + this.name + 
-              "\' will delete any data attached to this organisation."
-    },
+    /*blockText () {
+      return this.$i18n.i18next('KOrganisationDZ.BLOCK_TEXT', {organsation: this.name})
+    },*/
     loadService () {
       return this.$api.getService('organisations')
     },
     onDeleteClicked () {
       Dialog.create({
-        title: 'Are you sure you want to delete \'' + this.name + '\' ?',
+        title: this.$i18n.i18next.t('KOrganisationDZ.DIALOG_TITLE', {organisation: this.name}),
         form: {
           confirm: {
             type: 'text',
             model: '',
-            label: 'Enter the name of the organisation to confirm the deletion'
+            label: this.$i18n.i18next.t('KOrganisationDZ.DIALOG_HELPER')
           }
         },
         buttons: [

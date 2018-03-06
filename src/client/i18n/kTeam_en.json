@@ -1,5 +1,36 @@
 {
+  "MEMBERS": "Members",
+  "GROUPS": "Groups",
+  "schemas": {
+    "ORGANISATIONS_CREATE_TITLE": "Create a new organisation ?",
+    "ORGANISATIONS_NAME_FIELD_HELPER": "Enter the name of this organisation",
+    "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this organisation",
+    "ORGANISATIONS_PLAN_FIELD_HELPER": "Select the billing plan of this organisation",
+    "GROUPS_CREATE_TITLE": "Create a new group ?",
+    "GROUPS_NAME_FIELD_HELPER": "Enter the name of this group",
+    "GROUPS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this group"
+  },
   "KOrganisationPanel": {
     "NEW_ORGANISATION": "New organisation"
+  },
+  "KMembersActivity": {
+    "MEMBERS": "$t(MEMBERS)",
+    "GROUPS": "$t(GROUPS)"
+  },
+  "KGroupsActivity": {
+    "MEMBERS": "$t(MEMBERS)",
+    "GROUPS": "$t(GROUPS)"
+  },
+  "KSettingsActivity": {
+    "PROPERTIES": "Properties",
+    "BILLING": "Billing",
+    "DANGER_ZONE": "Danger Zone"
+  },
+  "KOrganisationDZ": {
+    "BLOCK_TITLE": "Delete this organisation ?",
+    "BLOCK_TEXT": "Please note that deleting {{organiation}} will delete any data attached to this organisation.<br>The deletion cannot be undone.",
+    "BLOCK_ACTION": "Delete",
+    "DIALOG_TITLE": "Are you sure you want to delete {{organisation}} ?",
+    "DIALOG_HELPER": "Enter the organisation name to confirm the deletion" 
   }
 }

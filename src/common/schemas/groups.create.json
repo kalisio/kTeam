@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://www.kalisio.xyz/schemas/groups.create.json#",
-  "title": "Create a new group ?",
+  "title": "schemas.GROUPS_CREATE_TITLE",
   "description": "Group creation schema",
   "type": "object",
   "properties": {
@@ -12,8 +12,7 @@
       "default": "New group",
       "field": {
         "component": "form/KTextField",
-        "label": "Name",
-        "helper": "Enter the name of your new group"
+        "helper": "schemas.GROUPS_NAME_FIELD_HELPER"
       }
     },
     "description": {
@@ -21,8 +20,7 @@
       "maxLength": 256,
       "field": {
         "component": "form/KTextField",
-        "label": "Description",
-        "helper": "Enter a brief description about your group and its purpose"
+        "helper": "schemas.GROUPS_DESCRIPTION_FIELD_HELPER"
       }
     }
   },

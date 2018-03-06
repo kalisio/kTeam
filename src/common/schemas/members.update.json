@@ -10,7 +10,6 @@
       "scope": "members",
       "field": {
         "component": "form/KTagField",
-        "label": "Tags",
         "helper": "Enter some tags to qualify yourself"
       }
     }

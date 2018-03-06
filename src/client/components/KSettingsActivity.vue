@@ -38,17 +38,17 @@ export default {
       // Tabbar actions
       if (this.$can('update', 'organisations', this.contextId, { _id: this.contextId })) {
         this.registerTabAction({ 
-          name: 'properties', label: 'Properties', icon: 'description', 
+          name: 'properties', label: this.$i18n.i18next.t('KSettingsActivity.PROPERTIES'), icon: 'description', 
           route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' },
           default: this.perspective === 'properties' } 
         })
         this.registerTabAction({ 
-          name: 'billing', label: 'Billing', icon: 'credit_card', 
+          name: 'billing', label: this.$i18n.i18next.t('KSettingsActivity.BILLING'), icon: 'credit_card', 
           route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' },
           default: this.perspective === 'billing' }
         }),
         this.registerTabAction({
-          name: 'danger-zone', label: 'Danger Zone', icon: 'warning', 
+          name: 'danger-zone', label: this.$i18n.i18next.t('KSettingsActivity.DANGER_ZONE'), icon: 'warning', 
           route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' },
           default: this.perspective === 'danger-zone' }
         })

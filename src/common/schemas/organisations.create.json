@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "http://www.kalisio.xyz/schemas/organisations.create.json#",
-  "title": "Create a new organisation ?",
+  "title": "schemas.ORGANISATIONS_CREATE_TITLE",
   "description": "Organisation creation schema",
   "type": "object",
   "properties": {
@@ -12,8 +12,7 @@
       "default": "New organisation",
       "field": {
         "component": "form/KTextField",
-        "label": "Name",
-        "helper": "Enter the name of your new organisation"
+        "helper": "schemas.ORGANISATIONS_NAME_FIELD_HELPER"
       }
     },
     "description": {
@@ -21,8 +20,7 @@
       "maxLength": 256,
       "field": {
         "component": "form/KTextField",
-        "label": "Description",
-        "helper": "Enter a brief description about your new organisation"
+        "helper": "schemas.ORGANISATIONS_DESCRIPTION_FIELD_HELPER"
       }
     }
   },
