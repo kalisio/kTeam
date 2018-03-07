@@ -34,12 +34,12 @@ export default {
     },
     onDeleteClicked () {
       Dialog.create({
-        title: this.$i18n.i18next.t('KOrganisationDZ.DIALOG_TITLE', {organisation: this.name}),
+        title: this.$t('KOrganisationDZ.DIALOG_TITLE', {organisation: this.name}),
         form: {
           confirm: {
             type: 'text',
             model: '',
-            label: this.$i18n.i18next.t('KOrganisationDZ.DIALOG_HELPER')
+            label: this.$t('KOrganisationDZ.DIALOG_HELPER')
           }
         },
         buttons: [

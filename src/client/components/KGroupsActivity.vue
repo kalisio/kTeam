@@ -58,11 +58,11 @@ export default {
       this.setSearchBar('name')
       // Tabbar actions
       this.registerTabAction({ 
-        name: 'members', label: this.$i18n.i18next.t('KGroupsActivity.MEMBERS'), icon: 'group',
+        name: 'members', label: this.$t('KGroupsActivity.MEMBERS'), icon: 'group',
         route: { name: 'members-activity', params: { contextId: this.contextId } } 
       })
       this.registerTabAction({ 
-        name: 'groups', label: this.$i18n.i18next.t('KGroupsActivity.GROUPS'), icon: 'group_work',
+        name: 'groups', label: this.$t('KGroupsActivity.GROUPS'), icon: 'group_work',
         route: { name: 'groups-activity', params: { contextId: this.contextId } },
         default: true
       })
