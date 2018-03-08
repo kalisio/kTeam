@@ -1,7 +1,7 @@
 <template>
-  <k-modal ref="modal" title="Invite a guest to join your organisation" :toolbar="toolbar" :buttons="buttons" :route="true">
+  <k-modal ref="modal" :title="$t('KInviteMember.TITLE')" :toolbar="getToolbar()" :buttons="getButtons()" :route="true">
     <div slot="modal-content" class="column xs-gutter">
-      <k-form ref="form" :schema="schema" />
+      <k-form ref="form" :schema="getSchema()" />
     </div>
   </k-modal>
 </template>
@@ -19,14 +19,13 @@ export default {
       type: String,
       required: true,
     }
-  },
-  data () {
-    return {
-      schema: {
+  },  
+  methods: {
+    getSchema () {
+      return {
         "$schema": "http://json-schema.org/draft-06/schema#",
         "$id": "http://kalisio.xyz/schemas/invite-member",
         "title": "Invite Member Form",
-        "description": "Invite member form",
         "type": "object",
         "properties": {
          "name": { 
@@ -35,8 +34,7 @@ export default {
             "maxLength": 128,
             "field": {
               "component": "form/KTextField",
-              "label": "Name",
-              "helper": "Enter your guest's name",
+              "helper": "KInviteMember.NAME_FIELD_HELPER"
             }
           },
           "email": { 
@@ -44,8 +42,7 @@ export default {
             "format": "email",
             "field": {
               "component": "form/KEmailField",
-              "label": "Email",
-              "helper": "Enter your guest's email address",
+              "helper": "KInviteMember.EMAIL_FIELD_HELPER"
             }
           },
           "role": { 
@@ -53,28 +50,29 @@ export default {
             "default": "member",
             "field": {
               "component": "form/KSelectField",
-              "label": "Role",
-              "helper": "Select the role of the user",
+              "helper": "KInviteMember.ROLE_FIELD_HELPER",
               "type": "radio",
               "options": [
-                { "label": "Owner", "value": "owner" },
-                { "label": "Manager", "value": "manager" },
-                { "label": "Member", "value": "member" }
+                { "label": this.$t('KInviteMember.OWNER_LABEL'), "value": "owner" },
+                { "label": this.$t('KInviteMember.MANAGER_LABEL'), "value": "manager" },
+                { "label": this.$t('KInviteMember.MEMBER_LABEL'), "value": "member" }
               ]
             }
           }
         },
         "required": ["name", "email", "role"]
-      },
-      toolbar: [
-        { name: 'Close', icon: 'close', handler: () => this.doClose() }
-      ],
-      buttons: [
-        { name: 'Invite', color: 'primary', handler: (event, done) => this.doInvite(event, done) }
-      ],
-    }
-  },
-  methods: {
+      }
+    },
+    getToolbar () {
+      return [
+        { name: this.$t('KInviteMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+      ]
+    },
+    getButtons () {
+      return [
+        { name: this.$t('KInviteMember.INVITE_BUTTON'), color: 'primary', handler: (event, done) => this.doInvite(event, done) }
+      ]
+    },
     doInvite (event, done) {
       let result = this.$refs.form.validate()
       if (result.isValid) {

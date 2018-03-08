@@ -2,7 +2,10 @@
   "MEMBERS_LABEL": "Membres",
   "GROUPS_LABEL": "Groupes",
   "REMOVE_LABEL": "Supprimer",
-  "EDIT_LABEL": "Editer",
+  "OWNER_LABEL": "Propriétaire",  
+  "MANAGER_LABEL": "Manager",
+  "MEMBER_LABEL": "Membre",
+  "CLOSE_ACTION": "Fermer",  
   "schemas": {
     "ORGANISATIONS_CREATE_TITLE": "Créer une nouvelle organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
@@ -17,7 +20,40 @@
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
-    "GROUPS_LABEL": "$t(GROUPS_LABEL)"
+    "GROUPS_LABEL": "$t(GROUPS_LABEL)",
+    "ADD_USER_LABEL": "Ajouter un utilisateurr",
+    "INVITE_GUEST_LABEL": "Inviter une personne"
+  },
+  "KAddMember": {
+    "TITLE": "Ajouter un membre à votre organisation ?",
+    "USER_FIELD_HELPER": "Selectionner l'utilisateur à ajouter",
+    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer",
+    "OWNER_LABEL": "$t(OWNER_LABEL)",
+    "MANAGER_LABEL": "$t(MANAGER_LABEL)",
+    "MEMBER_LABEL": "$t(MEMBER_LABEL)",
+    "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "ADD_BUTTON": "Ajouter"    
+  },
+  "KInviteMember": {
+    "TITLE": "Inviter une personne à rejoindre votre organisation ?",
+    "NAME_FIELD_HELPER": "Saisissez le nom de votre invité",
+    "EMAIL_FIELD_HELPER": "Saisissez l'adresse mail de votre invité",
+    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer à votre invité",
+    "OWNER_LABEL": "$t(OWNER_LABEL)",
+    "MANAGER_LABEL": "$t(MANAGER_LABEL)",
+    "MEMBER_LABEL": "$t(MEMBER_LABEL)",
+    "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "INVITE_BUTTON": "Inviter"
+  },
+  "KJoinGroup": {
+    "TITLE": "Ajouter {{member}} à un groupe existant ?",
+    "GROUP_FIELD_HELPER": "Saisissez le nom du groupe",
+    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer",
+    "OWNER_LABEL": "$t(OWNER_LABEL)",
+    "MANAGER_LABEL": "$t(MANAGER_LABEL)",
+    "MEMBER_LABEL": "$t(MEMBER_LABEL)",
+    "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "ADD_BUTTON": "Ajouter"
   },
   "KMemberCard": {
     "TAG_LABEL": "Etiqueter",    
@@ -32,7 +68,7 @@
   },
   "KGroupCard": {
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
-    "EDIT_LABEL": "$t(EDIT_LABEL)",
+    "EDIT_LABEL": "Editer",
     "REMOVE_DIALOG_TITLE": "Supprimer {{group}} ?",
     "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloier supprimer {{group}} de votre organisation ?"
   },

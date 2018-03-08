@@ -1,7 +1,7 @@
 <template>
-  <k-modal ref="modal" title="Add a member to your organisation" :toolbar="toolbar" :buttons="buttons" :route="true">
+  <k-modal ref="modal" :title="$t('KAddMember.TITLE')" :toolbar="getToolbar()" :buttons="getButtons()" :route="true">
     <div slot="modal-content" class="column xs-gutter">
-      <k-form ref="form" :schema="schema" />
+      <k-form ref="form" :schema="getSchema()" />
     </div>
   </k-modal>
 </template>
@@ -20,13 +20,12 @@ export default {
       required: true,
     }
   },
-  data () {
-    return {
-      schema: {
+  methods: {
+    getSchema () {
+      return {        
         "$schema": "http://json-schema.org/draft-06/schema#",
         "$id": "http://kalisio.xyz/schemas/add-member#",
         "title": "Add Member Form",
-        "description": "Add member form",
         "type": "object",
         "properties": {
           "user": { 
@@ -44,8 +43,7 @@ export default {
             }],
             "field": {
               "component": "form/KItemField",
-              "label": "User",
-              "helper": "Select the user to add",
+              "helper": "KAddMember.USER_FIELD_HELPER",
             }
           },
           "role": { 
@@ -53,28 +51,29 @@ export default {
             "default": "member",
             "field": {
               "component": "form/KSelectField",
-              "label": "Role",
-              "helper": "Select the role of the user",
+              "helper": "KAddMember.ROLE_FIELD_HELPER",
               "type": "radio",
               "options": [
-                { "label": "Owner", "value": "owner" },
-                { "label": "Manager", "value": "manager" },
-                { "label": "Member", "value": "member" }
+                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" },
+                { "label": this.$t('KAddMember.MANAGER_LABEL'), "value": "manager" },
+                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" }
               ]
             }
           }
         },
         "required": ["user", "role"]
-      },
-      toolbar: [
-        { name: 'Close', icon: 'close', handler: () => this.doClose() }
-      ],
-      buttons: [
-        { name: 'Add', color: 'primary', handler: (event, done) => this.doAdd(event, done) }
-      ],
-    }
-  },
-  methods: {
+      }
+    },
+    getToolbar () {
+      return [
+        { name: this.$t('KAddMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+      ]
+    },
+    getButtons () {
+      return  [
+        { name: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doAdd(event, done) }
+      ]
+    },
     doAdd (event, done) {
       let result = this.$refs.form.validate()
       if (result.isValid) {

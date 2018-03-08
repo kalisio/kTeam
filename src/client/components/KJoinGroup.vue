@@ -1,6 +1,6 @@
 <template>
   <div v-if="member !== null">
-    <k-modal ref="modal" :title="title" :toolbar="toolbar" :buttons="buttons" :route="true">
+    <k-modal ref="modal" :title="title" :toolbar="getToolbar()" :buttons="getButtons()" :route="true">
       <div slot="modal-content" class="column xs-gutter">
         <k-form ref="form" :schema="schema" />
       </div>
@@ -31,7 +31,7 @@ export default {
   computed: {
     title () {
       if (this.member === null) return ''
-      return 'Add ' + this.member.name + ' to an existing group ?'
+      return this.$t('KJoinGroup.TITLE', { member: this.member.name })
     },
     schema () {
       if (this.member === null) return {}
@@ -39,7 +39,6 @@ export default {
         "$schema": "http://json-schema.org/draft-06/schema#",
         "$id": "http://kalisio.xyz/schemas/join-group#",
         "title": "Join Group Form",
-        "description": "Join group form",
         "type": "object",
         "properties": {
           "group": { 
@@ -56,8 +55,7 @@ export default {
             }],
             "field": {
               "component": "form/KItemField",
-              "label": "Group",
-              "helper": "Enter the name of the group",
+              "helper": "KJoinGroup.GROUP_FIELD_HELPER",
             }
           },
           "role": { 
@@ -65,13 +63,12 @@ export default {
             "default": "member",
             "field": {
               "component": "form/KSelectField",
-              "label": "Role",
-              "helper": "Select the role you want to grant",
+              "helper": "KJoinGroup.ROLE_FIELD_HELPER",
               "type": "radio",
               "options": [
-                { "label": "Owner", "value": "owner" },
-                { "label": "Manager", "value": "manager" },
-                { "label": "Member", "value": "member" }
+                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" },
+                { "label": this.$t('KAddMember.MANAGER_LABEL'), "value": "manager" },
+                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" }
               ]
             }
           }
@@ -82,16 +79,20 @@ export default {
   },
   data () {
     return {
-      toolbar: [
-        { name: 'Close', icon: 'close', handler: () => this.doClose() }
-      ],
-      buttons: [
-        { name: 'Add', color: 'primary', handler: (event, done) => this.doJoin(event, done) }
-      ],
       member: null
     }
   },
   methods: {
+    getToolbar () {
+      return [
+        { name: this.$t('KAddMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+      ]
+    },
+    getButtons () {
+      return [
+        { name: this.$t('KJoinGroup.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doJoin(event, done) }
+      ]
+    },
     loadService () {
       return this.$api.getService('members')
     },

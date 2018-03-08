@@ -66,11 +66,11 @@ export default {
       // Fab actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerFabAction({ 
-          name: 'add-member', label: 'Add a user', icon: 'person_add', 
+          name: 'add-member', label: this.$t('KMembersActivity.ADD_USER_LABEL'), icon: 'person_add', 
           route: { name: 'add-member', params: {} } 
         })
         this.registerFabAction({ 
-          name: 'invite-member', label: 'Invite a guest', icon: 'email', 
+          name: 'invite-member', label: this.$t('KMembersActivity.INVITE_GUEST_LABEL'), icon: 'email', 
           route: { name: 'invite-member', params: {} } 
         })
       }
