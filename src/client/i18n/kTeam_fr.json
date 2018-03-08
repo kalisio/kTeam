@@ -1,6 +1,8 @@
 {
-  "MEMBERS": "Membres",
-  "GROUPS": "Groupes",
+  "MEMBERS_LABEL": "Membres",
+  "GROUPS_LABEL": "Groupes",
+  "REMOVE_LABEL": "Supprimer",
+  "EDIT_LABEL": "Editer",
   "schemas": {
     "ORGANISATIONS_CREATE_TITLE": "Créer une nouvelle organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
@@ -14,17 +16,30 @@
     "NEW_ORGANISATION": "Nouvelle organisation"
   },
   "KMembersActivity": {
-    "MEMBERS": "$t(MEMBERS)",
-    "GROUPS": "$t(GROUPS)"
+    "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
+    "GROUPS_LABEL": "$t(GROUPS_LABEL)"
+  },
+  "KMemberCard": {
+    "TAG_LABEL": "Etiqueter",    
+    "REMOVE_LABEL": "$t(REMOVE_LABEL)",
+    "REMOVE_DIALOG_TITLE": "Supprimer {{member}} ?",
+    "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloir supprimer <b>{{member}}</b> de votre organisation ?"
   },
   "KGroupsActivity": {
-    "MEMBERS": "$t(MEMBERS)",
-    "GROUPS": "$t(GROUPS)"
+    "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
+    "GROUPS_LABEL": "$t(GROUPS_LABEL)",
+    "CREATE_GROUP_LABEL": "Créer un groupe"
+  },
+  "KGroupCard": {
+    "REMOVE_LABEL": "$t(REMOVE_LABEL)",
+    "EDIT_LABEL": "$t(EDIT_LABEL)",
+    "REMOVE_DIALOG_TITLE": "Supprimer {{group}} ?",
+    "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloier supprimer {{group}} de votre organisation ?"
   },
   "KSettingsActivity": {
-    "PROPERTIES": "Propriétés",
-    "BILLING": "Paiement",
-    "DANGER_ZONE": "Zone de danger"
+    "PROPERTIES_LABEL": "Propriétés",
+    "BILLING_LABEL": "Paiement",
+    "DANGER_ZONE_LABEL": "Zone de danger"
   },
   "KOrganisationDZ": {
     "BLOCK_TITLE": "Supprimer cette organisation ?",

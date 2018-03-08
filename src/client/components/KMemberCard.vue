@@ -80,21 +80,21 @@ export default {
       this.clearActions()
       if (this.$can('update', 'members', this.contextId)) {
         this.registerPaneAction({ 
-          name: 'tag-member', label: 'Tag', icon: 'local_offer',
+          name: 'tag-member', label: this.$t('KMemberCard.TAG_LABEL'), icon: 'local_offer',
           route: { name: 'tag-member', params: { contextId: this.contextId, id: this.item._id } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
         this.registerMenuAction({ 
-          name: 'remove-member', label: 'Remove', icon: 'remove_circle',
+          name: 'remove-member', label: this.$t('KMemberCard.REMOVE_LABEL'), icon: 'remove_circle',
           handler: this.removeMember 
         })
       }
     },
     removeMember (member) {
       Dialog.create({
-        title: 'Remove ' + member.name + '?',
-        message: 'Are you sure you want to remove ' + member.name + ' from your organisation ?',
+        title: this.$t('KMemberCard.REMOVE_DIALOG_TITLE', { member: member.name }),
+        message: this.$t('KMemberCard.REMOVE_DIALOG_MESSAGE', { member: member.name }),
         buttons: [
           {
             label: 'Ok',

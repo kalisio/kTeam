@@ -58,18 +58,18 @@ export default {
       this.setSearchBar('name')
       // Tabbar actions
       this.registerTabAction({ 
-        name: 'members', label: this.$t('KGroupsActivity.MEMBERS'), icon: 'group',
+        name: 'members', label: this.$t('KGroupsActivity.MEMBERS_LABEL'), icon: 'group',
         route: { name: 'members-activity', params: { contextId: this.contextId } } 
       })
       this.registerTabAction({ 
-        name: 'groups', label: this.$t('KGroupsActivity.GROUPS'), icon: 'group_work',
+        name: 'groups', label: this.$t('KGroupsActivity.GROUPS_LABEL'), icon: 'group_work',
         route: { name: 'groups-activity', params: { contextId: this.contextId } },
         default: true
       })
       // Fab actions
       if (this.$can('create', 'groups', this.contextId)) {
         this.registerFabAction({ 
-          name: 'create-group', label: 'Create a group', icon: 'add', 
+          name: 'create-group', label: this.$t('KGroupsActivity.CREATE_GROUP_LABEL'), icon: 'add', 
           route: { name: 'create-group', params: { contextId: this.contextId } }
         })
       }

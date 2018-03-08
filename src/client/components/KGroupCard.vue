@@ -54,21 +54,21 @@ export default {
       this.clearActions()
       if (this.$can('update', 'groups', this.contextId, this.item)) {
         this.registerPaneAction({ 
-          name: 'edit-group', label: 'Edit', icon: 'description',
+          name: 'edit-group', label: this.$t('KGroupCard.EDIT_LABEL'), icon: 'description',
           route: { name: 'edit-group', params: { contextId: this.contextId, id: this.item._id } }
         })
       }
       if (this.$can('remove', 'groups', this.contextId, this.item)) {
         this.registerMenuAction({ 
-          name: 'remove-group', label: 'Remove', icon: 'remove_circle',
+          name: 'remove-group', label: this.$t('KGroupCard.REMOVE_LABEL'), icon: 'remove_circle',
           handler: this.removeGroup
         })
       }
     },
     removeGroup (group) {
       Dialog.create({
-        title: 'Remove ' + group.name + '?',
-        message: 'Are you sure you want to remove ' + group.name + ' from your organisation ?',
+        title: this.$t('KGroupCard.REMOVE_DIALOG_TITLE', { group: group.name }),
+        message: this.$t('KGroupCard.REMOVE_DIALOG_MESSAGE', { group: group.name }),
         buttons: [
           {
             label: 'Ok',

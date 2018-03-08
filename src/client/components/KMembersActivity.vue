@@ -55,12 +55,12 @@ export default {
       ])
       // Tabbar actions
       this.registerTabAction({ 
-        name: 'members', label: this.$t('KMembersActivity.MEMBERS'), icon: 'group', 
+        name: 'members', label: this.$t('KMembersActivity.MEMBERS_LABEL'), icon: 'group', 
         route: { name: 'members-activity', params: { contextId: this.contextId } },
         default: true
       })
       this.registerTabAction({ 
-        name: 'groups', label: this.$t('KMembersActivity.GROUPS'), icon: 'group_work', route: { 
+        name: 'groups', label: this.$t('KMembersActivity.GROUPS_LABEL'), icon: 'group_work', route: { 
         name: 'groups-activity', params: { contextId: this.contextId } } 
       })
       // Fab actions
