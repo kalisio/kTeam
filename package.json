@@ -74,7 +74,7 @@
     "quasar-framework": "0.14.7",
     "s3-blob-store": "2.1.0",
     "uberproto": "^1.2.0",
-    "vue": "2.5.2",
+    "vue": "2.5.15",
     "vue-avatar": "^2.0.0",
     "vue-template-compiler": "2.5.2",
     "winston": "^2.3.1"
