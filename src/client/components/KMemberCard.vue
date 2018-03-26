@@ -128,7 +128,7 @@ export default {
       return ''
     },
     canJoinGroup () {
-      return this.$can('create', 'authorisations', this.contextId, { resource: contextId })
+      return this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })
     },
     canLeaveGroup (group) {
       return this.$can('remove', 'authorisations', this.item._id, { resource: group._id })
