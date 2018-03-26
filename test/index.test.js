@@ -108,7 +108,7 @@ describe('kTeam', () => {
     return userService.create({ email: 'test-1@test.org', name: 'test-user-1' }, { checkAuthorisation: true })
     .then(user => {
       user1Object = user
-      return userService.find({ query: { 'profile.name': 'test-user-1' }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': 'test-user-1' }, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()
@@ -122,7 +122,7 @@ describe('kTeam', () => {
       expect(user2Object.organisations).toExist()
       // By default the user manage its own organisation
       expect(user2Object.organisations[0].permissions).to.deep.equal('owner')
-      return orgService.find({ query: { 'name': 'test-user-2' }, user: user2Object, checkAuthorisation: true })
+      return orgService.find({ query: { 'name': 'test-user-2' }, user: user2Object, checkAuthorisation: true, user: user2Object })
     })
     .then(orgs => {
       expect(orgs.data.length > 0).beTrue()
@@ -226,7 +226,7 @@ describe('kTeam', () => {
     })
     .then(authorisation => {
       expect(authorisation).toExist()
-      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()
@@ -277,7 +277,7 @@ describe('kTeam', () => {
     })
     .then(authorisation => {
       expect(authorisation).toExist()
-      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()
@@ -318,7 +318,7 @@ describe('kTeam', () => {
     })
     .then(groups => {
       expect(groups.data.length === 0).beTrue()
-      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user2Object })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()
@@ -341,7 +341,7 @@ describe('kTeam', () => {
     })
     .then(authorisation => {
       expect(authorisation).toExist()
-      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true })
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
       expect(users.data.length === 1).beTrue()
@@ -358,7 +358,7 @@ describe('kTeam', () => {
     })
     .then(orgs => {
       expect(orgs.data.length === 0).beTrue()
-      return userService.find({ query: {}, checkAuthorisation: true })
+      return userService.find({ query: {}, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
       expect(users.data.length === 3).beTrue()
