@@ -80,7 +80,7 @@ export default {
       if (this.$can('update', 'members', this.contextId)) {
         this.registerPaneAction({ 
           name: 'tag-member', label: this.$t('KMemberCard.TAG_LABEL'), icon: 'local_offer',
-          route: { name: 'tag-member', params: { contextId: this.contextId, id: this.item._id } }
+          route: { name: 'tag-member', params: { contextId: this.contextId, objectId: this.item._id } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
@@ -134,7 +134,7 @@ export default {
       return this.$can('remove', 'authorisations', this.item._id, { resource: group._id })
     },
     onJoinGroup () {
-      this.$router.push({ name: 'join-group', params: { contextId: this.contextId, id: this.item._id } })
+      this.$router.push({ name: 'join-group', params: { contextId: this.contextId, objectId: this.item._id } })
     },
     onLeaveGroup (group) {
       Dialog.create({

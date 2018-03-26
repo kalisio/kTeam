@@ -23,7 +23,7 @@ export default {
       type: String,
       required: true
     },
-    id: {
+    objectId: {
       type: String,
       required: true
     }
@@ -103,7 +103,7 @@ export default {
         authorisationService.create({
           scope: 'groups',
           permissions: result.values.role,
-          subjects: this.id,
+          subjects: this.objectId,
           subjectsService: this.contextId + '/members',
           resource: result.values.group[0]._id,
           resourcesService: this.contextId + '/groups'

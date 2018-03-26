@@ -22,7 +22,8 @@
     <!--
       Create editor
      -->
-    <k-modal-editor 
+    <k-modal-editor
+      id="editor"
       ref="editor" 
       service="organisations"
       :route="false"

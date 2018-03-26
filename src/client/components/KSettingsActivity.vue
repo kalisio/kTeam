@@ -1,13 +1,13 @@
 <template>
   <div class="row justify-center full-width">
     <div v-if="perspective === 'properties'" class="col-11">
-      <k-editor service="organisations" :id="contextId" />
+      <k-editor service="organisations" :ObjectId="contextId" />
     </div>
     <div v-else-if="perspective === 'billing'" class="col-11">
-      <k-editor service="organisations" :id="contextId" perspective="billing" />
+      <k-editor service="organisations" :objectId="contextId" perspective="billing" />
     </div>
     <div v-else-if="perspective === 'danger-zone'" class="col-11">
-      <k-organisation-dz :id="contextId" />
+      <k-organisation-dz :objectId="contextId" />
     </div>
     <div v-else>
       <!-- Error -->

@@ -54,7 +54,7 @@ export default {
       if (this.$can('update', 'groups', this.contextId, this.item)) {
         this.registerPaneAction({ 
           name: 'edit-group', label: this.$t('KGroupCard.EDIT_LABEL'), icon: 'description',
-          route: { name: 'edit-group', params: { contextId: this.contextId, id: this.item._id } }
+          route: { name: 'edit-group', params: { contextId: this.contextId, objectId: this.item._id } }
         })
       }
       if (this.$can('remove', 'groups', this.contextId, this.item)) {
@@ -101,7 +101,7 @@ export default {
     },
     onMembersClicked (role) {
     /* FIXME
-      this.$router.push({ name: 'edit-group', params: { contextId: this.contextId, id: this.item._id, perspective: role } })
+      this.$router.push({ name: 'edit-group', params: { contextId: this.contextId, objectId: this.item._id, perspective: role } })
       */
     }
   },
