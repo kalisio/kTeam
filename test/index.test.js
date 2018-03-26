@@ -122,7 +122,7 @@ describe('kTeam', () => {
       expect(user2Object.organisations).toExist()
       // By default the user manage its own organisation
       expect(user2Object.organisations[0].permissions).to.deep.equal('owner')
-      return orgService.find({ query: { 'name': 'test-user-2' }, user: user2Object, checkAuthorisation: true, user: user2Object })
+      return orgService.find({ query: { 'name': 'test-user-2' }, user: user2Object, checkAuthorisation: true })
     })
     .then(orgs => {
       expect(orgs.data.length > 0).beTrue()
