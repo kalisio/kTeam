@@ -69,8 +69,7 @@ export default {
       })
     },
     role () {
-      const contextId = this.$store.get('context._id')
-      let role = getRoleForOrganisation(this.item, contextId)
+      let role = getRoleForOrganisation(this.item, this.contextId)
       if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     }
@@ -104,7 +103,7 @@ export default {
                 query: {
                   scope: 'organisations',
                   subjects: member._id,
-                  subjectsService: 'members',
+                  subjectsService: this.contextId + '/members',
                   resourcesService: 'organisations'
                 }
               })
@@ -124,21 +123,18 @@ export default {
       return this.roleIcons[role]
     },
     roleForGroup (group) {
-      const contextId = this.$store.get('context._id')
-      let role = getRoleForGroup(this.item, contextId, group._id)
+      let role = getRoleForGroup(this.item, this.contextId, group._id)
       if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     },
     canJoinGroup () {
-      const contextId = this.$store.get('context._id')
-      return this.$can('create', 'authorisations', contextId, { resource: contextId })
+      return this.$can('create', 'authorisations', this.contextId, { resource: contextId })
     },
     canLeaveGroup (group) {
       return this.$can('remove', 'authorisations', this.item._id, { resource: group._id })
     },
     onJoinGroup () {
-      const contextId = this.$store.get('context._id')
-      this.$router.push({ name: 'join-group', params: { contextId: contextId, id: this.item._id } })
+      this.$router.push({ name: 'join-group', params: { contextId: this.contextId, id: this.item._id } })
     },
     onLeaveGroup (group) {
       Dialog.create({
@@ -148,14 +144,13 @@ export default {
           {
             label: 'Ok',
             handler: () => {
-              const contextId = this.$store.get('context._id')
               const authorisationService = this.$api.getService('authorisations')
               authorisationService.remove(group._id, {
                 query: {
                   scope: 'groups',
                   subjects: this.item._id,
-                  subjectsService: contextId + '/members',
-                  resourcesService: contextId + '/groups'
+                  subjectsService: this.contextId + '/members',
+                  resourcesService: this.contextId + '/groups'
                 }
               })
             }

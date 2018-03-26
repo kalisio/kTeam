@@ -37,9 +37,8 @@ export default {
   },
   computed: {
     memberRole () {
-      const contextId = this.$store.get('context._id')
       const user = this.$store.get('user')
-      let role = getRoleForGroup(user, contextId, this.item._id)
+      let role = getRoleForGroup(user, this.contextId, this.item._id)
       if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
       else return ''
     }
@@ -89,8 +88,7 @@ export default {
       // see: https://v1.vuejs.org/guide/reactivity.html
       let stats = {}
       this.roleNames.forEach(role => stats[role] = 0)
-      const contextId = this.$store.get('context._id')
-      const membersService = this.$api.getService('members', contextId)
+      const membersService = this.$api.getService('members', this.contextId)
       findMembersOfGroup(membersService, this.item._id)
       .then(members => {
         // filter the subjects according the role in order to count them
@@ -103,8 +101,7 @@ export default {
     },
     onMembersClicked (role) {
     /* FIXME
-      const contextId = this.$store.get('context._id')
-      this.$router.push({ name: 'edit-group', params: { contextId: contextId, id: this.item._id, perspective: role } })
+      this.$router.push({ name: 'edit-group', params: { contextId: this.contextId, id: this.item._id, perspective: role } })
       */
     }
   },
