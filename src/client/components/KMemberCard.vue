@@ -138,8 +138,8 @@ export default {
     },
     onLeaveGroup (group) {
       Dialog.create({
-        title: 'Leave the group ' + group.name + '?',
-        message: 'Are you sure you want ' + this.item.name + ' to leave the group ' + group.name + ' ?',
+        title: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_TITLE', { group: group.name }),
+        message: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_MESSAGE', { group: group.name, member: this.item.name }),
         buttons: [
           {
             label: 'Ok',

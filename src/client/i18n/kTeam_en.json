@@ -59,7 +59,9 @@
     "TAG_LABEL": "Tag",    
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Remove {{member}} ?",
-    "REMOVE_DIALOG_MESSAGE": "Are you sure you want to remove <b>{{member}}</b> from your organisation ?"
+    "REMOVE_DIALOG_MESSAGE": "Are you sure you want to remove <b>{{member}}</b> from your organisation ?",
+    "LEAVE_GROUP_DIALOG_TITLE": "Leave the group {{group}} '?",
+    "LEAVE_GROUP_DIALOG_MESSAGE": "Are you sure you want <b>{{member}}</b> to leave the group <b>{{group}}</b> ?"
   },
   "KGroupsActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",

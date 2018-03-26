@@ -59,7 +59,9 @@
     "TAG_LABEL": "Etiqueter",    
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Supprimer {{member}} ?",
-    "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloir supprimer <b>{{member}}</b> de votre organisation ?"
+    "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloir supprimer <b>{{member}}</b> de votre organisation ?",
+    "LEAVE_GROUP_DIALOG_TITLE": "Quitter le groupe {{group}} '?",
+    "LEAVE_GROUP_DIALOG_MESSAGE": "Etes vous sûr de vouloir enlever <b>{{member}}</b> du groupe <b>{{group}}</b> ?"
   },
   "KGroupsActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
