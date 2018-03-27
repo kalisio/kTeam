@@ -65,12 +65,12 @@ export default {
     },
     getToolbar () {
       return [
-        { name: this.$t('KInviteMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+        { name: 'close-actoion', label: this.$t('KInviteMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
       ]
     },
     getButtons () {
       return [
-        { name: this.$t('KInviteMember.INVITE_BUTTON'), color: 'primary', handler: (event, done) => this.doInvite(event, done) }
+        { name: 'invite-button', label: this.$t('KInviteMember.INVITE_BUTTON'), color: 'primary', handler: (event, done) => this.doInvite(event, done) }
       ]
     },
     doInvite (event, done) {

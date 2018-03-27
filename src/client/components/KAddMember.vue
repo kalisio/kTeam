@@ -66,12 +66,12 @@ export default {
     },
     getToolbar () {
       return [
-        { name: this.$t('KAddMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+        { name: 'close-action', label: this.$t('KAddMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
       ]
     },
     getButtons () {
       return  [
-        { name: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doAdd(event, done) }
+        { name: 'add-button', label: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doAdd(event, done) }
       ]
     },
     doAdd (event, done) {
