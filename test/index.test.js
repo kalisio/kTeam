@@ -4,7 +4,7 @@ import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
 import core, { kalisio, hooks, permissions } from 'kCore'
-import { iffElse } from 'feathers-hooks-common'
+import { iffElse, when } from 'feathers-hooks-common'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 describe('kTeam', () => {
@@ -41,7 +41,7 @@ describe('kTeam', () => {
         service.hooks({
           after: {
             create: [ teamHooks.createGroupAuthorisations ],
-            remove: [ teamHooks.removeGroupAuthorisations ]
+            remove: [ hooks.setAsDeleted, teamHooks.removeGroupAuthorisations ]
           }
         })
       }
@@ -82,6 +82,11 @@ describe('kTeam', () => {
     })
     authorisationService = app.getService('authorisations')
     expect(authorisationService).toExist()
+    authorisationService.hooks({
+      before: {
+        remove: [ when(hook => hook.params.resource && !hook.params.resource.deleted, teamHooks.preventRemovingLastOwner('groups')) ]
+      }
+    })
     server = app.listen(port)
     server.once('listening', _ => done())
   })
@@ -114,6 +119,8 @@ describe('kTeam', () => {
       expect(users.data.length > 0).beTrue()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('creates a private organisation on user registration', () => {
     return userService.create({ email: 'test-2@test.org', name: 'test-user-2' }, { checkAuthorisation: true })
@@ -128,6 +135,8 @@ describe('kTeam', () => {
       expect(orgs.data.length > 0).beTrue()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('invites a user to join an organisation', () => {
     let sponsor = { id: user2Object._id, organisationId: user2Object.organisations[0]._id, roleGranted: 'member' }
@@ -139,6 +148,8 @@ describe('kTeam', () => {
       expect(user3Object.organisations[0].permissions).to.deep.equal('member')
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('creates an organisation', () => {
     return orgService.create({ name: 'test-org' }, { user: user1Object, checkAuthorisation: true })
@@ -162,6 +173,8 @@ describe('kTeam', () => {
       // creates it until the first document has been inserted (see next test)
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('checks the subjects as owner on this organisation', () => {
     return teamPermissions.findMembersOfOrganisation(userService, orgObject._id, permissions.Roles.owner)
@@ -234,6 +247,8 @@ describe('kTeam', () => {
       expect(user2Object.organisations[1].permissions).to.deep.equal('member')
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('members can access organisation users', () => {
     return orgUserService.find({ query: { 'profile.name': user1Object.name }, user: user2Object, checkAuthorisation: true })
@@ -251,6 +266,8 @@ describe('kTeam', () => {
       done()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('members can access organisation storage', () => {
     return orgStorageService.create({
@@ -285,6 +302,8 @@ describe('kTeam', () => {
       expect(user2Object.organisations[1].permissions).to.deep.equal('manager')
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('manager can create an organisation group', () => {
     return orgGroupService.create({ name: 'test-group' }, { user: user2Object, checkAuthorisation: true })
@@ -302,6 +321,8 @@ describe('kTeam', () => {
       expect(dbs.databases.find(db => db.name === orgObject._id.toString())).toExist()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('checks the subjects as owner on this organisation group', () => {
     return teamPermissions.findMembersOfGroup(userService, groupObject._id, permissions.Roles.owner)
@@ -311,22 +332,111 @@ describe('kTeam', () => {
     })
   })
 
-  it('group owner can remove his organisation group', () => {
-    return orgGroupService.remove(groupObject._id, { user: user2Object, checkAuthorisation: true })
-    .then(() => {
-      return orgGroupService.find({ query: { name: groupObject.name }, user: user2Object, checkAuthorisation: true })
+  it('non-group owner cannot add members to the group', (done) => {
+    authorisationService.create({
+      scope: 'groups',
+      permissions: 'member',
+      subjects: user1Object._id.toString(),
+      subjectsService: 'users',
+      resource: groupObject._id.toString(),
+      resourcesService: orgObject._id.toString() + '/groups'
+    }, {
+      user: user1Object,
+      checkAuthorisation: true
     })
-    .then(groups => {
-      expect(groups.data.length === 0).beTrue()
-      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user2Object })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+
+  it('group owner can add members to his group', () => {
+    return authorisationService.create({
+      scope: 'groups',
+      permissions: 'owner',
+      subjects: user1Object._id.toString(),
+      subjectsService: 'users',
+      resource: groupObject._id.toString(),
+      resourcesService: orgObject._id.toString() + '/groups'
+    }, {
+      user: user2Object,
+      checkAuthorisation: true
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { 'profile.name': user1Object.name }, checkAuthorisation: true, user: user2Object })
     })
     .then(users => {
       expect(users.data.length > 0).beTrue()
+      user1Object = users.data[0]
+      expect(user1Object.groups[0].permissions).to.deep.equal('owner')
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
+
+  it('group owner can remove group members', () => {
+    return authorisationService.remove(groupObject._id, {
+      query: {
+        scope: 'groups',
+        subjects: user2Object._id.toString(),
+        subjectsService: 'users',
+        resourcesService: orgObject._id.toString() + '/groups'
+      }
+    }, {
+      user: user1Object, checkAuthorisation: true
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
+    })
+    .then(users => {
+      expect(users.data.length === 1).beTrue()
       user2Object = users.data[0]
       // No more permission set for org groups
       expect(_.find(user2Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
+
+  it('last group owner cannot be removed', (done) => {
+    authorisationService.remove(groupObject._id, {
+      query: {
+        scope: 'groups',
+        subjects: user1Object._id.toString(),
+        subjectsService: 'users',
+        resourcesService: orgObject._id.toString() + '/groups'
+      }
+    }, {
+      user: user1Object, checkAuthorisation: true
+    })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+
+  it('group owner can remove his organisation group', () => {
+    return orgGroupService.remove(groupObject._id, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
+      return orgGroupService.find({ query: { name: groupObject.name }, user: user1Object, checkAuthorisation: true })
+    })
+    .then(groups => {
+      expect(groups.data.length === 0).beTrue()
+      return userService.find({ query: { 'profile.name': user1Object.name }, checkAuthorisation: true, user: user1Object })
+    })
+    .then(users => {
+      expect(users.data.length > 0).beTrue()
+      user1Object = users.data[0]
+      // No more permission set for org groups
+      expect(_.find(user1Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
 
   it('owner can remove organisation members', () => {
     return authorisationService.remove(orgObject._id, {
@@ -350,6 +460,8 @@ describe('kTeam', () => {
       expect(user2Object.organisations[0]._id.toString()).to.equal(user2Object._id.toString())
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('owner can remove organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
@@ -376,6 +488,8 @@ describe('kTeam', () => {
       expect(dbs.databases.find(db => db.name === orgObject._id.toString())).beUndefined()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('removes private organisation on user removal', () => {
     return userService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
@@ -386,6 +500,8 @@ describe('kTeam', () => {
       expect(orgs.data.length === 0).beTrue()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('removes test user', () => {
     return userService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
@@ -396,6 +512,8 @@ describe('kTeam', () => {
       expect(users.data.length === 0).beTrue()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   // Cleanup
   after(async () => {

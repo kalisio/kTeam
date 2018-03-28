@@ -32,11 +32,12 @@ export function removeGroupAuthorisations (hook) {
   return authorisationService.remove(hook.result._id.toString(), {
     query: {
       // Use the organisation user service to only target org users
-      subjectsService: (typeof hook.service.context === 'object' ? hook.service.context._id.toString() : hook.service.context) + '/members',
+      subjectsService: hook.service.getContextId() + '/members',
       scope: 'groups'
     },
     user: hook.params.user,
     // Because we already have resource set it as objects to avoid populating
+    // Moreover used as an after hook the resource might not already exist anymore
     resource: hook.result,
     resourcesService: hook.service
   })

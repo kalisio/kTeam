@@ -76,6 +76,7 @@ export function removeOrganisationAuthorisations (hook) {
         },
         user: hook.params.user,
         // Because we already have resource set it as objects to avoid populating
+        // Moreover used as an after hook the resource might not already exist anymore
         resource: group,
         resourcesService: orgGroupService
       })
@@ -91,6 +92,7 @@ export function removeOrganisationAuthorisations (hook) {
       },
       user: hook.params.user,
       // Because we already have resource set it as objects to avoid populating
+      // Moreover used as an after hook the resource might not already exist anymore
       resource: hook.result,
       resourcesService: hook.service
     })
