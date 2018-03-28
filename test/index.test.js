@@ -90,6 +90,8 @@ describe('kTeam', () => {
     server = app.listen(port)
     server.once('listening', _ => done())
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('unregistered users cannot create organisations', (done) => {
     orgService.create({ name: 'test-org' }, { checkAuthorisation: true })
