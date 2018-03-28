@@ -4,7 +4,7 @@
       <!-- 
         Organisations list
       -->
-      <q-item v-for="org in items" :key="org._id" @click="setCurrentOrganisation(org)">
+      <q-item v-for="org in items" :id="getId(org)" :key="org._id" @click="setCurrentOrganisation(org)">
         <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
         <q-item-main :label="org.name"/>
         <q-item-side v-if="org._id === currentOrgId" right>
@@ -14,7 +14,7 @@
       <!--
         Create link
       -->
-      <q-item @click="createOrganisation">
+      <q-item id="new-organisation" @click="createOrganisation">
         <q-item-side icon="add_circle" />
         <q-item-main :label="$t('KOrganisationPanel.NEW_ORGANISATION')" />
       </q-item>
@@ -52,11 +52,6 @@ export default {
   },
   mixins: [mixins.baseCollection],
   inject: ['sideNav'],
-  computed: {
-    route () {
-      return {}
-    }
-  },
   watch: {
     '$route' (to, from) {
       // React to route changes. Checks whether the context is null or not
@@ -69,6 +64,9 @@ export default {
     }
   },
   methods: {
+    getId (org) {
+      return _.kebabCase(org.name)
+    },
     loadService () {
       this._service = this.$api.getService('organisations')
       return this._service
