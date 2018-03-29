@@ -65,7 +65,7 @@ export default {
     },
     getToolbar () {
       return [
-        { name: 'close-actoion', label: this.$t('KInviteMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
+        { name: 'close-action', label: this.$t('KInviteMember.CLOSE_ACTION'), icon: 'close', handler: () => this.doClose() }
       ]
     },
     getButtons () {
