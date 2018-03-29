@@ -114,7 +114,6 @@ export default {
         })
         .catch(error => {
           done()
-          throw error 
         })
       } else {
         done()
