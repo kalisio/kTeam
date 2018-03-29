@@ -62,7 +62,6 @@ describe('kTeam', () => {
     userService.hooks({
       after: {
         create: [
-          teamHooks.updateAbilities,
           iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation)
         ],
         remove: [

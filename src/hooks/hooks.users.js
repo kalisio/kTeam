@@ -1,17 +1,6 @@
 import makeDebug from 'debug'
 const debug = makeDebug('kalisio:kTeam:users:hooks')
 
-export function updateAbilities (hook) {
-  if (hook.type !== 'after') {
-    throw new Error(`The 'updateAbilities' hook should only be used as a 'after' hook.`)
-  }
-
-  let authorisationService = hook.app.getService('authorisations')
-  authorisationService.updateAbilities(hook.params.user)
-
-  return hook
-}
-
 export function joinOrganisation (hook) {
   let app = hook.app
   let authorisationService = app.getService('authorisations')
