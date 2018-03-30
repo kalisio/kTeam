@@ -105,7 +105,7 @@ export function removeOrganisationAuthorisations (hook) {
 
 export function removeOrganisationGroups (hook) {
   let app = hook.app
-  let orgGroupService = this.app.getService('groups', hook.result)
+  let orgGroupService = app.getService('groups', hook.result)
   return orgGroupService.find({ paginate: false })
   .then(groups => {
     return Promise.all(groups.map(group => {
