@@ -10,7 +10,7 @@
     "ORGANISATIONS_CREATE_TITLE": "Créer une nouvelle organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
     "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Saisissez une description de l'organisation",
-    "ORGANISATIONS_PLAN_FIELD_HELPER": "Choisissez un plan de paiement pour l'organisation",
+    "ORGANISATIONS_PLAN_FIELD_HELPER": "Sélectionnez un plan de paiement pour l'organisation",
     "GROUPS_CREATE_TITLE": "Créer une nouveau groupe ?",
     "GROUPS_NAME_FIELD_HELPER": "Saisissez le nom du groupe",
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Saisissez une description du groupe"
@@ -26,8 +26,8 @@
   },
   "KAddMember": {
     "TITLE": "Ajouter un membre à votre organisation ?",
-    "USER_FIELD_HELPER": "Selectionner l'utilisateur à ajouter",
-    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer",
+    "USER_FIELD_HELPER": "Sélectionnez l'utilisateur à ajouter",
+    "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer",
     "OWNER_LABEL": "$t(OWNER_LABEL)",
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
     "MEMBER_LABEL": "$t(MEMBER_LABEL)",
@@ -38,7 +38,7 @@
     "TITLE": "Inviter une personne à rejoindre votre organisation ?",
     "NAME_FIELD_HELPER": "Saisissez le nom de votre invité",
     "EMAIL_FIELD_HELPER": "Saisissez l'adresse mail de votre invité",
-    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer à votre invité",
+    "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer à votre invité",
     "OWNER_LABEL": "$t(OWNER_LABEL)",
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
     "MEMBER_LABEL": "$t(MEMBER_LABEL)",
@@ -48,15 +48,25 @@
   "KJoinGroup": {
     "TITLE": "Ajouter {{member}} à un groupe existant ?",
     "GROUP_FIELD_HELPER": "Saisissez le nom du groupe",
-    "ROLE_FIELD_HELPER": "Selectionner le rôle à attribuer",
+    "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer",
     "OWNER_LABEL": "$t(OWNER_LABEL)",
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
     "MEMBER_LABEL": "$t(MEMBER_LABEL)",
     "CLOSE_ACTION": "$t(CLOSE_ACTION)",
     "ADD_BUTTON": "Ajouter"
   },
+  "KChangeRole": {
+    "TITLE": "Changer le role ?",
+    "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer",
+    "OWNER_LABEL": "$t(OWNER_LABEL)",
+    "MANAGER_LABEL": "$t(MANAGER_LABEL)",
+    "MEMBER_LABEL": "$t(MEMBER_LABEL)",
+    "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "UPDATE_BUTTON": "Mettre à jour"
+  },
   "KMemberCard": {
     "TAG_LABEL": "Etiqueter",    
+    "CHANGE_ROLE_LABEL": "Changer de rôle",
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Supprimer {{member}} ?",
     "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloir supprimer <b>{{member}}</b> de votre organisation ?",

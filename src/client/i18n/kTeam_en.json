@@ -55,8 +55,18 @@
     "CLOSE_ACTION": "$t(CLOSE_ACTION)",
     "ADD_BUTTON": "Add"
   },
+  "KChangeRole": {
+    "TITLE": "Change role ?",
+    "ROLE_FIELD_HELPER": "Select the role granted to the user",
+    "OWNER_LABEL": "$t(OWNER_LABEL)",
+    "MANAGER_LABEL": "$t(MANAGER_LABEL)",
+    "MEMBER_LABEL": "$t(MEMBER_LABEL)",
+    "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "UPDATE_BUTTON": "Update"
+  },
   "KMemberCard": {
-    "TAG_LABEL": "Tag",    
+    "TAG_LABEL": "Tag",
+    "CHANGE_ROLE_LABEL": "Change role",
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Remove {{member}} ?",
     "REMOVE_DIALOG_MESSAGE": "Are you sure you want to remove <b>{{member}}</b> from your organisation ?",

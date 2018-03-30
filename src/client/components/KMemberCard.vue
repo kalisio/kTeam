@@ -14,9 +14,11 @@
             <q-btn :key="groupKey(group)" flat small round color="faded">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
-                <q-toolbar inverted color="faded">
-                  <span><q-icon :name="roleIcon(roleForGroup(group))" /></span>
+                <q-toolbar inverted color="faded">     
                   <span style="margin:8px">{{group.name}}</span>
+                  <q-btn v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
+                    <q-icon :name="roleIcon(roleForGroup(group))" />
+                  </q-btn>
                   <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
                     <q-icon name="remove_circle" />
                   </q-btn>
@@ -72,6 +74,11 @@ export default {
       let role = getRoleForOrganisation(this.item, this.contextId)
       if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
+    },
+    roleIcon2 () {
+      let role = getRoleForOrganisation(this.item, this.contextId)
+      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      return ''
     }
   },
   methods: {
@@ -81,6 +88,12 @@ export default {
         this.registerPaneAction({ 
           name: 'tag-member', label: this.$t('KMemberCard.TAG_LABEL'), icon: 'local_offer',
           route: { name: 'tag-member', params: { contextId: this.contextId, objectId: this.item._id } }
+        })
+      }
+      if (this.$can('update', 'members', this.contextId)) {
+        this.registerPaneAction({ 
+          name: 'change-role', label: this.$t('KMemberCard.CHANGE_ROLE_LABEL'), icon: 'security',
+          route: { name: 'change-role', params: { contextId: this.contextId, objectId: this.item._id, resource: { id: this.contextId, scope: 'organisations', service: 'organisations'} } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
@@ -130,8 +143,14 @@ export default {
     canJoinGroup () {
       return this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })
     },
+    canChangeRoleInGroup (group) {
+      return this.$can('create', 'authorisations', this.item._id, { resource: group._id })
+    },
     canLeaveGroup (group) {
       return this.$can('remove', 'authorisations', this.item._id, { resource: group._id })
+    },
+    onChangeRoleInGroup (group) {
+      this.$router.push({ name: 'change-role', params: { contextId: this.contextId, objectId: this.item._id, resource: { id: group._id, scope: 'groups', service: this.contextId + '/groups' } } })
     },
     onJoinGroup () {
       this.$router.push({ name: 'join-group', params: { contextId: this.contextId, objectId: this.item._id } })
