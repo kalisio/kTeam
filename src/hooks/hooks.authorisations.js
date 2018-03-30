@@ -15,8 +15,15 @@ export function preventRemovingLastOwner (resourceScope) {
     const subjects = hook.params.subjects
     let userService = app.getService('users')
     if ((scope === resourceScope) && resource && resource._id) {
+      // Count existing owners
       const owners = await permissions.countSubjectsForResource(userService, resourceScope, resource._id, permissions.Roles.owner)
-      const removedOwners = subjects.reduce((count, subject) => (_.find(_.get(subject, resourceScope, []), { _id: resource._id })) ? count + 1 : count, 0)
+      // Now count owners we remove permissions on
+      const removedOwners = subjects.reduce((count, subject) => {
+        const resources = _.get(subject, resourceScope, [])
+        const ownedResource = _.find(resources, { _id: resource._id, permissions: permissions.RoleNames[permissions.Roles.owner] })
+        return (ownedResource ? count + 1 : count)
+      }, 0)
+      // If none remains stop
       if (removedOwners >= owners.total) {
         debug('Cannot remove the last owner of resource ', resource)
         throw new Forbidden('You are not allowed to remove the last owner of resource ' + (resource.name ? resource.name : resource._id.toString()))
