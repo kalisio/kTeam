@@ -53,9 +53,9 @@ export default {
               "helper": "KInviteMember.ROLE_FIELD_HELPER",
               "type": "radio",
               "options": [
-                { "label": this.$t('KInviteMember.OWNER_LABEL'), "value": "owner" },
+                { "label": this.$t('KInviteMember.MEMBER_LABEL'), "value": "member" },
                 { "label": this.$t('KInviteMember.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KInviteMember.MEMBER_LABEL'), "value": "member" }
+                { "label": this.$t('KInviteMember.OWNER_LABEL'), "value": "owner" }
               ]
             }
           }

@@ -66,9 +66,9 @@ export default {
               "helper": "KJoinGroup.ROLE_FIELD_HELPER",
               "type": "radio",
               "options": [
-                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" },
+                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" },
                 { "label": this.$t('KAddMember.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" }
+                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" }               
               ]
             }
           }
