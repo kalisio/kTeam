@@ -74,11 +74,6 @@ export default {
       let role = getRoleForOrganisation(this.item, this.contextId)
       if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
-    },
-    roleIcon2 () {
-      let role = getRoleForOrganisation(this.item, this.contextId)
-      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
-      return ''
     }
   },
   methods: {
