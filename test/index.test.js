@@ -76,7 +76,7 @@ describe('kTeam', () => {
     orgService.hooks({
       after: {
         create: [ teamHooks.createOrganisationServices, teamHooks.createOrganisationAuthorisations ],
-        remove: [ teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
+        remove: [ teamHooks.removeOrganisationGroups, teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
       }
     })
     authorisationService = app.getService('authorisations')
@@ -371,7 +371,8 @@ describe('kTeam', () => {
     .then(users => {
       expect(users.data.length > 0).beTrue()
       user1Object = users.data[0]
-      expect(user1Object.groups[0].permissions).to.deep.equal('owner')
+      expect(user1Object.groups[0]._id.toString()).to.equal(groupObject._id.toString())
+      expect(user1Object.groups[0].permissions).to.equal('owner')
     })
   })
   // Let enough time to process
@@ -464,6 +465,27 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
+  it('restore organisation group to prepare testing org cleanup', () => {
+    return orgGroupService.create({ name: 'test-group' }, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
+      return orgGroupService.find({ query: { name: 'test-group' }, user: user1Object, checkAuthorisation: true })
+    })
+    .then(groups => {
+      expect(groups.data.length > 0).beTrue()
+      groupObject = groups.data[0]
+    })
+    .then(group => {
+      return userService.find({ query: { 'profile.name': user1Object.name }, checkAuthorisation: true, user: user1Object })
+    })
+    .then(users => {
+      user1Object = users.data[0]
+      expect(user1Object.groups[0]._id.toString()).to.equal(groupObject._id.toString())
+      expect(user1Object.groups[0].permissions).to.equal('owner')
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
+
   it('owner can remove organisation', () => {
     return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
     .then(org => {
@@ -478,6 +500,8 @@ describe('kTeam', () => {
       user1Object = users.data[0]
       user2Object = users.data[1]
       user3Object = users.data[2]
+      // No more permission set for org groups
+      expect(_.find(user1Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
       // No more permission set for org
       expect(_.find(user1Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
       expect(_.find(user2Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()

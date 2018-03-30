@@ -103,6 +103,23 @@ export function removeOrganisationAuthorisations (hook) {
   })
 }
 
+export function removeOrganisationGroups (hook) {
+  let app = hook.app
+  let orgGroupService = this.app.getService('groups', hook.result)
+  return orgGroupService.find({ paginate: false })
+  .then(groups => {
+    return Promise.all(groups.map(group => {
+      return orgGroupService.remove(group._id.toString(), {
+        user: hook.params.user
+      })
+    }))
+  })
+  .then(groups => {
+    debug('Removed groups for organisation ' + hook.result._id)
+    return hook
+  })
+}
+
 export function createPrivateOrganisation (hook) {
   let app = hook.app
   let organisationService = app.getService('organisations')
