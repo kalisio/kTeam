@@ -7,6 +7,21 @@ import core, { kalisio, hooks, permissions } from 'kCore'
 import { iffElse, when } from 'feathers-hooks-common'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
+/* Scenario story board
+
+  User 2 invites User 3 in its org
+  User 1 creates an org
+  User 1 adds User 2 as member
+  User 1 adds User 2 as manager
+  User 2 creates a group
+  User 2 adds User 1 as group owner
+  User 1 removes User 2 from group
+  User 1 removes group
+  User 1 creates a group and adds User 2 as group member
+  User 1 removes User 2 from org (=> and his group)
+  User 1 removes org (=> and his group)
+  User 2 is removed (=> and his org)
+*/
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
     userService, orgService, authorisationService, orgGroupService, orgUserService, orgStorageService,
@@ -84,6 +99,9 @@ describe('kTeam', () => {
     authorisationService.hooks({
       before: {
         remove: [ when(hook => hook.params.resource && !hook.params.resource.deleted, teamHooks.preventRemovingLastOwner('groups')) ]
+      },
+      after: {
+        remove: [ when(hook => _.get(hook.params, 'query.scope') === 'organisations', teamHooks.removeOrganisationGroupsAuthorisations) ]
       }
     })
     server = app.listen(port)
@@ -171,7 +189,7 @@ describe('kTeam', () => {
       orgStorageService = app.getService('storage', orgObject)
       expect(orgStorageService).toExist()
       // We do not test creation of the DB here since MongoDB does not actually
-      // creates it until the first document has been inserted (see next test)
+      // creates it until the first document has been inserted (see next tests)
     })
   })
   // Let enough time to process
@@ -320,18 +338,15 @@ describe('kTeam', () => {
     })
     .then(dbs => {
       expect(dbs.databases.find(db => db.name === orgObject._id.toString())).toExist()
+      return teamPermissions.findMembersOfGroup(userService, groupObject._id, permissions.Roles.owner)
     })
-  })
-  // Let enough time to process
-  .timeout(5000)
-
-  it('checks the subjects as owner on this organisation group', () => {
-    return teamPermissions.findMembersOfGroup(userService, groupObject._id, permissions.Roles.owner)
     .then(members => {
       expect(members.data.length === 1).beTrue()
       expect(members.data[0]._id.toString()).to.deep.equal(user2Object._id.toString())
     })
   })
+  // Let enough time to process
+  .timeout(10000)
 
   it('non-group owner cannot add members to the group', (done) => {
     authorisationService.create({
@@ -440,6 +455,39 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
+  it('restore organisation group to prepare testing org cleanup', () => {
+    return orgGroupService.create({ name: 'test-group' }, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
+      return orgGroupService.find({ query: { name: 'test-group' }, user: user1Object, checkAuthorisation: true })
+    })
+    .then(groups => {
+      expect(groups.data.length > 0).beTrue()
+      groupObject = groups.data[0]
+      return authorisationService.create({
+        scope: 'groups',
+        permissions: 'member',
+        subjects: user2Object._id.toString(),
+        subjectsService: 'users',
+        resource: groupObject._id.toString(),
+        resourcesService: orgObject._id.toString() + '/groups'
+      }, {
+        user: user1Object,
+        checkAuthorisation: true
+      })
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
+    })
+    .then(users => {
+      user2Object = users.data[0]
+      expect(user2Object.groups[0]._id.toString()).to.equal(groupObject._id.toString())
+      expect(user2Object.groups[0].permissions).to.equal('member')
+    })
+  })
+  // Let enough time to process
+  .timeout(10000)
+
   it('owner can remove organisation members', () => {
     return authorisationService.remove(orgObject._id, {
       query: {
@@ -456,31 +504,13 @@ describe('kTeam', () => {
       return userService.find({ query: { 'profile.name': user2Object.name }, checkAuthorisation: true, user: user1Object })
     })
     .then(users => {
-      expect(users.data.length === 1).beTrue()
       user2Object = users.data[0]
+      // No more permission set for org groups
+      expect(_.find(user2Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
+      // No more permission set for org
+      expect(_.find(user2Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
       // Only private org remains
-      expect(user2Object.organisations[0]._id.toString()).to.equal(user2Object._id.toString())
-    })
-  })
-  // Let enough time to process
-  .timeout(5000)
-
-  it('restore organisation group to prepare testing org cleanup', () => {
-    return orgGroupService.create({ name: 'test-group' }, { user: user1Object, checkAuthorisation: true })
-    .then(() => {
-      return orgGroupService.find({ query: { name: 'test-group' }, user: user1Object, checkAuthorisation: true })
-    })
-    .then(groups => {
-      expect(groups.data.length > 0).beTrue()
-      groupObject = groups.data[0]
-    })
-    .then(group => {
-      return userService.find({ query: { 'profile.name': user1Object.name }, checkAuthorisation: true, user: user1Object })
-    })
-    .then(users => {
-      user1Object = users.data[0]
-      expect(user1Object.groups[0]._id.toString()).to.equal(groupObject._id.toString())
-      expect(user1Object.groups[0].permissions).to.equal('owner')
+      expect(_.find(user2Object.organisations, org => org._id.toString() === user2Object._id.toString())).toExist()
     })
   })
   // Let enough time to process
@@ -498,14 +528,10 @@ describe('kTeam', () => {
     .then(users => {
       expect(users.data.length === 3).beTrue()
       user1Object = users.data[0]
-      user2Object = users.data[1]
-      user3Object = users.data[2]
       // No more permission set for org groups
       expect(_.find(user1Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
       // No more permission set for org
       expect(_.find(user1Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
-      expect(_.find(user2Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
-      expect(_.find(user3Object.organisations, org => org._id.toString() === orgObject._id.toString())).beUndefined()
       // Should remove associated DB
       return adminDb.listDatabases()
     })

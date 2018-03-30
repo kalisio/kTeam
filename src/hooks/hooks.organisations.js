@@ -63,20 +63,43 @@ export function removeOrganisationAuthorisations (hook) {
   let app = hook.app
   let authorisationService = app.getService('authorisations')
 
+  // Unset membership for the all org users
+  return authorisationService.remove(hook.result._id.toString(), {
+    query: {
+      subjectsService: hook.result._id.toString() + '/members',
+      scope: 'organisations'
+    },
+    user: hook.params.user,
+    // Because we already have resource set it as objects to avoid populating
+    // Moreover used as an after hook the resource might not already exist anymore
+    resource: hook.result,
+    resourcesService: hook.service
+  })
+  .then(authorisation => {
+    debug('Authorisations unset for organisation ' + hook.result._id)
+    return hook
+  })
+}
+
+export function removeOrganisationGroupsAuthorisations (hook) {
+  let app = hook.app
+  let authorisationService = app.getService('authorisations')
+
   // Unset membership for the all org groups
-  let orgGroupService = this.app.getService('groups', hook.result)
+  let orgGroupService = app.getService('groups', hook.params.resource)
   return orgGroupService.find({ paginate: false })
   .then(groups => {
     return Promise.all(groups.map(group => {
       // Unset membership on group for the all org users
       return authorisationService.remove(group._id.toString(), {
         query: {
-          subjectsService: hook.result._id.toString() + '/members',
           scope: 'groups'
         },
         user: hook.params.user,
         // Because we already have resource set it as objects to avoid populating
         // Moreover used as an after hook the resource might not already exist anymore
+        subjects: hook.params.subjects,
+        subjectsService: hook.params.subjectsService,
         resource: group,
         resourcesService: orgGroupService
       })
@@ -84,21 +107,6 @@ export function removeOrganisationAuthorisations (hook) {
   })
   .then(groups => {
     debug('Authorisations unset on groups for organisation ' + hook.result._id)
-    // Unset membership for the all org users
-    return authorisationService.remove(hook.result._id.toString(), {
-      query: {
-        subjectsService: hook.result._id.toString() + '/members',
-        scope: 'organisations'
-      },
-      user: hook.params.user,
-      // Because we already have resource set it as objects to avoid populating
-      // Moreover used as an after hook the resource might not already exist anymore
-      resource: hook.result,
-      resourcesService: hook.service
-    })
-  })
-  .then(authorisation => {
-    debug('Authorisations unset for organisation ' + hook.result._id)
     return hook
   })
 }
