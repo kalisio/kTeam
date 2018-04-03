@@ -14,6 +14,7 @@ import team, { hooks as teamHooks, permissions as teamPermissions } from '../src
   User 1 adds User 2 as member
   User 1 adds User 2 as manager
   User 2 creates a group
+  User 2 adds User 1 as group member
   User 2 adds User 1 as group owner
   User 1 removes User 2 from group
   User 1 removes group
@@ -370,6 +371,50 @@ describe('kTeam', () => {
   it('group owner can add members to his group', () => {
     return authorisationService.create({
       scope: 'groups',
+      permissions: 'member',
+      subjects: user1Object._id.toString(),
+      subjectsService: 'users',
+      resource: groupObject._id.toString(),
+      resourcesService: orgObject._id.toString() + '/groups'
+    }, {
+      user: user2Object,
+      checkAuthorisation: true
+    })
+    .then(authorisation => {
+      expect(authorisation).toExist()
+      return userService.find({ query: { 'profile.name': user1Object.name }, checkAuthorisation: true, user: user2Object })
+    })
+    .then(users => {
+      expect(users.data.length > 0).beTrue()
+      user1Object = users.data[0]
+      expect(user1Object.groups[0]._id.toString()).to.equal(groupObject._id.toString())
+      expect(user1Object.groups[0].permissions).to.equal('member')
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
+
+  it('group owner cannot be removed when alone', (done) => {
+    authorisationService.remove(groupObject._id, {
+      query: {
+        scope: 'groups',
+        subjects: user2Object._id.toString(),
+        subjectsService: 'users',
+        resourcesService: orgObject._id.toString() + '/groups'
+      }
+    }, {
+      user: user2Object, checkAuthorisation: true
+    })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+
+  it('group owner can add owners to his group', () => {
+    return authorisationService.create({
+      scope: 'groups',
       permissions: 'owner',
       subjects: user1Object._id.toString(),
       subjectsService: 'users',
@@ -393,24 +438,6 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
-  it('last group owner cannot be removed', (done) => {
-    authorisationService.remove(groupObject._id, {
-      query: {
-        scope: 'groups',
-        subjects: user1Object._id.toString(),
-        subjectsService: 'users',
-        resourcesService: orgObject._id.toString() + '/groups'
-      }
-    }, {
-      user: user1Object, checkAuthorisation: true
-    })
-    .catch(error => {
-      expect(error).toExist()
-      expect(error.name).to.equal('Forbidden')
-      done()
-    })
-  })
-  
   it('group owner can remove group members', () => {
     return authorisationService.remove(groupObject._id, {
       query: {
