@@ -55,13 +55,21 @@ export function defineGroupAbilities (subject, can, cannot) {
 }
 
 // Helper functions to find the members of a given organisation
-export function findMembersOfOrganisation (userService, organisationId, role) {
-  return permissions.findSubjectsForResource(userService, 'organisations', organisationId, role)
+export function findMembersOfOrganisation (usersService, organisationId, role) {
+  return permissions.findSubjectsForResource(usersService, 'organisations', organisationId, role)
+}
+
+export function countMembersOfOrganisation (usersService, organisationId, role) {
+  return permissions.countSubjectsForResource(usersService, 'organisations', organisationId, role)
 }
 
 // Helper functions to find the members of a given group
-export function findMembersOfGroup (memberService, groupId, role) {
-  return permissions.findSubjectsForResource(memberService, 'groups', groupId, role)
+export function findMembersOfGroup (membersService, groupId, role) {
+  return permissions.findSubjectsForResource(membersService, 'groups', groupId, role)
+}
+
+export function countMembersOfGroup (membersService, groupId, role) {
+  return permissions.countSubjectsForResource(membersService, 'groups', groupId, role)
 }
 
 export function getRoleForOrganisation (user, organisationId) {
