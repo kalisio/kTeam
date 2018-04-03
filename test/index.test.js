@@ -4,7 +4,7 @@ import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
 import core, { kalisio, hooks, permissions } from 'kCore'
-import { iffElse, when } from 'feathers-hooks-common'
+import { iffElse, iff, when } from 'feathers-hooks-common'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 /* Scenario story board
@@ -25,7 +25,7 @@ import team, { hooks as teamHooks, permissions as teamPermissions } from '../src
 describe('kTeam', () => {
   let app, adminDb, server, port, // baseUrl,
     userService, orgService, authorisationService, orgGroupService, orgUserService, orgStorageService,
-    user1Object, user2Object, user3Object, orgObject, groupObject
+    joinedOrgUserService, user1Object, user2Object, user3Object, orgObject, groupObject
 
   before(() => {
     chailint(chai, util)
@@ -80,7 +80,7 @@ describe('kTeam', () => {
           iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation)
         ],
         remove: [
-          teamHooks.removePrivateOrganisation
+          hooks.setAsDeleted, iff(hook => !hook.result.sponsor, teamHooks.removePrivateOrganisation), teamHooks.leaveOrganisations
         ]
       }
     })
@@ -393,6 +393,24 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
+  it('last group owner cannot be removed', (done) => {
+    authorisationService.remove(groupObject._id, {
+      query: {
+        scope: 'groups',
+        subjects: user1Object._id.toString(),
+        subjectsService: 'users',
+        resourcesService: orgObject._id.toString() + '/groups'
+      }
+    }, {
+      user: user1Object, checkAuthorisation: true
+    })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+  
   it('group owner can remove group members', () => {
     return authorisationService.remove(groupObject._id, {
       query: {
@@ -417,24 +435,6 @@ describe('kTeam', () => {
   })
   // Let enough time to process
   .timeout(5000)
-
-  it('last group owner cannot be removed', (done) => {
-    authorisationService.remove(groupObject._id, {
-      query: {
-        scope: 'groups',
-        subjects: user1Object._id.toString(),
-        subjectsService: 'users',
-        resourcesService: orgObject._id.toString() + '/groups'
-      }
-    }, {
-      user: user1Object, checkAuthorisation: true
-    })
-    .catch(error => {
-      expect(error).toExist()
-      expect(error.name).to.equal('Forbidden')
-      done()
-    })
-  })
 
   it('group owner can remove his organisation group', () => {
     return orgGroupService.remove(groupObject._id, { user: user1Object, checkAuthorisation: true })
@@ -537,6 +537,28 @@ describe('kTeam', () => {
     })
     .then(dbs => {
       expect(dbs.databases.find(db => db.name === orgObject._id.toString())).beUndefined()
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
+
+  it('removes joined user', () => {
+    return orgService.find({ query: { name: user2Object.name }, user: user2Object, checkAuthorisation: true })
+    .then(orgs => {
+      expect(orgs.data.length > 0).beTrue()
+      joinedOrgUserService = app.getService('members', orgs.data[0])
+      return userService.remove(user3Object._id, { user: user3Object, checkAuthorisation: true })
+    })
+    .then(user => {
+      return userService.find({ query: { name: user3Object.name }, user: user3Object, checkAuthorisation: true })
+    })
+    .then(users => {
+      expect(users.data.length === 0).beTrue()
+      return joinedOrgUserService.find({ query: { name: user3Object.name }, user: user2Object, checkAuthorisation: true })
+    })
+    .then(users => {
+      // User is not found on the joined org service
+      expect(users.data.length === 0).beTrue()
     })
   })
   // Let enough time to process
