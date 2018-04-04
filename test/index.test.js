@@ -81,7 +81,7 @@ describe('kTeam', () => {
           iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation)
         ],
         remove: [
-          hooks.setAsDeleted, iff(hook => !hook.result.sponsor, teamHooks.removePrivateOrganisation), teamHooks.leaveOrganisations
+          hooks.setAsDeleted, iff(hook => !hook.result.sponsor, teamHooks.removePrivateOrganisation), teamHooks.leaveOrganisations()
         ]
       }
     })
@@ -92,17 +92,22 @@ describe('kTeam', () => {
     orgService.hooks({
       after: {
         create: [ teamHooks.createOrganisationServices, teamHooks.createOrganisationAuthorisations ],
-        remove: [ teamHooks.removeOrganisationGroups, teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
+        remove: [ hooks.setAsDeleted, teamHooks.removeOrganisationGroups, teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
       }
     })
     authorisationService = app.getService('authorisations')
     expect(authorisationService).toExist()
     authorisationService.hooks({
       before: {
-        remove: [ when(hook => hook.params.resource && !hook.params.resource.deleted, teamHooks.preventRemovingLastOwner('groups')) ]
+        remove: [ when(hook => hook.params.resource && !hook.params.resource.deleted,
+          teamHooks.preventRemovingLastOwner('organisations'),
+          teamHooks.preventRemovingLastOwner('groups'))
+        ]
       },
       after: {
-        remove: [ when(hook => _.get(hook.params, 'query.scope') === 'organisations', teamHooks.removeOrganisationGroupsAuthorisations) ]
+        remove: [ when(hook => _.get(hook.params, 'query.scope') === 'organisations',
+          teamHooks.removeOrganisationGroupsAuthorisations)
+        ]
       }
     })
     server = app.listen(port)

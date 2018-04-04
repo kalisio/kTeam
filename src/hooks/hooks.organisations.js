@@ -2,6 +2,10 @@ import makeDebug from 'debug'
 const debug = makeDebug('kalisio:kTeam:organisations:hooks')
 
 export function createOrganisationServices (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'createOrganisationServices' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let organisationService = hook.service
   let databaseService = app.getService('databases')
@@ -22,6 +26,10 @@ export function createOrganisationServices (hook) {
 }
 
 export function removeOrganisationServices (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'removeOrganisationServices' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let organisationService = hook.service
   let databaseService = app.getService('databases')
@@ -38,6 +46,10 @@ export function removeOrganisationServices (hook) {
 }
 
 export function createOrganisationAuthorisations (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'createOrganisationAuthorisations' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let authorisationService = app.getService('authorisations')
   let userService = app.getService('users')
@@ -60,6 +72,10 @@ export function createOrganisationAuthorisations (hook) {
 }
 
 export function removeOrganisationAuthorisations (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'removeOrganisationAuthorisations' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let authorisationService = app.getService('authorisations')
 
@@ -82,6 +98,10 @@ export function removeOrganisationAuthorisations (hook) {
 }
 
 export function removeOrganisationGroups (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'removeOrganisationGroups' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let orgGroupService = app.getService('groups', hook.result)
   return orgGroupService.find({ paginate: false })
@@ -99,6 +119,10 @@ export function removeOrganisationGroups (hook) {
 }
 
 export function createPrivateOrganisation (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'createPrivateOrganisation' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let organisationService = app.getService('organisations')
   // Create a private organisation for the user
@@ -114,6 +138,10 @@ export function createPrivateOrganisation (hook) {
 }
 
 export function removePrivateOrganisation (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'removePrivateOrganisation' hook should only be used as a 'after' hook.`)
+  }
+
   let app = hook.app
   let organisationService = app.getService('organisations')
   // Remove the private user's organisation
