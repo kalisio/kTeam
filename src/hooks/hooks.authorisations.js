@@ -36,9 +36,10 @@ export function preventRemovingLastOwner (resourceScope) {
 export function removeOrganisationGroupsAuthorisations (hook) {
   let app = hook.app
   let authorisationService = app.getService('authorisations')
-
+  let org = hook.params.resource
+  let user = hook.params.user
   // Unset membership for the all org groups
-  let orgGroupService = app.getService('groups', hook.params.resource)
+  let orgGroupService = app.getService('groups', org)
   return orgGroupService.find({ paginate: false })
   .then(groups => {
     return Promise.all(groups.map(group => {
@@ -47,7 +48,7 @@ export function removeOrganisationGroupsAuthorisations (hook) {
         query: {
           scope: 'groups'
         },
-        user: hook.params.user,
+        user,
         // Because we already have resource set it as objects to avoid populating
         // Moreover used as an after hook the resource might not already exist anymore
         subjects: hook.params.subjects,
@@ -58,7 +59,7 @@ export function removeOrganisationGroupsAuthorisations (hook) {
     }))
   })
   .then(groups => {
-    debug('Authorisations unset on groups for organisation ' + hook.result._id)
+    debug('Authorisations unset on groups for organisation ' + org._id)
     return hook
   })
 }
