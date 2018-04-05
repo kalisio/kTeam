@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-list link no-border>
+      <q-item-separator />
       <!-- 
         Organisations list
       -->

@@ -11,10 +11,10 @@
       <div class="column full-width justify-center xs-gutter">
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
-            <q-btn :key="groupKey(group)" flat small round color="faded">
+            <q-btn :key="groupKey(group)" flat small round color="primary">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
-                <q-toolbar inverted color="faded">     
+                <q-toolbar inverted color="grey-7">     
                   <span style="margin:8px">{{group.name}}</span>
                   <q-btn v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
                     <q-icon :name="roleIcon(roleForGroup(group))" />
@@ -27,7 +27,7 @@
             </q-btn>
           </template>
           <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
-            <q-icon name="add_circle" color="faded" />
+            <q-icon name="add_circle" color="secondary" />
           </q-btn>
         </div>
       </div>
