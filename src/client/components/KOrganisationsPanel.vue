@@ -111,10 +111,9 @@ export default {
     }
   },
   created () {
+    // Load the required components
     this.$options.components['k-modal-editor'] = this.$load('editor/KModalEditor')
-    // Load the configuration
-    this.bgColor = this.$config('organisationsPanel.bgColor', 'bg-light')
-    this.textColor = this.$config('organisationsPanel.textColor', 'text-dark')
+    // Setup the current org if any
     if (this.$route.params.contextId) this.currentOrgId = this.$route.params.contextId
     // Update the list of organisations
     this.updateOrganisations()
