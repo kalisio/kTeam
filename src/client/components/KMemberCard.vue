@@ -39,7 +39,7 @@
 import _ from 'lodash'
 import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
-import { getRoleForOrganisation, getRoleForGroup } from '../../common/permissions'
+import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
 import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
 import Avatar from 'vue-avatar/dist/Avatar'
 
@@ -136,7 +136,12 @@ export default {
       return ''
     },
     canJoinGroup () {
-      return this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })
+      const user = this.$store.get('user')
+      // Can add members to a group if at least manager/owner of one
+      const groups = findGroupsWithRole(user, this.contextId, kCorePermissions.Roles.manager)
+      .concat(findGroupsWithRole(user, this.contextId, kCorePermissions.Roles.owner))
+      // FIXME: we should also filter by the member groups so that if already added to all my groups we don't show the action
+      return groups.length > 0
     },
     canChangeRoleInGroup (group) {
       return this.$can('create', 'authorisations', this.item._id, { resource: group._id })

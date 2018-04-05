@@ -83,3 +83,7 @@ export function getRoleForGroup (user, organisationId, groupId) {
   if (!_.isUndefined(result)) return result.permissions
   return undefined
 }
+
+export function findGroupsWithRole (user, organisationId, role) {
+  return _.filter(user.groups || [], { 'context': organisationId, 'permissions': permissions.RoleNames[role] })
+}
