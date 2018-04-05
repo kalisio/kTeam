@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mixins as kCoreMixins } from 'kCore/client'
+import { mixins as kCoreMixins, utils } from 'kCore/client'
 
 export default {
   name: 'k-invite-member',
@@ -76,6 +76,8 @@ export default {
     doInvite (event, done) {
       let result = this.$refs.form.validate()
       if (result.isValid) {
+        // Add the locale information
+        result.values.locale = utils.getLocale()
         // Add the sponsor information
         result.values.sponsor = {
           id: this.$store.get('user._id'),
