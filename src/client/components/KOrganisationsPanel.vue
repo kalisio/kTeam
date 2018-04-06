@@ -107,7 +107,7 @@ export default {
     },
     onOrganisationRemoved (org) {
        Toast.create.warning({
-        html: 'The organisation ' + org.name + ' has been removed'
+        html: this.$t('KOrganisationPanel.ORGANISATION_REMOVED_WARNING', { organisation: org.name })
       })
     }
   },

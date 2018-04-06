@@ -16,7 +16,8 @@
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Saisissez une description du groupe"
   },
   "KOrganisationPanel": {
-    "NEW_ORGANISATION": "Nouvelle organisation"
+    "NEW_ORGANISATION": "Nouvelle organisation",
+    "ORGANISATION_REMOVED_WARNING": "L'organisation <b>{{organisation}}</b> a été supprimée"
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",

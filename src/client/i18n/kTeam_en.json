@@ -16,7 +16,8 @@
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this group"
   },
   "KOrganisationPanel": {
-    "NEW_ORGANISATION": "New organisation"
+    "NEW_ORGANISATION": "New organisation",
+    "ORGANISATION_REMOVED_WARNING": "The organisation <b>{{organisation}}</b> has been removed"
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
