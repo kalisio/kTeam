@@ -7,13 +7,11 @@ import { permissions } from 'kCore/common'
 const debug = makeDebug('kalisio:kTeam:users:hooks')
 
 export function preventRemoveUser (hook) {
-  console.log('*** preventRemoveUser ****')
   if (hook.type !== 'before') {
     throw new Error(`The 'preventRemoveUser' hook should only be used as a 'before' hook.`)
   }
   
   let user = hook.params.user
-  console.log(user)
   if (user.organisations) {
     // We must ensure the user is no more an owner of any of the organisations is belong
     let owningOrganisations = _.find(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
