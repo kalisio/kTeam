@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import makeDebug from 'debug'
+import { Forbidden } from 'feathers-errors'
 const debug = makeDebug('kalisio:kTeam:organisations:hooks')
 
 export function createOrganisationServices (hook) {
@@ -118,6 +120,33 @@ export function removeOrganisationGroups (hook) {
   })
 }
 
+export async function removeOrganisationTags (hook) {
+  if (hook.type !== 'after') {
+    throw new Error(`The 'removeOrganisationTags' hook should only be used as a 'after' hook.`)
+  }
+
+  let app = hook.app
+  // Retrieve the list of tags
+  const orgTagsService = app.getService('tags', hook.result)
+  let tags = await orgTagsService.find({ paginate: false })
+  // Retrieve the list of members
+  const orgMembersService = app.getService('members', hook.result)
+  let members = await orgMembersService.find({ paginate: false })
+  // Update each members
+  for (let i in members) {
+    let member = members[i]
+    if (member.tags) {
+      let filteredTagsMember = _.find(member.tags, (tag) => {
+        return _.findIndex(tags, { _id: tag._id }) === -1 
+      })
+      await orgMembersService.patch(member._id, { tags: filteredTagsMember })
+    }
+  }
+
+  debug('Removed tags from organisation ' + hook.result._id)
+  return hook
+}
+
 export function createPrivateOrganisation (hook) {
   if (hook.type !== 'after') {
     throw new Error(`The 'createPrivateOrganisation' hook should only be used as a 'after' hook.`)
@@ -151,4 +180,17 @@ export function removePrivateOrganisation (hook) {
   .then(org => {
     debug('Private organisation removed for user ' + hook.result._id)
   })
+}
+
+export function preventRemoveOrganisation (hook) {
+  if (hook.type !== 'before') {
+    throw new Error(`The 'preventRemoveOrganisations' hook should only be used as a 'before' hook.`)
+  }
+  
+  let user = hook.params.user
+  if (user.groups && user.groups.length > 0) {
+    // We must ensure the user is no more an o
+    throw new Forbidden('You are not allowed to delete the organisation', { translationKey: 'CANNOT_REMOVE_ORGANISATION' })
+  }
+  return hook
 }

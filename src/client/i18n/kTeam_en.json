@@ -6,6 +6,10 @@
   "MANAGER_LABEL": "Manager",
   "MEMBER_LABEL": "Member",
   "CLOSE_ACTION": "Close",
+  "errors": {
+    "CANNOT_REMOVE_USER": "Your are not allowed to remove this accound.<br>Please remove the organisations owned by <b>{{user}}</b> first.",
+    "CANNOT_REMOVE_ORGANISATION": "You are not allowed to remove this organisation.<br>Please remove all the groups first."
+  },
   "schemas": {
     "ORGANISATIONS_CREATE_TITLE": "Create a new organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Enter the name of this organisation",

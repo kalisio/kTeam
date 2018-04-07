@@ -6,6 +6,10 @@
   "MANAGER_LABEL": "Manager",
   "MEMBER_LABEL": "Membre",
   "CLOSE_ACTION": "Fermer",  
+  "errors": {
+    "CANNOT_REMOVE_USER": "Vous n'êtes pas autorisé à supprimer ce compte.<br>Merci de supprimer les organisations appartenant à <b>{{user}}</b> préalablement.",
+    "CANNOT_REMOVE_ORGANISATION": "Vous n'êtes pas autorisé à supprimer cette organisation.<br>Merci de supprimer tous les groupes préalablement."
+  },
   "schemas": {
     "ORGANISATIONS_CREATE_TITLE": "Créer une nouvelle organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
