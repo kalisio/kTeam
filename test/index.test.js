@@ -4,7 +4,7 @@ import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
 import core, { kalisio, hooks, permissions } from 'kCore'
-import { iffElse, iff, when } from 'feathers-hooks-common'
+import { iffElse, when } from 'feathers-hooks-common'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 
 /* Scenario story board
@@ -76,13 +76,14 @@ describe('kTeam', () => {
     app.configure(core)
     userService = app.getService('users')
     userService.hooks({
+      before: {
+        remove: [ teamHooks.preventRemoveUser ]
+      },
       after: {
         create: [
           iffElse(hook => hook.result.sponsor, teamHooks.joinOrganisation, teamHooks.createPrivateOrganisation)
         ],
-        remove: [
-          hooks.setAsDeleted, iff(hook => !hook.result.sponsor, teamHooks.removePrivateOrganisation), teamHooks.leaveOrganisations()
-        ]
+        remove: [ hooks.setAsDeleted, teamHooks.leaveOrganisations() ]
       }
     })
     expect(userService).toExist()
@@ -90,6 +91,9 @@ describe('kTeam', () => {
     orgService = app.getService('organisations')
     expect(orgService).toExist()
     orgService.hooks({
+      before: {
+        remove: [ teamHooks.preventRemoveOrganisation ]
+      },
       after: {
         create: [ teamHooks.createOrganisationServices, teamHooks.createOrganisationAuthorisations ],
         remove: [ hooks.setAsDeleted, teamHooks.removeOrganisationGroups, teamHooks.removeOrganisationAuthorisations, teamHooks.removeOrganisationServices ]
@@ -549,8 +553,15 @@ describe('kTeam', () => {
   .timeout(5000)
 
   it('owner can remove organisation', () => {
-    return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
-    .then(org => {
+    return orgGroupService.remove(groupObject._id, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
+      return userService.get(user1Object._id)
+    })
+    .then(user => {
+      user1Object = user
+      return orgService.remove(orgObject._id, { user: user1Object, checkAuthorisation: true })
+    })
+    .then(() => {
       return orgService.find({ query: { name: 'test-org' }, user: user1Object, checkAuthorisation: true })
     })
     .then(orgs => {
@@ -559,6 +570,7 @@ describe('kTeam', () => {
     })
     .then(users => {
       expect(users.data.length === 3).beTrue()
+      console.log(users)
       user1Object = users.data[0]
       // No more permission set for org groups
       expect(_.find(user1Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
@@ -596,22 +608,51 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
-  it('removes private organisation on user removal', () => {
-    return userService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
-    .then(org => {
-      return orgService.find({ query: { name: user2Object.name }, user: user2Object, checkAuthorisation: true })
-    })
-    .then(orgs => {
-      expect(orgs.data.length === 0).beTrue()
+  it('prevent remove user while owning organisation', (done) => {
+    userService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
     })
   })
   // Let enough time to process
   .timeout(5000)
 
-  it('removes test user', () => {
-    return userService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
+  it('remove private users private organisations before deletion', () => {
+    return orgService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
+      return userService.get(user1Object._id)
+    })
     .then(user => {
+      user1Object = user
+    })
+    .then(() => {
+      return orgService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
+    })
+    .then(() => {
+      return userService.get(user2Object._id)
+    })
+    .then(user => {
+      user2Object = user
+    })
+  })
+  // Let enough time to process
+  .timeout(5000)
+
+  it('remove users', () => {
+    return userService.remove(user1Object._id, { user: user1Object, checkAuthorisation: true })
+    .then(() => {
       return userService.find({ query: { name: user1Object.name }, user: user1Object, checkAuthorisation: true })
+    })
+    .then(users => {
+      expect(users.data.length === 0).beTrue()
+    })
+    .then(() => {
+      return userService.remove(user2Object._id, { user: user2Object, checkAuthorisation: true })
+    })
+    .then(() => {
+      return userService.find({ query: { name: user2Object.name }, user: user2Object, checkAuthorisation: true })
     })
     .then(users => {
       expect(users.data.length === 0).beTrue()
