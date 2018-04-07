@@ -27,7 +27,7 @@ export function preventRemovingLastOwner (resourceScope) {
       if (removedOwners >= owners.total) {
         debug('Cannot remove the last owner of resource ', resource)
         let resourceName = resource.name ? resource.name : resource._id.toString()
-        throw new Forbidden('You are not allowed to remove the last owner of resource ' + resourceName, { 
+        throw new Forbidden('You are not allowed to remove the last owner of resource ' + resourceName, {
           translation: {
             key: 'CANNOT_REMOVE_LAST_OWNER',
             params: { resource: resourceName }
@@ -72,7 +72,6 @@ export function removeOrganisationGroupsAuthorisations (hook) {
 
 export async function removeOrganisationTagsAuthorisations (hook) {
   let app = hook.app
-  let authorisationService = app.getService('authorisations')
   let org = hook.params.resource
   let user = hook.params.subjects[0]
   if (user.tags) {
@@ -90,4 +89,3 @@ export async function removeOrganisationTagsAuthorisations (hook) {
   debug('Authorisations unset on tags for organisation ' + org._id)
   return hook
 }
-

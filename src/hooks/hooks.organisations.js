@@ -137,7 +137,7 @@ export async function removeOrganisationTags (hook) {
     let member = members[i]
     if (member.tags) {
       let filteredTagsMember = _.find(member.tags, (tag) => {
-        return _.findIndex(tags, { _id: tag._id }) === -1 
+        return _.findIndex(tags, { _id: tag._id }) === -1
       })
       await orgMembersService.patch(member._id, { tags: filteredTagsMember })
     }
@@ -186,12 +186,12 @@ export function preventRemoveOrganisation (hook) {
   if (hook.type !== 'before') {
     throw new Error(`The 'preventRemoveOrganisations' hook should only be used as a 'before' hook.`)
   }
-  
+
   let user = hook.params.user
   if (user.groups && user.groups.length > 0) {
     // We must ensure the user is no more an o
-    throw new Forbidden('You are not allowed to delete the organisation', { 
-      translation: { key: 'CANNOT_REMOVE_ORGANISATION' } 
+    throw new Forbidden('You are not allowed to delete the organisation', {
+      translation: { key: 'CANNOT_REMOVE_ORGANISATION' }
     })
   }
   return hook
