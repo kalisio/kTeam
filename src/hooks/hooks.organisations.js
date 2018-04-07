@@ -190,7 +190,9 @@ export function preventRemoveOrganisation (hook) {
   let user = hook.params.user
   if (user.groups && user.groups.length > 0) {
     // We must ensure the user is no more an o
-    throw new Forbidden('You are not allowed to delete the organisation', { translationKey: 'CANNOT_REMOVE_ORGANISATION' })
+    throw new Forbidden('You are not allowed to delete the organisation', { 
+      translation: { key: 'CANNOT_REMOVE_ORGANISATION' } 
+    })
   }
   return hook
 }

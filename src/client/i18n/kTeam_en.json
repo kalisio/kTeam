@@ -9,6 +9,7 @@
   "errors": {
     "CANNOT_REMOVE_USER": "Your are not allowed to remove this accound.<br>Please remove the organisations owned by <b>{{user}}</b> first.",
     "CANNOT_REMOVE_ORGANISATION": "You are not allowed to remove this organisation.<br>Please remove all the groups first."
+    "CANNOT_REMOVE_LAST_OWNER": "You are not allowed to remove the last owner of <b>{{resource}}</b>"
   },
   "schemas": {
     "ORGANISATIONS_CREATE_TITLE": "Create a new organisation ?",

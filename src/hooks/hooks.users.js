@@ -17,9 +17,11 @@ export function preventRemoveUser (hook) {
     let owningOrganisations = _.find(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
     if (! _.isEmpty(owningOrganisations)) {
       debug('Cannot remove the user: ', user)
-      throw new Forbidden('You are not allowed to delete the user ' + user.name, { 
-        translationKey: 'CANNOT_REMOVE_USER',
-        translationParams: { user: user.name }
+      throw new Forbidden('You are not allowed to delete the user ' + user.name, {
+        translation: {
+          key: 'CANNOT_REMOVE_USER',
+          params: { user: user.name }
+        }
       })
     }
   }
