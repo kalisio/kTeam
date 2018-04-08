@@ -136,7 +136,7 @@ export async function removeOrganisationTags (hook) {
   for (let i in members) {
     let member = members[i]
     if (member.tags) {
-      let filteredTagsMember = _.find(member.tags, (tag) => {
+      let filteredTagsMember = _.filter(member.tags, (tag) => {
         return _.findIndex(tags, { _id: tag._id }) === -1
       })
       await orgMembersService.patch(member._id, { tags: filteredTagsMember })

@@ -79,7 +79,7 @@ export async function removeOrganisationTagsAuthorisations (hook) {
     const orgTagsService = app.getService('tags', org)
     let tags = await orgTagsService.find({ paginate: false })
     // Unset membership for the all org tags if needed
-    let filteredTags = _.find(user.tags, (tag) => {
+    let filteredTags = _.filter(user.tags, (tag) => {
       return _.findIndex(tags, { _id: tag._id }) === -1
     })
     const usersService = app.getService('users')
