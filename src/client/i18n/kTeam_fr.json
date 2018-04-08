@@ -62,7 +62,7 @@
     "ADD_BUTTON": "Ajouter"
   },
   "KChangeRole": {
-    "TITLE": "Changer le role ?",
+    "TITLE": "Changer le rôle ?",
     "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer",
     "OWNER_LABEL": "$t(OWNER_LABEL)",
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
