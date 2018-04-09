@@ -570,7 +570,6 @@ describe('kTeam', () => {
     })
     .then(users => {
       expect(users.data.length === 3).beTrue()
-      console.log(users)
       user1Object = users.data[0]
       // No more permission set for org groups
       expect(_.find(user1Object.groups, group => group._id.toString() === groupObject._id.toString())).beUndefined()
