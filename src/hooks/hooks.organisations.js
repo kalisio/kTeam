@@ -182,14 +182,15 @@ export function removePrivateOrganisation (hook) {
   })
 }
 
-export function preventRemoveOrganisation (hook) {
+export async function preventRemoveOrganisation (hook) {
   if (hook.type !== 'before') {
     throw new Error(`The 'preventRemoveOrganisations' hook should only be used as a 'before' hook.`)
   }
 
-  let user = hook.params.user
-  if (user.groups && user.groups.length > 0) {
-    // We must ensure the user is no more an o
+  let app = hook.app
+  let orgGroupService = app.getService('groups', hook.id)
+  const result = await orgGroupService.find({ $limit: 0 })
+  if (result.total > 0) {
     throw new Forbidden('You are not allowed to delete the organisation', {
       translation: { key: 'CANNOT_REMOVE_ORGANISATION' }
     })
