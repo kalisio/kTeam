@@ -16,6 +16,7 @@
     "ORGANISATIONS_NAME_FIELD_HELPER": "Enter the name of this organisation",
     "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this organisation",
     "ORGANISATIONS_PLAN_FIELD_HELPER": "Select the billing plan of this organisation",
+    "MEMBERS_TAGS_FIELD_HELPER": "Add somes tags to qualify this member",
     "GROUPS_CREATE_TITLE": "Create a new group ?",
     "GROUPS_NAME_FIELD_HELPER": "Enter the name of this group",
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this group"
