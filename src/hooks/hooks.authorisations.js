@@ -10,7 +10,6 @@ export function preventRemovingLastOwner (resourceScope) {
   return async function (hook) {
     // By pass check ?
     if (hook.params.force) return hook
-    let app = hook.app
     const params = hook.params
     const query = params.query || {}
     const scope = query.scope
