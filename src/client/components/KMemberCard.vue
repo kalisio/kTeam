@@ -41,7 +41,7 @@ import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
 import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
-import Avatar from 'vue-avatar/dist/Avatar'
+import { Avatar } from 'vue-avatar'
 
 export default {
   name: 'k-member-card',
