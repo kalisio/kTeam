@@ -187,6 +187,8 @@ export async function preventRemoveOrganisation (hook) {
     throw new Error(`The 'preventRemoveOrganisations' hook should only be used as a 'before' hook.`)
   }
 
+  // By pass check ?
+  if (hook.params.force) return hook
   let app = hook.app
   let orgGroupService = app.getService('groups', hook.id)
   const result = await orgGroupService.find({ $limit: 0 })

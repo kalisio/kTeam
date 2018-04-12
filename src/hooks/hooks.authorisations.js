@@ -1,22 +1,25 @@
 import _ from 'lodash'
 import makeDebug from 'debug'
 import { Forbidden } from 'feathers-errors'
+import { hooks } from 'kCore'
 import { permissions } from 'kCore/common'
 
 const debug = makeDebug('kalisio:kTeam:authorisations:hooks')
 
 export function preventRemovingLastOwner (resourceScope) {
   return async function (hook) {
+    // By pass check ?
+    if (hook.params.force) return hook
     let app = hook.app
     const params = hook.params
     const query = params.query || {}
     const scope = query.scope
     const resource = hook.params.resource
     const subjects = hook.params.subjects
-    let userService = app.getService('users')
+    const subjectService = hook.params.subjectsService
     if ((scope === resourceScope) && resource && resource._id) {
       // Count existing owners
-      const owners = await permissions.countSubjectsForResource(userService, resourceScope, resource._id, permissions.Roles.owner)
+      const owners = await permissions.countSubjectsForResource(subjectService, resourceScope, resource._id, permissions.Roles.owner)
       // Now count owners we remove permissions on
       const removedOwners = subjects.reduce((count, subject) => {
         const resources = _.get(subject, resourceScope, [])
@@ -55,6 +58,7 @@ export function removeOrganisationGroupsAuthorisations (hook) {
           scope: 'groups'
         },
         user,
+        force: hook.params.force,
         // Because we already have resource set it as objects to avoid populating
         // Moreover used as an after hook the resource might not already exist anymore
         subjects: hook.params.subjects,
@@ -73,19 +77,23 @@ export function removeOrganisationGroupsAuthorisations (hook) {
 export async function removeOrganisationTagsAuthorisations (hook) {
   let app = hook.app
   let org = hook.params.resource
-  let user = hook.params.subjects[0]
-  if (user.tags) {
-    // Retrieve org tags
-    const orgTagsService = app.getService('tags', org)
-    let tags = await orgTagsService.find({ paginate: false })
-    // Unset membership for the all org tags if needed
-    let filteredTags = _.filter(user.tags, (tag) => {
-      return _.findIndex(tags, { _id: tag._id }) === -1
-    })
-    const usersService = app.getService('users')
-    await usersService.patch(user._id, { tags: filteredTags })
-  }
+  const subjectService = hook.params.subjectsService
+  const orgTagsService = app.getService('tags', org)
+  let subjects = hook.params.subjects || []
+  if (subjects.length === 0) return hook
+  // Retrieve org tags
+  let orgTags = await orgTagsService.find({ paginate: false })
+  subjects.forEach(async subject => {
+    let tags = subject.tags || []
+    let previousTagCount = tags.length
+    // Filter tags belonging to org
+    _.pullAllWith(tags, orgTags, hooks.isTagEqual)
+    // Update subject if required
+    if (tags.length < previousTagCount) {
+      await subjectService.patch(subject._id, { tags })
+    }
+  })
 
-  debug('Authorisations unset on tags for organisation ' + org._id)
+  debug('Tags unset on subjects for organisation ' + org._id)
   return hook
 }
