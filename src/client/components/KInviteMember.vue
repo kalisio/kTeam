@@ -17,50 +17,50 @@ export default {
   props: {
     contextId: {
       type: String,
-      required: true,
+      required: true
     }
-  },  
+  },
   methods: {
     getSchema () {
       return {
-        "$schema": "http://json-schema.org/draft-06/schema#",
-        "$id": "http://kalisio.xyz/schemas/invite-member",
-        "title": "Invite Member Form",
-        "type": "object",
-        "properties": {
-         "name": { 
-            "type": "string", 
-            "minLength": 3,
-            "maxLength": 128,
-            "field": {
-              "component": "form/KTextField",
-              "helper": "KInviteMember.NAME_FIELD_HELPER"
+        '$schema': 'http://json-schema.org/draft-06/schema#',
+        '$id': 'http://kalisio.xyz/schemas/invite-member',
+        'title': 'Invite Member Form',
+        'type': 'object',
+        'properties': {
+          'name': {
+            'type': 'string',
+            'minLength': 3,
+            'maxLength': 128,
+            'field': {
+              'component': 'form/KTextField',
+              'helper': 'KInviteMember.NAME_FIELD_HELPER'
             }
           },
-          "email": { 
-            "type": "string", 
-            "format": "email",
-            "field": {
-              "component": "form/KEmailField",
-              "helper": "KInviteMember.EMAIL_FIELD_HELPER"
+          'email': {
+            'type': 'string',
+            'format': 'email',
+            'field': {
+              'component': 'form/KEmailField',
+              'helper': 'KInviteMember.EMAIL_FIELD_HELPER'
             }
           },
-          "role": { 
-            "type": "string",
-            "default": "member",
-            "field": {
-              "component": "form/KSelectField",
-              "helper": "KInviteMember.ROLE_FIELD_HELPER",
-              "type": "radio",
-              "options": [
-                { "label": this.$t('KInviteMember.MEMBER_LABEL'), "value": "member" },
-                { "label": this.$t('KInviteMember.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KInviteMember.OWNER_LABEL'), "value": "owner" }
+          'role': {
+            'type': 'string',
+            'default': 'member',
+            'field': {
+              'component': 'form/KSelectField',
+              'helper': 'KInviteMember.ROLE_FIELD_HELPER',
+              'type': 'radio',
+              'options': [
+                { 'label': this.$t('KInviteMember.MEMBER_LABEL'), 'value': 'member' },
+                { 'label': this.$t('KInviteMember.MANAGER_LABEL'), 'value': 'manager' },
+                { 'label': this.$t('KInviteMember.OWNER_LABEL'), 'value': 'owner' }
               ]
             }
           }
         },
-        "required": ["name", "email", "role"]
+        'required': ['name', 'email', 'role']
       }
     },
     getToolbar () {
@@ -92,7 +92,7 @@ export default {
           this.doClose()
         })
         .catch(error => {
-          done()
+          done(error)
         })
       } else {
         done()

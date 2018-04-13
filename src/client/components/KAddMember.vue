@@ -17,51 +17,51 @@ export default {
   props: {
     contextId: {
       type: String,
-      required: true,
+      required: true
     }
   },
   methods: {
     getSchema () {
-      return {        
-        "$schema": "http://json-schema.org/draft-06/schema#",
-        "$id": "http://kalisio.xyz/schemas/add-member#",
-        "title": "Add Member Form",
-        "type": "object",
-        "properties": {
-          "user": { 
-            "type": "array",
-            "services": [{
-              "service": "users",
-              "field": "profile.name",
-              "baseQuery": {
-                "organisations._id": { "$nin": [this.contextId] },
-                "$select": ["profile"]
+      return {
+        '$schema': 'http://json-schema.org/draft-06/schema#',
+        '$id': 'http://kalisio.xyz/schemas/add-member#',
+        'title': 'Add Member Form',
+        'type': 'object',
+        'properties': {
+          'user': {
+            'type': 'array',
+            'services': [{
+              'service': 'users',
+              'field': 'profile.name',
+              'baseQuery': {
+                'organisations._id': { '$nin': [this.contextId] },
+                '$select': ['profile']
               },
-              "icon": {
-                "name": "person"
+              'icon': {
+                'name': 'person'
               }
             }],
-            "field": {
-              "component": "form/KItemField",
-              "helper": "KAddMember.USER_FIELD_HELPER",
+            'field': {
+              'component': 'form/KItemField',
+              'helper': 'KAddMember.USER_FIELD_HELPER'
             }
           },
-          "role": { 
-            "type": "string",
-            "default": "member",
-            "field": {
-              "component": "form/KSelectField",
-              "helper": "KAddMember.ROLE_FIELD_HELPER",
-              "type": "radio",
-              "options": [
-                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" },
-                { "label": this.$t('KAddMember.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" }          
+          'role': {
+            'type': 'string',
+            'default': 'member',
+            'field': {
+              'component': 'form/KSelectField',
+              'helper': 'KAddMember.ROLE_FIELD_HELPER',
+              'type': 'radio',
+              'options': [
+                { 'label': this.$t('KAddMember.MEMBER_LABEL'), 'value': 'member' },
+                { 'label': this.$t('KAddMember.MANAGER_LABEL'), 'value': 'manager' },
+                { 'label': this.$t('KAddMember.OWNER_LABEL'), 'value': 'owner' }
               ]
             }
           }
         },
-        "required": ["user", "role"]
+        'required': ['user', 'role']
       }
     },
     getToolbar () {
@@ -70,7 +70,7 @@ export default {
       ]
     },
     getButtons () {
-      return  [
+      return [
         { name: 'add-button', label: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doAdd(event, done) }
       ]
     },
@@ -91,7 +91,7 @@ export default {
           this.doClose()
         })
         .catch(error => {
-          done()
+          done(error)
         })
       } else {
         done()
