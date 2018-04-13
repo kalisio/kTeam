@@ -11,7 +11,7 @@
       <div class="column full-width justify-center xs-gutter">
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
-            <q-btn id="group-toolbar" :key="groupKey(group)" flat small round color="primary">
+            <q-btn id="group-button" :key="groupKey(group)" flat small round color="primary">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
                 <q-toolbar inverted color="grey-7">     
