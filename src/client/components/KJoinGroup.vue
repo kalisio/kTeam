@@ -36,44 +36,44 @@ export default {
     schema () {
       if (this.member === null) return {}
       return {
-        "$schema": "http://json-schema.org/draft-06/schema#",
-        "$id": "http://kalisio.xyz/schemas/join-group#",
-        "title": "Join Group Form",
-        "type": "object",
-        "properties": {
-          "group": { 
-            "type": "array",
-            "services": [{
-              "service": this.contextId + "/groups",
-              "field": "name",
-              "baseQuery": {
-                "_id": { "$nin": _.map(this.member.groups, '_id') }
+        '$schema': 'http://json-schema.org/draft-06/schema#',
+        '$id': 'http://kalisio.xyz/schemas/join-group#',
+        'title': 'Join Group Form',
+        'type': 'object',
+        'properties': {
+          'group': {
+            'type': 'array',
+            'services': [{
+              'service': this.contextId + '/groups',
+              'field': 'name',
+              'baseQuery': {
+                '_id': { '$nin': _.map(this.member.groups, '_id') }
               },
-              "icon": {
-                "name": "group_work"
+              'icon': {
+                'name': 'group_work'
               }
             }],
-            "field": {
-              "component": "form/KItemField",
-              "helper": "KJoinGroup.GROUP_FIELD_HELPER",
+            'field': {
+              'component': 'form/KItemField',
+              'helper': 'KJoinGroup.GROUP_FIELD_HELPER'
             }
           },
-          "role": { 
-            "type": "string",
-            "default": "member",
-            "field": {
-              "component": "form/KSelectField",
-              "helper": "KJoinGroup.ROLE_FIELD_HELPER",
-              "type": "radio",
-              "options": [
-                { "label": this.$t('KAddMember.MEMBER_LABEL'), "value": "member" },
-                { "label": this.$t('KAddMember.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KAddMember.OWNER_LABEL'), "value": "owner" }               
+          'role': {
+            'type': 'string',
+            'default': 'member',
+            'field': {
+              'component': 'form/KSelectField',
+              'helper': 'KJoinGroup.ROLE_FIELD_HELPER',
+              'type': 'radio',
+              'options': [
+                { 'label': this.$t('KAddMember.MEMBER_LABEL'), 'value': 'member' },
+                { 'label': this.$t('KAddMember.MANAGER_LABEL'), 'value': 'manager' },
+                { 'label': this.$t('KAddMember.OWNER_LABEL'), 'value': 'owner' }
               ]
             }
           }
         },
-        "required": ["group", "role"]
+        'required': ['group', 'role']
       }
     }
   },
@@ -113,7 +113,7 @@ export default {
           this.doClose()
         })
         .catch(error => {
-          done()
+          done(error)
         })
       } else {
         done()

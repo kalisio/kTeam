@@ -22,30 +22,30 @@ export default {
       type: String,
       default: ''
     },
-    id : {
+    id: {
       type: String,
-      default: '',
+      default: ''
     },
     perspective: {
       type: String,
-      default: '',
+      default: ''
     }
   },
   data () {
     return {
-      renderer: { 
-        component: 'KGroupCard', 
+      renderer: {
+        component: 'KGroupCard',
         props: {
           options: {
             avatar: { size: 96 }
           }
-        } 
+        }
       }
     }
   },
   methods: {
     router () {
-      return { 
+      return {
         onApply: { name: 'groups-activity', params: { contextId: this.contextId } },
         onDismiss: { name: 'groups-activity', params: { contextId: this.contextId } }
       }
@@ -57,19 +57,25 @@ export default {
       // SearchBar
       this.setSearchBar('name')
       // Tabbar actions
-      this.registerTabAction({ 
-        name: 'members', label: this.$t('KGroupsActivity.MEMBERS_LABEL'), icon: 'group',
-        route: { name: 'members-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({
+        name: 'members',
+        label: this.$t('KGroupsActivity.MEMBERS_LABEL'),
+        icon: 'group',
+        route: { name: 'members-activity', params: { contextId: this.contextId } }
       })
-      this.registerTabAction({ 
-        name: 'groups', label: this.$t('KGroupsActivity.GROUPS_LABEL'), icon: 'group_work',
+      this.registerTabAction({
+        name: 'groups',
+        label: this.$t('KGroupsActivity.GROUPS_LABEL'),
+        icon: 'group_work',
         route: { name: 'groups-activity', params: { contextId: this.contextId } },
         default: true
       })
       // Fab actions
       if (this.$can('create', 'groups', this.contextId)) {
-        this.registerFabAction({ 
-          name: 'create-group', label: this.$t('KGroupsActivity.CREATE_GROUP_LABEL'), icon: 'add', 
+        this.registerFabAction({
+          name: 'create-group',
+          label: this.$t('KGroupsActivity.CREATE_GROUP_LABEL'),
+          icon: 'add',
           route: { name: 'create-group', params: { contextId: this.contextId } }
         })
       }

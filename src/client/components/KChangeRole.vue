@@ -17,7 +17,7 @@ export default {
   props: {
     contextId: {
       type: String,
-      required: true,
+      required: true
     },
     objectId: {
       type: String,
@@ -30,28 +30,28 @@ export default {
   },
   methods: {
     getSchema () {
-      return {        
-        "$schema": "http://json-schema.org/draft-06/schema#",
-        "$id": "http://kalisio.xyz/schemas/change-role#",
-        "title": "Change role form",
-        "type": "object",
-        "properties": {
-          "role": { 
-            "type": "string",
-            "default": "member",
-            "field": {
-              "component": "form/KSelectField",
-              "helper": "KChangeRole.ROLE_FIELD_HELPER",
-              "type": "radio",
-              "options": [
-                { "label": this.$t('KChangeRole.MEMBER_LABEL'), "value": "member" },
-                { "label": this.$t('KChangeRole.MANAGER_LABEL'), "value": "manager" },
-                { "label": this.$t('KChangeRole.OWNER_LABEL'), "value": "owner" }          
+      return {
+        '$schema': 'http://json-schema.org/draft-06/schema#',
+        '$id': 'http://kalisio.xyz/schemas/change-role#',
+        'title': 'Change role form',
+        'type': 'object',
+        'properties': {
+          'role': {
+            'type': 'string',
+            'default': 'member',
+            'field': {
+              'component': 'form/KSelectField',
+              'helper': 'KChangeRole.ROLE_FIELD_HELPER',
+              'type': 'radio',
+              'options': [
+                { 'label': this.$t('KChangeRole.MEMBER_LABEL'), 'value': 'member' },
+                { 'label': this.$t('KChangeRole.MANAGER_LABEL'), 'value': 'manager' },
+                { 'label': this.$t('KChangeRole.OWNER_LABEL'), 'value': 'owner' }
               ]
             }
           }
         },
-        "required": ["role"]
+        'required': ['role']
       }
     },
     getToolbar () {
@@ -60,7 +60,7 @@ export default {
       ]
     },
     getButtons () {
-      return  [
+      return [
         { name: 'update-button', label: this.$t('KChangeRole.UPDATE_BUTTON'), color: 'primary', handler: (event, done) => this.doUpdate(event, done) }
       ]
     },
@@ -81,7 +81,7 @@ export default {
           this.doClose()
         })
         .catch(error => {
-          done()
+          done(error)
         })
       } else {
         done()

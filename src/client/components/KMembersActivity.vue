@@ -25,9 +25,9 @@ export default {
   },
   data () {
     return {
-      renderer: { 
-        component: 'KMemberCard', 
-        props: { 
+      renderer: {
+        component: 'KMemberCard',
+        props: {
           groups: [],
           options: {
             tags: 'icon',
@@ -39,9 +39,9 @@ export default {
   },
   methods: {
     router () {
-      return { 
-        onApply: { name:'members-activity', params: { contextId: this.contextId } },
-        onDismiss: { name:'members-activity', params: { contextId: this.contextId } }
+      return {
+        onApply: { name: 'members-activity', params: { contextId: this.contextId } },
+        onDismiss: { name: 'members-activity', params: { contextId: this.contextId } }
       }
     },
     refreshActivity () {
@@ -54,24 +54,33 @@ export default {
         { service: 'tags', field: 'value', baseQuery: {}, icon: 'label' }
       ])
       // Tabbar actions
-      this.registerTabAction({ 
-        name: 'members', label: this.$t('KMembersActivity.MEMBERS_LABEL'), icon: 'group', 
+      this.registerTabAction({
+        name: 'members',
+        label: this.$t('KMembersActivity.MEMBERS_LABEL'),
+        icon: 'group',
         route: { name: 'members-activity', params: { contextId: this.contextId } },
         default: true
       })
-      this.registerTabAction({ 
-        name: 'groups', label: this.$t('KMembersActivity.GROUPS_LABEL'), icon: 'group_work', route: { 
-        name: 'groups-activity', params: { contextId: this.contextId } } 
+      this.registerTabAction({
+        name: 'groups',
+        label: this.$t('KMembersActivity.GROUPS_LABEL'),
+        icon: 'group_work',
+        route: {
+          name: 'groups-activity', params: { contextId: this.contextId } }
       })
       // Fab actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerFabAction({ 
-          name: 'add-member', label: this.$t('KMembersActivity.ADD_USER_LABEL'), icon: 'person_add', 
-          route: { name: 'add-member', params: {} } 
+        this.registerFabAction({
+          name: 'add-member',
+          label: this.$t('KMembersActivity.ADD_USER_LABEL'),
+          icon: 'person_add',
+          route: { name: 'add-member', params: {} }
         })
-        this.registerFabAction({ 
-          name: 'invite-member', label: this.$t('KMembersActivity.INVITE_GUEST_LABEL'), icon: 'email', 
-          route: { name: 'invite-member', params: {} } 
+        this.registerFabAction({
+          name: 'invite-member',
+          label: this.$t('KMembersActivity.INVITE_GUEST_LABEL'),
+          icon: 'email',
+          route: { name: 'invite-member', params: {} }
         })
       }
       // Refresh the group list
@@ -99,7 +108,7 @@ export default {
     // Load the required components
     this.$options.components['k-grid'] = this.$load('collection/KGrid')
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.unsubscribeGroups()
   }
 }

@@ -37,20 +37,29 @@ export default {
       this.setTitle(this.$store.get('context.name'))
       // Tabbar actions
       if (this.$can('update', 'organisations', this.contextId, { _id: this.contextId })) {
-        this.registerTabAction({ 
-          name: 'properties', label: this.$t('KSettingsActivity.PROPERTIES_LABEL'), icon: 'description', 
-          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'properties' },
-          default: this.perspective === 'properties' } 
-        })
-        this.registerTabAction({ 
-          name: 'billing', label: this.$t('KSettingsActivity.BILLING_LABEL'), icon: 'credit_card', 
-          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'billing' },
-          default: this.perspective === 'billing' }
-        }),
         this.registerTabAction({
-          name: 'danger-zone', label: this.$t('KSettingsActivity.DANGER_ZONE_LABEL'), icon: 'warning', 
-          route: { name: 'settings-activity', params: { contextId: this.contextId, perspective: 'danger-zone' },
-          default: this.perspective === 'danger-zone' }
+          name: 'properties',
+          label: this.$t('KSettingsActivity.PROPERTIES_LABEL'),
+          icon: 'description',
+          route: { name: 'settings-activity',
+            params: { contextId: this.contextId, perspective: 'properties' },
+            default: this.perspective === 'properties' }
+        })
+        this.registerTabAction({
+          name: 'billing',
+          label: this.$t('KSettingsActivity.BILLING_LABEL'),
+          icon: 'credit_card',
+          route: { name: 'settings-activity',
+            params: { contextId: this.contextId, perspective: 'billing' },
+            default: this.perspective === 'billing' }
+        })
+        this.registerTabAction({
+          name: 'danger-zone',
+          label: this.$t('KSettingsActivity.DANGER_ZONE_LABEL'),
+          icon: 'warning',
+          route: { name: 'settings-activity',
+            params: { contextId: this.contextId, perspective: 'danger-zone' },
+            default: this.perspective === 'danger-zone' }
         })
       }
     }
