@@ -11,22 +11,22 @@
       <div class="column full-width justify-center xs-gutter">
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
-            <q-btn :key="groupKey(group)" flat small round color="primary">
+            <q-btn id="group-toolbar" :key="groupKey(group)" flat small round color="primary">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
                 <q-toolbar inverted color="grey-7">     
                   <span style="margin:8px">{{group.name}}</span>
-                  <q-btn v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
+                  <q-btn id="change-role-group" v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
                     <q-icon :name="roleIcon(roleForGroup(group))" />
                   </q-btn>
-                  <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
+                  <q-btn id="leave-group" v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
                     <q-icon name="remove_circle" />
                   </q-btn>
                 </q-toolbar>
               </q-popover>
             </q-btn>
           </template>
-          <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
+          <q-btn id="join-group" v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
             <q-icon name="add_circle" color="secondary" />
           </q-btn>
         </div>

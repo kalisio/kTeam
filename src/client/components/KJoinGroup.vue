@@ -90,7 +90,7 @@ export default {
     },
     getButtons () {
       return [
-        { name: 'add-button', label: this.$t('KJoinGroup.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doJoin(event, done) }
+        { name: 'join-button', label: this.$t('KJoinGroup.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doJoin(event, done) }
       ]
     },
     loadService () {
