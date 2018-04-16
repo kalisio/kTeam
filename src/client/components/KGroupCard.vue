@@ -39,7 +39,7 @@ export default {
     memberRole () {
       const user = this.$store.get('user')
       let role = getRoleForGroup(user, this.contextId, this.item._id)
-      if (! _.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      if (!_.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
       else return ''
     }
   },
@@ -52,14 +52,18 @@ export default {
     refreshActions () {
       this.clearActions()
       if (this.$can('update', 'groups', this.contextId, this.item)) {
-        this.registerPaneAction({ 
-          name: 'edit-group', label: this.$t('KGroupCard.EDIT_LABEL'), icon: 'description',
+        this.registerPaneAction({
+          name: 'edit-group',
+          label: this.$t('KGroupCard.EDIT_LABEL'),
+          icon: 'description',
           route: { name: 'edit-group', params: { contextId: this.contextId, objectId: this.item._id } }
         })
       }
       if (this.$can('remove', 'groups', this.contextId, this.item)) {
-        this.registerMenuAction({ 
-          name: 'remove-group', label: this.$t('KGroupCard.REMOVE_LABEL'), icon: 'remove_circle',
+        this.registerMenuAction({
+          name: 'remove-group',
+          label: this.$t('KGroupCard.REMOVE_LABEL'),
+          icon: 'remove_circle',
           handler: this.removeGroup
         })
       }
@@ -87,13 +91,15 @@ export default {
       // Clear the counters. We use a temporaty object to ensure reactivity
       // see: https://v1.vuejs.org/guide/reactivity.html
       let stats = {}
-      this.roleNames.forEach(role => stats[role] = 0)
+      this.roleNames.forEach(role => {
+        stats[role] = 0
+      })
       const membersService = this.$api.getService('members', this.contextId)
       findMembersOfGroup(membersService, this.item._id)
       .then(members => {
         // filter the subjects according the role in order to count them
         _.forEach(members.data, (user) => {
-          let group = _.find(user.groups, { '_id':  this.item._id })
+          let group = _.find(user.groups, { '_id': this.item._id })
           stats[group.permissions]++
         })
         this.memberStats = Object.assign({}, stats)

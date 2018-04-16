@@ -16,6 +16,7 @@
     "ORGANISATIONS_NAME_FIELD_HELPER": "Saisissez le nom de l'organisation",
     "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Saisissez une description de l'organisation",
     "ORGANISATIONS_PLAN_FIELD_HELPER": "Sélectionnez un plan de paiement pour l'organisation",
+    "MEMBERS_TAGS_FIELD_HELPER": "Ajouter des étiquettes pour qualifier le membre",
     "GROUPS_CREATE_TITLE": "Créer une nouveau groupe ?",
     "GROUPS_NAME_FIELD_HELPER": "Saisissez le nom du groupe",
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Saisissez une description du groupe"
@@ -27,7 +28,7 @@
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
     "GROUPS_LABEL": "$t(GROUPS_LABEL)",
-    "ADD_USER_LABEL": "Ajouter un utilisateurr",
+    "ADD_USER_LABEL": "Ajouter un utilisateur",
     "INVITE_GUEST_LABEL": "Inviter une personne"
   },
   "KAddMember": {

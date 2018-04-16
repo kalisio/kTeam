@@ -22,13 +22,13 @@ export default {
   ],
   data () {
     return {
-      name: '',
+      name: ''
     }
   },
   methods: {
-    /*blockText () {
+    /* blockText () {
       return this.$i18n.i18next('KOrganisationDZ.BLOCK_TEXT', {organsation: this.name})
-    },*/
+    }, */
     loadService () {
       return this.$api.getService('organisations')
     },
@@ -48,7 +48,7 @@ export default {
             preventClose: true,
             handler: (data, close) => {
               if (data.confirm === this.name) {
-                close(() => { 
+                close(() => {
                   this.loadService().remove(this.objectId)
                   .then(() => {
                     this.$router.push({ name: 'home' })
@@ -67,7 +67,9 @@ export default {
     this.$options.components['k-block'] = this.$load('frame/KBlock')
     // Update underlying object
     this.loadObject()
-    .then(object => this.name = object.name)
+    .then(object => {
+      this.name = object.name
+    })
   }
 }
 </script>

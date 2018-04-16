@@ -35,7 +35,7 @@
 <script>
 import _ from 'lodash'
 import { Events, Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
-import Avatar from 'vue-avatar/dist/Avatar'
+import { Avatar } from 'vue-avatar'
 import { mixins } from 'kCore/client'
 
 export default {
@@ -56,7 +56,7 @@ export default {
   watch: {
     '$route' (to, from) {
       // React to route changes. Checks whether the context is null or not
-      if (! this.$route.params.contextId) this.clearCurrentOrganisation()
+      if (!this.$route.params.contextId) this.clearCurrentOrganisation()
     }
   },
   data () {
@@ -80,7 +80,7 @@ export default {
     },
     updateOrganisations () {
       let list = this.$store.get('user.organisations', [])
-      this.filterQuery = { _id: { $in : list.map(org => { return org._id }) } }
+      this.filterQuery = { _id: { $in: list.map(org => { return org._id }) } }
       this.refreshCollection()
     },
     updateCurrentOrganisation () {
@@ -106,7 +106,7 @@ export default {
       this.$refs.editor.close(() => this.sideNav.navigate({ name: 'context', params: { contextId: org._id } }))
     },
     onOrganisationRemoved (org) {
-       Toast.create.warning({
+      Toast.create.warning({
         html: this.$t('KOrganisationPanel.ORGANISATION_REMOVED_WARNING', { organisation: org.name })
       })
     }
@@ -126,7 +126,7 @@ export default {
     const organisationsService = this.$api.getService('organisations')
     organisationsService.on('removed', (org) => this.onOrganisationRemoved(org))
   },
-  beforeDestroy() {
+  beforeDestroy () {
     Events.$off('user-changed', this.updateOrganisations)
     this.$off('collection-refreshed', this.updateCurrentOrganisation)
     const organisationsService = this.$api.getService('organisations')

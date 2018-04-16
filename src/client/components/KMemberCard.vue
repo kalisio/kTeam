@@ -11,22 +11,22 @@
       <div class="column full-width justify-center xs-gutter">
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
-            <q-btn :key="groupKey(group)" flat small round color="primary">
+            <q-btn id="group-button" :key="groupKey(group)" flat small round color="primary">
               <avatar :username="group.name" :size="32" />
               <q-popover ref="popover">
                 <q-toolbar inverted color="grey-7">     
                   <span style="margin:8px">{{group.name}}</span>
-                  <q-btn v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
+                  <q-btn id="change-role-group" v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
                     <q-icon :name="roleIcon(roleForGroup(group))" />
                   </q-btn>
-                  <q-btn v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
+                  <q-btn id="leave-group" v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
                     <q-icon name="remove_circle" />
                   </q-btn>
                 </q-toolbar>
               </q-popover>
             </q-btn>
           </template>
-          <q-btn v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
+          <q-btn id="join-group" v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
             <q-icon name="add_circle" color="secondary" />
           </q-btn>
         </div>
@@ -41,7 +41,7 @@ import { mixins as kCoreMixins } from 'kCore/client'
 import { permissions as kCorePermissions } from 'kCore/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
 import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
-import Avatar from 'vue-avatar/dist/Avatar'
+import { Avatar } from 'vue-avatar'
 
 export default {
   name: 'k-member-card',
@@ -66,13 +66,13 @@ export default {
       // Get the groups for this member
       let groupsOfMember = _.map(this.item.groups, '_id')
       // Filter the groups against the orfanisation groups
-      return  _.filter(this.groups, (group) => {
+      return _.filter(this.groups, (group) => {
         return _.includes(groupsOfMember, group._id)
       })
     },
     role () {
       let role = getRoleForOrganisation(this.item, this.contextId)
-      if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
+      if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     }
   },
@@ -80,21 +80,27 @@ export default {
     refreshActions () {
       this.clearActions()
       if (this.$can('update', 'members', this.contextId)) {
-        this.registerPaneAction({ 
-          name: 'tag-member', label: this.$t('KMemberCard.TAG_LABEL'), icon: 'local_offer',
+        this.registerPaneAction({
+          name: 'tag-member',
+          label: this.$t('KMemberCard.TAG_LABEL'),
+          icon: 'local_offer',
           route: { name: 'tag-member', params: { contextId: this.contextId, objectId: this.item._id } }
         })
       }
       if (this.$can('update', 'members', this.contextId)) {
-        this.registerPaneAction({ 
-          name: 'change-role', label: this.$t('KMemberCard.CHANGE_ROLE_LABEL'), icon: 'security',
-          route: { name: 'change-role', params: { contextId: this.contextId, objectId: this.item._id, resource: { id: this.contextId, scope: 'organisations', service: 'organisations'} } }
+        this.registerPaneAction({
+          name: 'change-role',
+          label: this.$t('KMemberCard.CHANGE_ROLE_LABEL'),
+          icon: 'security',
+          route: { name: 'change-role', params: { contextId: this.contextId, objectId: this.item._id, resource: { id: this.contextId, scope: 'organisations', service: 'organisations' } } }
         })
       }
       if (this.$can('remove', 'authorisations', this.contextId, { resource: this.contextId })) {
-        this.registerMenuAction({ 
-          name: 'remove-member', label: this.$t('KMemberCard.REMOVE_LABEL'), icon: 'remove_circle',
-          handler: this.removeMember 
+        this.registerMenuAction({
+          name: 'remove-member',
+          label: this.$t('KMemberCard.REMOVE_LABEL'),
+          icon: 'remove_circle',
+          handler: this.removeMember
         })
       }
     },
@@ -132,7 +138,7 @@ export default {
     },
     roleForGroup (group) {
       let role = getRoleForGroup(this.item, this.contextId, group._id)
-      if (! _.isUndefined(role)) return kCorePermissions.Roles[role]
+      if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     },
     canJoinGroup () {

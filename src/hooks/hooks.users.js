@@ -11,10 +11,12 @@ export function preventRemoveUser (hook) {
     throw new Error(`The 'preventRemoveUser' hook should only be used as a 'before' hook.`)
   }
 
+  // By pass check ?
+  if (hook.params.force) return hook
   let user = hook.params.user
   if (user.organisations) {
-    // We must ensure the user is no more an owner of any of the organisations is belong
-    let owningOrganisations = _.find(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
+    // We must ensure the user is no more a owner of an organisation
+    let owningOrganisations = _.filter(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
     if (!_.isEmpty(owningOrganisations)) {
       debug('Cannot remove the user: ', user)
       throw new Forbidden('You are not allowed to delete the user ' + user.name, {
