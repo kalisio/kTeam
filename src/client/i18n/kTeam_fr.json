@@ -28,7 +28,7 @@
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
     "GROUPS_LABEL": "$t(GROUPS_LABEL)",
-    "ADD_USER_LABEL": "Ajouter un utilisateurr",
+    "ADD_USER_LABEL": "Ajouter un utilisateur",
     "INVITE_GUEST_LABEL": "Inviter une personne"
   },
   "KAddMember": {
