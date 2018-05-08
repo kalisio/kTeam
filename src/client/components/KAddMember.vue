@@ -33,9 +33,10 @@ export default {
             'services': [{
               'service': 'users',
               'field': 'profile.name',
+              'subfield': 'email',
               'baseQuery': {
                 'organisations._id': { '$nin': [this.contextId] },
-                '$select': ['profile']
+                '$select': ['email', 'profile']
               },
               'icon': {
                 'name': 'person'
