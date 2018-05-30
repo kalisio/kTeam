@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :filter-query="searchQuery" />
+    <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :base-query="baseQuery" :filter-query="searchQuery" />
     <!-- 
       Router view to enable routing to modals
     -->
@@ -33,6 +33,11 @@ export default {
   },
   data () {
     return {
+      baseQuery: {
+        $sort: {
+          'name': 1
+        }
+      },
       renderer: {
         component: 'KGroupCard',
         props: {
