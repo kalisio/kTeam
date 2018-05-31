@@ -9,7 +9,6 @@
       "type": "string", 
       "maxLength": 128,
       "minLength": 3,
-      "default": "New organisation",
       "field": {
         "component": "form/KTextField",
         "helper": "schemas.ORGANISATIONS_NAME_FIELD_HELPER"
