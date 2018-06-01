@@ -35,7 +35,7 @@ export default {
         props: {
           groups: [],
           options: {
-            tags: 'icon',
+            tags: 'chip',
             avatar: { size: 96 }
           }
         }
