@@ -84,7 +84,7 @@ export default {
           organisationId: this.contextId,
           roleGranted: result.values.role
         }
-        // Remove the role from the form data 
+        // Remove the role from the form data
         delete result.values.role
         // Create the user
         let usersService = this.$api.getService('users')
