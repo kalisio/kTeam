@@ -30,6 +30,11 @@ export default {
         'properties': {
           'user': {
             'type': 'array',
+            'type': 'array',
+            'multiselect': false,
+            'uniqueItems': true,
+            'minItems': 1,
+            'maxItems': 1,
             'services': [{
               'service': 'users',
               'field': 'profile.name',

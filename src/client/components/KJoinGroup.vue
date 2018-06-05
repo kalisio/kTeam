@@ -43,6 +43,10 @@ export default {
         'properties': {
           'group': {
             'type': 'array',
+            'multiselect': false,
+            'uniqueItems': true,
+            'minItems': 1,
+            'maxItems': 1,
             'services': [{
               'service': this.contextId + '/groups',
               'field': 'name',
