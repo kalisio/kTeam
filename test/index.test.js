@@ -103,6 +103,10 @@ describe('kTeam', () => {
     expect(authorisationService).toExist()
     authorisationService.hooks({
       before: {
+        create: [ when(hook => hook.params.resource,
+          teamHooks.preventRemovingLastOwner('organisations'),
+          teamHooks.preventRemovingLastOwner('groups'))
+        ],
         remove: [ when(hook => hook.params.resource && !hook.params.resource.deleted,
           teamHooks.preventRemovingLastOwner('organisations'),
           teamHooks.preventRemovingLastOwner('groups'))
@@ -403,6 +407,26 @@ describe('kTeam', () => {
   // Let enough time to process
   .timeout(5000)
 
+  it('group owner cannot be changed to manager when alone', (done) => {
+    authorisationService.create({
+      query: {
+        scope: 'groups',
+        subjects: user1Object._id.toString(),
+        subjectsService: 'users',
+        resource: groupObject._id.toString(),
+        resourcesService: orgObject._id.toString() + '/groups'
+      }
+    }, {
+      user: user2Object,
+      checkAuthorisation: true
+    })
+    .catch(error => {
+      expect(error).toExist()
+      expect(error.name).to.equal('Forbidden')
+      done()
+    })
+  })
+
   it('group owner cannot be removed when alone', (done) => {
     authorisationService.remove(groupObject._id, {
       query: {
@@ -412,7 +436,8 @@ describe('kTeam', () => {
         resourcesService: orgObject._id.toString() + '/groups'
       }
     }, {
-      user: user2Object, checkAuthorisation: true
+      user: user2Object,
+      checkAuthorisation: true
     })
     .catch(error => {
       expect(error).toExist()

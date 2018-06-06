@@ -11,15 +11,21 @@ export function preventRemovingLastOwner (resourceScope) {
     // By pass check ?
     if (hook.params.force) return hook
     const params = hook.params
+    const data = hook.data || {}
     const query = params.query || {}
-    const scope = query.scope
+    const scope = data.scope || query.scope
+    const grantedPermissions = data.permissions || query.permissions
+    const grantedRole = (grantedPermissions ? permissions.Roles[grantedPermissions] : undefined)
     const resource = hook.params.resource
     const subjects = hook.params.subjects
     const subjectService = hook.params.subjectsService
+    // On create check if we try to downgrade permissions otherwise let pass through
+    if (!_.isUndefined(grantedRole) && (grantedRole === permissions.Roles.owner)) return hook
+
     if ((scope === resourceScope) && resource && resource._id) {
       // Count existing owners
       const owners = await permissions.countSubjectsForResource(subjectService, resourceScope, resource._id, permissions.Roles.owner)
-      // Now count owners we remove permissions on
+      // Now count owners we change/remove permissions on
       const removedOwners = subjects.reduce((count, subject) => {
         const resources = _.get(subject, resourceScope, [])
         const ownedResource = _.find(resources, { _id: resource._id, permissions: permissions.RoleNames[permissions.Roles.owner] })
