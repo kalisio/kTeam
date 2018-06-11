@@ -16,6 +16,7 @@
     "ORGANISATIONS_NAME_FIELD_HELPER": "Enter the name of this organisation",
     "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this organisation",
     "ORGANISATIONS_PLAN_FIELD_HELPER": "Select the billing plan of this organisation",
+    "ORGANISATIONS_EXTRA_INFOS_FIELD_HELPER": "Enter any extra information to appear on your receipts",
     "MEMBERS_TAGS_FIELD_HELPER": "Add somes tags to qualify this member",
     "GROUPS_CREATE_TITLE": "Create a new group ?",
     "GROUPS_NAME_FIELD_HELPER": "Enter the name of this group",
@@ -24,6 +25,10 @@
   "KOrganisationPanel": {
     "NEW_ORGANISATION": "New organisation",
     "ORGANISATION_REMOVED_WARNING": "The organisation <b>{{organisation}}</b> has been removed"
+  },
+  "KOrganisationPlans": {
+    "SELECT": "Select",
+    "CURRENT_PLAN": "Your plan"
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",

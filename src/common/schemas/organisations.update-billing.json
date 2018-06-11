@@ -5,7 +5,7 @@
   "description": "Organisation billing perspective",
   "type": "object",
   "properties": {
-    "billing": {
+    "plan": {
       "type": "string",
       "field": {
         "component": "form/KSelectField",
@@ -16,8 +16,15 @@
           { "label": "Bronze", "value": "bronze", "color": "amber" }
         ]
       }
+    },
+    "extraInfos": {
+      "type": "string", 
+      "field": {
+        "component": "form/KTextareaField",
+        "helper": "schemas.ORGANISATIONS_EXTRA_INFOS_FIELD_HELPER"
+      }
     }
   },
-  "required": ["billing"]
+  "required": ["plan", "extraInfos"]
 }
 

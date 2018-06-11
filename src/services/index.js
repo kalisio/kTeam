@@ -7,7 +7,7 @@ module.exports = async function () {
 
   // Create services to manage MongoDB databases, organisations, etc.
   app.createService('databases', { servicesPath })
-  app.createService('organisations', { modelsPath, servicesPath })
+  app.createService('organisations', { modelsPath, servicesPath, perspectives: ['billing'] })
 
   await app.getService('organisations').configureOrganisations()
 }

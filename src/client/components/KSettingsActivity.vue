@@ -4,7 +4,7 @@
       <k-editor service="organisations" :objectId="contextId" />
     </div>
     <div v-else-if="perspective === 'billing'" class="col-11">
-      <k-editor service="organisations" :objectId="contextId" perspective="billing" />
+      <k-organisation-billing :objectId="contextId" />
     </div>
     <div v-else-if="perspective === 'danger-zone'" class="col-11">
       <k-organisation-dz :objectId="contextId" />
@@ -67,6 +67,7 @@ export default {
   created () {
     // Load the required components
     this.$options.components['k-editor'] = this.$load('editor/KEditor')
+    this.$options.components['k-organisation-billing'] = this.$load('KOrganisationBilling')
     this.$options.components['k-organisation-dz'] = this.$load('KOrganisationDZ')
   }
 }

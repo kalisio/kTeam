@@ -3,6 +3,21 @@ import makeDebug from 'debug'
 import { Forbidden } from 'feathers-errors'
 const debug = makeDebug('kalisio:kTeam:organisations:hooks')
 
+export function addOrganisationPlan (hook) {
+  if (hook.type !== 'before') {
+    throw new Error(`The 'addOrganisationPlan' hook should only be used as a 'before' hook.`)
+  }
+
+  const plans = _.keys(hook.app.get('plans') || {})
+  const plan = _.get(hook.data, 'billing.plan')
+  if (!plan && (plans.length > 0)) {
+    // Add defaul plan
+    _.set(hook.data, 'billing.plan', plans[0])
+    debug('Added default plan to organisation: ', hook.data)
+  }
+  return hook
+}
+
 export function createOrganisationServices (hook) {
   if (hook.type !== 'after') {
     throw new Error(`The 'createOrganisationServices' hook should only be used as a 'after' hook.`)
