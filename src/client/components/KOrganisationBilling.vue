@@ -26,7 +26,7 @@
           </q-card-actions>
       </q-card>
     </div>
-    <k-editor ref="editor" service="organisations" :objectId="objectId" perspective="billing" @editor-ready="onEditorReady"/>
+    <k-editor ref="editor" service="organisations" :objectId="objectId" perspective="billing" @editor-ready="onEditorReady" @field-changed="onFieldChanged"/>
   </div>
 </template>
 
@@ -75,6 +75,11 @@ export default {
     onEditorReady (editor) {
       this.editor = editor
       this.currentPlan = _.get(this.editor.getObject(), 'billing.plan', '')
+    },
+    onFieldChanged (field, value) {
+      if (field === 'plan') {
+        this.currentPlan = value
+      }
     },
     refreshPlans() {
       this.plans = this.$store.get('capabilities.api.plans', {})
