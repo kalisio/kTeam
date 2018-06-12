@@ -18,7 +18,7 @@
     "ORGANISATIONS_PLAN_FIELD_HELPER": "Sélectionnez le plan de paiement pour l'organisation",
     "ORGANISATIONS_EXTRA_INFOS_FIELD_HELPER": "Saisissez des informations supplémentaires apparaissant sur vos factures",
     "MEMBERS_TAGS_FIELD_HELPER": "Ajouter des étiquettes pour qualifier le membre",
-    "GROUPS_CREATE_TITLE": "Créer une nouveau groupe ?",
+    "GROUPS_CREATE_TITLE": "Créer un nouveau groupe ?",
     "GROUPS_NAME_FIELD_HELPER": "Saisissez le nom du groupe",
     "GROUPS_DESCRIPTION_FIELD_HELPER": "Saisissez une description du groupe"
   },
