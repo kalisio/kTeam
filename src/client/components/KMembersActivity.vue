@@ -3,7 +3,7 @@
     <!-- 
       Members collection
      -->
-    <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" :filter-query="searchQuery" />
+    <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" :base-query="baseQuery" :filter-query="searchQuery" />
     <!-- 
       Router view to enable routing to modals
      -->
@@ -25,12 +25,17 @@ export default {
   },
   data () {
     return {
+      baseQuery: {
+        $sort: {
+          'profile.name': 1
+        }
+      },
       renderer: {
         component: 'KMemberCard',
         props: {
           groups: [],
           options: {
-            tags: 'icon',
+            tags: 'chip',
             avatar: { size: 96 }
           }
         }

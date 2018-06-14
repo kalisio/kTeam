@@ -9,7 +9,6 @@
       "type": "string", 
       "maxLength": 128,
       "minLength": 3,
-      "default": "New group",
       "field": {
         "component": "form/KTextField",
         "helper": "schemas.GROUPS_NAME_FIELD_HELPER"
