@@ -96,7 +96,6 @@ export async function removeOrganisationTagsAuthorisations (hook) {
     // Clear removed tags
     const notFromOrg = _.differenceWith(tags, orgTags, hooks.isTagEqual)
     // Update subject if required
-    console.log(fromOrg, notFromOrg)
     if (fromOrg.length > 0) {
       promises.push(subjectService.patch(subject._id.toString(), { tags: notFromOrg, devices: subject.devices }))
     }
