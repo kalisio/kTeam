@@ -91,12 +91,13 @@ export async function removeOrganisationTagsAuthorisations (hook) {
   let promises = []
   subjects.forEach(subject => {
     let tags = subject.tags || []
-    let previousTagCount = tags.length
-    // Filter tags belonging to org
-    _.pullAllWith(tags, orgTags, hooks.isTagEqual)
+    // Find tags from org
+    const fromOrg = _.intersectionWith(tags, orgTags, hooks.isTagEqual)
+    // Clear removed tags
+    const notFromOrg = _.differenceWith(tags, orgTags, hooks.isTagEqual)
     // Update subject if required
-    if (tags.length < previousTagCount) {
-      promises.push(subjectService.patch(subject._id.toString(), { tags, devices: subject.devices }))
+    if (fromOrg.length > 0) {
+      promises.push(subjectService.patch(subject._id.toString(), { tags: notFromOrg, devices: subject.devices }))
     }
   })
   // Perform subject updates in parallel

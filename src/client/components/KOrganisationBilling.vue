@@ -81,7 +81,7 @@ export default {
         this.currentPlan = value
       }
     },
-    refreshPlans() {
+    refreshPlans () {
       this.plans = this.$store.get('capabilities.api.plans', {})
       this.quotas = this.$store.get('capabilities.api.quotas', {})
     }
