@@ -26,9 +26,11 @@
     "NEW_ORGANISATION": "New organisation",
     "ORGANISATION_REMOVED_WARNING": "The organisation <b>{{organisation}}</b> has been removed"
   },
-  "KOrganisationPlans": {
+  "KOrganisationBilling": {
     "SELECT": "Select",
-    "CURRENT_PLAN": "Your plan"
+    "CURRENT_PLAN": "Your plan",
+    "BLOCK_NO_BILLING_TITLE": "You cannot change your plan",
+    "BLOCK_NO_BILLING_TEXT": "The feature is not available on this version, to change your plan please contact us using this address: <a href='mailto:support@kalisio.com'>support@kalisio.com</a>."
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",

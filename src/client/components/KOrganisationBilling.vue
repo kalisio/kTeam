@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="row">
+    <k-block v-if="!isBillingAvailable()"
+        color="orange" 
+        :title="$t('KOrganisationBilling.BLOCK_NO_BILLING_TITLE')"
+        :text="$t('KOrganisationBilling.BLOCK_NO_BILLING_TEXT', {organisation: name})" />
+    <div :class="isBillingAvailable() ? '' : 'disabled no-pointer-events'" class="row">
       <q-card class="col" :color="properties.color" :key="plan" v-for="(properties, plan) in plans">     
         <q-card-title class="text-center">
           <h4>{{$t('plans.' + plan + '_LABEL', quotas[plan])}}</h4>
@@ -17,16 +21,16 @@
         <q-card-separator />
           <q-card-actions align="end">
             <div v-if="properties.url || properties.route">
-              <q-btn flat @click="onSelectPlan(plan, properties)">{{$t('KOrganisationPlans.SELECT')}}</q-btn>
+              <q-btn flat @click="onSelectPlan(plan, properties)">{{$t('KOrganisationBilling.SELECT')}}</q-btn>
             </div>
             <div v-else>
-              <q-btn v-show="currentPlan !== plan" flat @click="onSelectPlan(plan, properties)">{{$t('KOrganisationPlans.SELECT')}}</q-btn>
-              <q-btn v-show="currentPlan === plan" flat disable>{{$t('KOrganisationPlans.CURRENT_PLAN')}}</q-btn>
+              <q-btn v-show="currentPlan !== plan" flat @click="onSelectPlan(plan, properties)">{{$t('KOrganisationBilling.SELECT')}}</q-btn>
+              <q-btn v-show="currentPlan === plan" flat disable>{{$t('KOrganisationBilling.CURRENT_PLAN')}}</q-btn>
             </div>
           </q-card-actions>
       </q-card>
     </div>
-    <k-editor ref="editor" service="organisations" :objectId="objectId" perspective="billing" @editor-ready="onEditorReady" @field-changed="onFieldChanged"/>
+    <k-editor ref="editor" :class="isBillingAvailable() ? '' : 'disabled no-pointer-events'" service="organisations" :objectId="objectId" perspective="billing" @editor-ready="onEditorReady" @field-changed="onFieldChanged"/>
   </div>
 </template>
 
@@ -84,10 +88,27 @@ export default {
     refreshPlans () {
       this.plans = this.$store.get('capabilities.api.plans', {})
       this.quotas = this.$store.get('capabilities.api.quotas', {})
+    },
+    onBillingRequest (plan, properties) {
+      // Open information link
+      if (properties.url) {
+        openURL(properties.url)
+      } else if (properties.route) {
+        this.$router.push(properties.route)
+      } else {
+        // Update plan in place in editor object
+        this.currentPlan = plan
+        _.set(this.editor._object, 'billing.plan', plan)
+        this.editor.fillEditor()
+      }
+    },
+    isBillingAvailable () {
+      return this.$config('domain', '').includes('localhost')
     }
   },
   created () {
     // Load the required components
+    this.$options.components['k-block'] = this.$load('frame/KBlock')
     this.$options.components['k-editor'] = this.$load('editor/KEditor')
     this.refreshPlans()
     // Whenever the cabilities are updated, update plans as well
