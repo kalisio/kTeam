@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import makeDebug from 'debug'
 import { getItems } from 'feathers-hooks-common'
-import { Forbidden } from 'feathers-errors'
+import { Forbidden } from '@feathersjs/errors'
 import { permissions } from 'kCore/common'
 const debug = makeDebug('kalisio:kTeam:users:hooks')
 

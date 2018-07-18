@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import makeDebug from 'debug'
-import { Forbidden } from 'feathers-errors'
+import { Forbidden } from '@feathersjs/errors'
 const debug = makeDebug('kalisio:kTeam:organisations:hooks')
 
 export function addOrganisationPlan (hook) {

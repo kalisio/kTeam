@@ -409,23 +409,25 @@ describe('kTeam', () => {
 
   it('group owner cannot be changed to manager when alone', (done) => {
     authorisationService.create({
-      query: {
-        scope: 'groups',
-        subjects: user1Object._id.toString(),
-        subjectsService: 'users',
-        resource: groupObject._id.toString(),
-        resourcesService: orgObject._id.toString() + '/groups'
-      }
+      scope: 'groups',
+      permissions: 'manager',
+      subjects: user2Object._id.toString(),
+      subjectsService: 'users',
+      resource: groupObject._id.toString(),
+      resourcesService: orgObject._id.toString() + '/groups'
     }, {
       user: user2Object,
       checkAuthorisation: true
     })
     .catch(error => {
+      console.log(error)
       expect(error).toExist()
       expect(error.name).to.equal('Forbidden')
       done()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('group owner cannot be removed when alone', (done) => {
     authorisationService.remove(groupObject._id, {
@@ -434,8 +436,7 @@ describe('kTeam', () => {
         subjects: user2Object._id.toString(),
         subjectsService: 'users',
         resourcesService: orgObject._id.toString() + '/groups'
-      }
-    }, {
+      },
       user: user2Object,
       checkAuthorisation: true
     })
@@ -445,6 +446,8 @@ describe('kTeam', () => {
       done()
     })
   })
+  // Let enough time to process
+  .timeout(5000)
 
   it('group owner can add owners to his group', () => {
     return authorisationService.create({
@@ -479,9 +482,9 @@ describe('kTeam', () => {
         subjects: user2Object._id.toString(),
         subjectsService: 'users',
         resourcesService: orgObject._id.toString() + '/groups'
-      }
-    }, {
-      user: user1Object, checkAuthorisation: true
+      },
+      user: user1Object,
+      checkAuthorisation: true
     })
     .then(authorisation => {
       expect(authorisation).toExist()
@@ -556,9 +559,9 @@ describe('kTeam', () => {
         subjects: user2Object._id.toString(),
         subjectsService: 'users',
         resourcesService: 'organisations'
-      }
-    }, {
-      user: user1Object, checkAuthorisation: true
+      },
+      user: user1Object,
+      checkAuthorisation: true
     })
     .then(authorisation => {
       expect(authorisation).toExist()
