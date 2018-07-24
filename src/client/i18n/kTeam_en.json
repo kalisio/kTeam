@@ -92,11 +92,6 @@
     "REMOVE_DIALOG_TITLE": "Remove {{group}} ?",
     "REMOVE_DIALOG_MESSAGE": "Are you sure you want to remove <b>{{group}}</b> from your organisation ?"
   },
-  "KSettingsActivity": {
-    "PROPERTIES_LABEL": "Properties",
-    "BILLING_LABEL": "Billing",
-    "DANGER_ZONE_LABEL": "Danger Zone"
-  },
   "KOrganisationDZ": {
     "BLOCK_TITLE": "Delete this organisation ?",
     "BLOCK_TEXT": "Please note that deleting {{organiation}} will delete any data attached to this organisation.<br>The deletion cannot be undone.",

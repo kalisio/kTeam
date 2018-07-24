@@ -92,11 +92,6 @@
     "REMOVE_DIALOG_TITLE": "Supprimer {{group}} ?",
     "REMOVE_DIALOG_MESSAGE": "Etes vous sûr de vouloier supprimer {{group}} de votre organisation ?"
   },
-  "KSettingsActivity": {
-    "PROPERTIES_LABEL": "Propriétés",
-    "BILLING_LABEL": "Paiement",
-    "DANGER_ZONE_LABEL": "Zone de danger"
-  },
   "KOrganisationDZ": {
     "BLOCK_TITLE": "Supprimer cette organisation ?",
     "BLOCK_TEXT": "Notez que la suppresion de <b>{{organisation}}</b> entrainera la suppression de toutes les données qui lui sont attachées.<br>La suppression ne peut pas être annulée.",
