@@ -31,6 +31,9 @@
           </q-btn>
         </div>
       </div>
+      <div v-if="expireAt">
+        <cite class="text-red" v-if="expireAt">{{$t('KMemberCard.EXPIRE_AT_LABEL')}} {{expireAt.toLocaleString()}}</cite>
+      </div>
     </div>
   </k-card>
 </template>
@@ -74,6 +77,9 @@ export default {
       let role = getRoleForOrganisation(this.item, this.contextId)
       if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
+    },
+    expireAt () {
+      return this.item.expireAt ? new Date(this.item.expireAt) : null
     }
   },
   methods: {
