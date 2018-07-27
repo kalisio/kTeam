@@ -15,8 +15,6 @@
     "ORGANISATIONS_CREATE_TITLE": "Create a new organisation ?",
     "ORGANISATIONS_NAME_FIELD_HELPER": "Enter the name of this organisation",
     "ORGANISATIONS_DESCRIPTION_FIELD_HELPER": "Enter a description name of this organisation",
-    "ORGANISATIONS_PLAN_FIELD_HELPER": "Select the billing plan of this organisation",
-    "ORGANISATIONS_EXTRA_INFOS_FIELD_HELPER": "Enter any extra information to appear on your receipts",
     "MEMBERS_TAGS_FIELD_HELPER": "Add somes tags to qualify this member",
     "GROUPS_CREATE_TITLE": "Create a new group ?",
     "GROUPS_NAME_FIELD_HELPER": "Enter the name of this group",
@@ -25,12 +23,6 @@
   "KOrganisationPanel": {
     "NEW_ORGANISATION": "New organisation",
     "ORGANISATION_REMOVED_WARNING": "The organisation <b>{{organisation}}</b> has been removed"
-  },
-  "KOrganisationBilling": {
-    "SELECT": "Select",
-    "CURRENT_PLAN": "Your plan",
-    "BLOCK_NO_BILLING_TITLE": "You cannot change your plan",
-    "BLOCK_NO_BILLING_TEXT": "The feature is not available on this version, to change your plan please contact us using this address: <a href='mailto:support@kalisio.com'>support@kalisio.com</a>."
   },
   "KMembersActivity": {
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
@@ -98,11 +90,6 @@
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Remove {{group}} ?",
     "REMOVE_DIALOG_MESSAGE": "Are you sure you want to remove <b>{{group}}</b> from your organisation ?"
-  },
-  "KSettingsActivity": {
-    "PROPERTIES_LABEL": "Properties",
-    "BILLING_LABEL": "Billing",
-    "DANGER_ZONE_LABEL": "Danger Zone"
   },
   "KOrganisationDZ": {
     "BLOCK_TITLE": "Delete this organisation ?",
