@@ -80,6 +80,7 @@
   },
   "KMemberCard": {
     "TAG_LABEL": "Tag",
+    "EXPIRE_AT_LABEL": "Invitation expire at",
     "CHANGE_ROLE_LABEL": "Change role",
     "REMOVE_LABEL": "$t(REMOVE_LABEL)",
     "REMOVE_DIALOG_TITLE": "Remove {{member}} ?",
