@@ -26,9 +26,6 @@ export default {
     }
   },
   methods: {
-    /* blockText () {
-      return this.$i18n.i18next('KOrganisationDZ.BLOCK_TEXT', {organsation: this.name})
-    }, */
     loadService () {
       return this.$api.getService('organisations')
     },
