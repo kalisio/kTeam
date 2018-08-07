@@ -42,7 +42,7 @@ export default {
         'type': 'object',
         'properties': {
           'group': {
-            'type': 'array',
+            'type': 'object',
             'multiselect': false,
             'uniqueItems': true,
             'minItems': 1,
@@ -109,7 +109,7 @@ export default {
           permissions: result.values.role,
           subjects: this.objectId,
           subjectsService: this.contextId + '/members',
-          resource: result.values.group[0]._id,
+          resource: result.values.group._id,
           resourcesService: this.contextId + '/groups'
         })
         .then(() => {

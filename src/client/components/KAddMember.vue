@@ -29,7 +29,7 @@ export default {
         'type': 'object',
         'properties': {
           'user': {
-            'type': 'array',
+            'type': 'object',
             'multiselect': false,
             'uniqueItems': true,
             'minItems': 1,
@@ -86,7 +86,7 @@ export default {
         authorisationService.create({
           scope: 'organisations',
           permissions: result.values.role,
-          subjects: result.values.user[0]._id,
+          subjects: result.values.user._id,
           subjectsService: 'users',
           resource: this.contextId,
           resourcesService: 'organisations'
