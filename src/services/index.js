@@ -6,7 +6,7 @@ module.exports = async function () {
   const modelsPath = path.join(__dirname, '..', 'models')
 
   // Create services to manage MongoDB databases, organisations, etc.
-  app.createService('databases', { servicesPath })
+  app.createService('databases', { servicesPath, events: ['created', 'updated', 'removed', 'patched'] }) // Internal use only, no events
   app.createService('organisations', { modelsPath, servicesPath, perspectives: ['billing'] })
 
   await app.getService('organisations').configureOrganisations()
