@@ -59,7 +59,7 @@ export default {
       this.clearActivity()
       // Title
       this.setTitle(this.$store.get('context.name'))
-      // SearchBar
+      // Search bar
       this.setSearchBar('name')
       // Tabbar actions
       this.registerTabAction({
