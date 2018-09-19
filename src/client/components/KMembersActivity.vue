@@ -95,9 +95,8 @@ export default {
       // Remove previous listener if any
       this.unsubscribeGroups()
       let groupsService = this.$api.getService('groups')
-      this.groupsListener = groupsService.find({
-        rx: { listStrategy: 'always' }
-      })
+      this.groupsListener = groupsService.watch({ listStrategy: 'always' })
+      .find()
       .subscribe(response => {
         this.renderer.props.groups = response.data
       })
