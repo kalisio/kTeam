@@ -35,7 +35,7 @@ export default {
     return {
       baseQuery: {
         $sort: {
-          'name': 1
+          name: 1
         }
       },
       renderer: {
