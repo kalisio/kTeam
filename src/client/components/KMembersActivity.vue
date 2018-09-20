@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- 
-      Members collection
+      Members collection, cannot use smart strategy here because membership is not managed at service level
+      but using authorisations on users
      -->
     <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" :base-query="baseQuery" :filter-query="searchQuery" />
     <!-- 
@@ -95,7 +96,7 @@ export default {
       // Remove previous listener if any
       this.unsubscribeGroups()
       let groupsService = this.$api.getService('groups')
-      this.groupsListener = groupsService.watch({ listStrategy: 'always' })
+      this.groupsListener = groupsService.watch({ listStrategy: 'smart' })
       .find()
       .subscribe(response => {
         this.renderer.props.groups = response.data

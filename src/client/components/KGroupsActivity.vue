@@ -3,7 +3,7 @@
     <!-- 
       Groups collection
     -->
-    <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :base-query="baseQuery" :filter-query="searchQuery" />
+    <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :base-query="baseQuery" :filter-query="searchQuery" :list-strategy="'smart'" />
     <!-- 
       Router view to enable routing to modals
     -->
