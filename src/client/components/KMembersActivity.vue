@@ -124,7 +124,6 @@ export default {
     refreshOnAddMember (user) {
       const grid = this.$refs.membersGrid
       if (grid) {
-        const members = grid.items
         const member = _.find(grid.items, { _id: user._id })
         const role = getRoleForOrganisation(user, this.contextId)
         // If the user has a role in this organisation and
