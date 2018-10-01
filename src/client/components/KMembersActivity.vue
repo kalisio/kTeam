@@ -13,7 +13,9 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { mixins } from 'kCore/client'
+import { getRoleForOrganisation } from '../../common/permissions'
 
 export default {
   name: 'k-members-activity',
@@ -89,6 +91,7 @@ export default {
           route: { name: 'invite-member', params: {} }
         })
       }
+      this.subscribeUsers()
       // Refresh the group list
       this.subscribeGroups()
     },
@@ -107,7 +110,29 @@ export default {
         this.groupsListener.unsubscribe()
         this.groupsListener = null
       }
-    }
+    },
+    subscribeUsers () {
+      // Remove previous listener if any
+      this.unsubscribeUsers()
+      let usersService = this.$api.getService('users')
+      usersService.on('patched', this.refreshOnAddMember)
+    },
+    unsubscribeUsers () {
+      let usersService = this.$api.getService('users')
+      usersService.off('patched', this.refreshOnAddMember)
+    },
+    refreshOnAddMember (user) {
+      const grid = this.$refs.membersGrid
+      if (grid) {
+        const members = grid.items
+        const member = _.find(grid.items, { _id: user._id })
+        const role = getRoleForOrganisation(user, this.contextId)
+        // If the user has a role in this organisation and
+        // was not in our list he might have been added so refresh
+        if (role && !member) this.$refs.membersGrid.refreshCollection()
+      }
+    },
+
   },
   created () {
     // Load the required components
@@ -115,6 +140,7 @@ export default {
   },
   beforeDestroy () {
     this.unsubscribeGroups()
+    this.unsubscribeUsers()
   }
 }
 </script>
