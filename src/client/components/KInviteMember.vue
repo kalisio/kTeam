@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { QTabs, QTab, QTabPane, QField, Dialog } from 'quasar'
 import { permissions as kCorePermissions, mixins as kCoreMixins, utils } from 'kCore/client'
 import Papa from 'papaparse'
@@ -140,7 +139,6 @@ export default {
       await usersService.create(data)
       done()
       this.doClose()
-
     },
     async doInviteMultiple (data, done) {
       let errors = []
@@ -160,13 +158,12 @@ export default {
             email: record[1]
           }
           guests.push(guest)
-        }
-        else {
+        } else {
           let error = {
             line: i + 1,
             record: record
-          } 
-          errors.push(error) 
+          }
+          errors.push(error)
         }
       }
       if (guests.length === 0) {
@@ -183,7 +180,8 @@ export default {
           title: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_MESSAGE', { errors: errors.length, records: data.length }),
           buttons: [
-            { label: 'Ok', handler: async () => {
+            { label: 'Ok',
+              handler: async () => {
                 let usersService = this.$api.getService('users')
                 for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
                 done()
