@@ -28,7 +28,7 @@
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
     "GROUPS_LABEL": "$t(GROUPS_LABEL)",
     "ADD_USER_LABEL": "Ajouter un utilisateur",
-    "INVITE_GUEST_LABEL": "Inviter une personne"
+    "INVITE_GUEST_LABEL": "Inviter des personnes"
   },
   "KAddMember": {
     "TITLE": "Ajouter un membre à votre organisation ?",
@@ -41,7 +41,7 @@
     "ADD_BUTTON": "Ajouter"    
   },
   "KInviteMember": {
-    "TITLE": "Inviter une personne à rejoindre votre organisation ?",
+    "TITLE": "Inviter des personnes à rejoindre votre organisation ?",
     "NAME_FIELD_HELPER": "Saisissez le nom de votre invité",
     "EMAIL_FIELD_HELPER": "Saisissez l'adresse mail de votre invité",
     "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer à votre invité",
@@ -49,6 +49,14 @@
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
     "MEMBER_LABEL": "$t(MEMBER_LABEL)",
     "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "ERROR_WHILE_LOADING_THE_FILE": "Erreur durant la lecture du fichier. Avez vous sélectionné un fichier CSV ?",
+    "INVALID_FILE_TYPE": "Type de fichier invalide. Veuillez sélectionner un fichier CSV",
+    "FILE_FIELD_HELPER": "Sélectionnez le fichier CSV que vous désirez importer",
+    "ALERT_FILE_IMPORT_DIALOG": "Êtes vous sur que votre fichier est correctement formaté ?",
+    "ALERT_FILE_IMPORT_MESSAGE": "Nous n'avons pas pu détecter un enregistrement valide. Merci de Vérifier le format de votre fichier",
+    "CONFIRM_FILE_IMPORT_DIALOG": "Êtes vous sur de vouloir continuer ?",
+    "CONFIRM_FILE_IMPORT_MESSAGE": "Nous avons détecté {{errors}} erreur(s) sur {{records}} enregistrement(s)",
+    "CANCEL_BUTTON": "Annuler",
     "INVITE_BUTTON": "Inviter"
   },
   "KJoinGroup": {

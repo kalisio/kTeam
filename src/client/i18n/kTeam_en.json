@@ -28,7 +28,7 @@
     "MEMBERS_LABEL": "$t(MEMBERS_LABEL)",
     "GROUPS_LABEL": "$t(GROUPS_LABEL)",
     "ADD_USER_LABEL": "Add a user",
-    "INVITE_GUEST_LABEL": "Invite a guest"
+    "INVITE_GUEST_LABEL": "Invite guests"
   },
   "KAddMember": {
     "TITLE": "Add a member to your organisation",
@@ -41,7 +41,7 @@
     "ADD_BUTTON": "Add"
   },
   "KInviteMember": {
-    "TITLE": "Invite a guest to join your organisation",
+    "TITLE": "Invite guests to join your organisation",
     "NAME_FIELD_HELPER": "Enter your guest's name",
     "EMAIL_FIELD_HELPER": "Enter your guest's email address",
     "ROLE_FIELD_HELPER": "Select the role granted to your guest",
@@ -49,6 +49,14 @@
     "MANAGER_LABEL": "$t(MANAGER_LABEL)",
     "MEMBER_LABEL": "$t(MEMBER_LABEL)",
     "CLOSE_ACTION": "$t(CLOSE_ACTION)",
+    "ERROR_WHILE_LOADING_THE_FILE": "Error while loading the file. Did you select a valid CSV file ?",
+    "INVALID_FILE_TYPE": "Invalid file type. Please select a CSV file",
+    "FILE_FIELD_HELPER": "Select the CSV file you want to import",
+    "ALERT_FILE_IMPORT_DIALOG": "Are you sure your file is correclty formatted ?",
+    "ALERT_FILE_IMPORT_MESSAGE": "We were not able to detect any valid record. Please ensure your file is correctly formatted",
+    "CONFIRM_FILE_IMPORT_DIALOG": "Are you sure you want to proceed ?",
+    "CONFIRM_FILE_IMPORT_MESSAGE": "We have detected {{errors}} error(s) among {{records}] record(s)",
+    "CANCEL_BUTTON": "Cancel",
     "INVITE_BUTTON": "Invite"
   },
   "KJoinGroup": {
