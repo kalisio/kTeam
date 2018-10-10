@@ -40,8 +40,8 @@
 
 <script>
 import _ from 'lodash'
-import { mixins as kCoreMixins } from 'kCore/client'
-import { permissions as kCorePermissions } from 'kCore/common'
+import { mixins as kCoreMixins } from '@kalisio/kCore/client'
+import { permissions as kCorePermissions } from '@kalisio/kCore/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
 import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
 import { Avatar } from 'vue-avatar'

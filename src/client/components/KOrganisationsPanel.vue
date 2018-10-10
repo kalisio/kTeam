@@ -36,7 +36,7 @@
 import _ from 'lodash'
 import { Events, Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import { Avatar } from 'vue-avatar'
-import { mixins } from 'kCore/client'
+import { mixins } from '@kalisio/kCore/client'
 
 export default {
   name: 'k-organisations-panel',

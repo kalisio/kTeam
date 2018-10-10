@@ -14,7 +14,7 @@
 
 <script>
 import _ from 'lodash'
-import { mixins } from 'kCore/client'
+import { mixins } from '@kalisio/kCore/client'
 import { getRoleForOrganisation } from '../../common/permissions'
 
 export default {

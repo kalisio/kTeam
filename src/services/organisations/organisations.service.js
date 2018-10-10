@@ -3,7 +3,7 @@ import makeDebug from 'debug'
 import aws from 'aws-sdk'
 import store from 's3-blob-store'
 import BlobService from 'feathers-blob'
-import { createTagService, createStorageService } from 'kCore'
+import { createTagService, createStorageService } from '@kalisio/kCore'
 const servicesPath = path.join(__dirname, '..', '..', 'services')
 const modelsPath = path.join(__dirname, '..', '..', 'models')
 

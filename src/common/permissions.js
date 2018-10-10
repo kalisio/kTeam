@@ -1,4 +1,4 @@
-import { permissions } from 'kCore/common'
+import { permissions } from '@kalisio/kCore/common'
 import _ from 'lodash'
 
 // Hook computing organisation abilities for a given user

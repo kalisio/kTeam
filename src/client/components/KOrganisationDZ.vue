@@ -13,7 +13,7 @@
 
 <script>
 import { Dialog } from 'quasar'
-import { mixins as kCoreMixins } from 'kCore/client'
+import { mixins as kCoreMixins } from '@kalisio/kCore/client'
 
 export default {
   name: 'k-organisation-dz',

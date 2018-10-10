@@ -22,8 +22,8 @@
 
 <script>
 import _ from 'lodash'
-import { mixins as kCoreMixins } from 'kCore/client'
-import { permissions as kCorePermissions } from 'kCore/common'
+import { mixins as kCoreMixins } from '@kalisio/kCore/client'
+import { permissions as kCorePermissions } from '@kalisio/kCore/common'
 import { findMembersOfGroup, getRoleForGroup } from '../../common/permissions'
 import { QChip, QBtn, QIcon, Dialog } from 'quasar'
 
