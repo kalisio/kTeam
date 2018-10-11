@@ -12,9 +12,9 @@
 ## Installation
 
 ```
-npm install kTeam --save
+npm install @kalisio/kdk-team --save
 // Or with Yarn
-yarn add kTeam
+yarn add @kalisio/kdk-team
 ```
 
 ## Documentation
