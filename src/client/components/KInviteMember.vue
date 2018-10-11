@@ -26,7 +26,7 @@
 
 <script>
 import { QTabs, QTab, QTabPane, QField, Dialog } from 'quasar'
-import { permissions as kCorePermissions, mixins as kCoreMixins, utils } from '@kalisio/kCore/client'
+import { permissions as kCorePermissions, mixins as kCoreMixins, utils } from '@kalisio/kdk-core/client'
 import Papa from 'papaparse'
 
 export default {

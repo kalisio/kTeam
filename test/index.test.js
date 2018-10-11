@@ -3,7 +3,7 @@ import { getBase64DataURI } from 'dauria'
 import chai, { util, expect } from 'chai'
 import chailint from 'chai-lint'
 // import request from 'superagent'
-import core, { kalisio, hooks, permissions } from '@kalisio/kCore'
+import core, { kalisio, hooks, permissions } from '@kalisio/kdk-core'
 import { iffElse, when } from 'feathers-hooks-common'
 import team, { hooks as teamHooks, permissions as teamPermissions } from '../src'
 

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import makeDebug from 'debug'
 import { getItems } from 'feathers-hooks-common'
 import { Forbidden } from '@feathersjs/errors'
-import { permissions } from '@kalisio/kCore/common'
+import { permissions } from '@kalisio/kdk-core/common'
 const debug = makeDebug('kalisio:kTeam:users:hooks')
 
 export function preventRemoveUser (hook) {
