@@ -3,7 +3,9 @@
     <!--
       Card icon
      -->
-    <q-icon slot="card-icon" :name="roleIcon(role)" />
+    <q-icon slot="card-icon" size="1.4rem" :name="roleIcon(role)">
+      <q-tooltip>{{ $t(roleName(role)) }}</q-tooltip>
+    </q-icon>
     <!--
       Card content
      -->
@@ -24,10 +26,13 @@
                   </q-btn>
                 </q-toolbar>
               </q-popover>
+              <q-tooltip>{{ group.name }}</q-tooltip>
             </q-btn>
           </template>
           <q-btn id="join-group" v-if="canJoinGroup()" flat small round @click="onJoinGroup()">
-            <q-icon name="add_circle" color="secondary" />
+            <q-icon name="add_circle" color="grey-7">
+              <q-tooltip>{{ $t('KMemberCard.JOIN_GROUP_LABEL') }}</q-tooltip>
+            </q-icon>
           </q-btn>
         </div>
       </div>
@@ -43,7 +48,7 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from '@kalisio/kdk-core/client'
 import { permissions as kCorePermissions } from '@kalisio/kdk-core/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
-import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, Dialog } from 'quasar'
+import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, QTooltip, Dialog } from 'quasar'
 import { Avatar } from 'vue-avatar'
 
 export default {
@@ -55,23 +60,13 @@ export default {
     QPopover,
     QToolbar,
     QCardSeparator,
+    QTooltip,
     QChip,
     Avatar
   },
-  props: {
-    groups: {
-      type: Array,
-      default: () => { return [] }
-    }
-  },
   computed: {
     memberGroups () {
-      // Get the groups for this member
-      let groupsOfMember = _.map(this.item.groups, '_id')
-      // Filter the groups against the orfanisation groups
-      return _.filter(this.groups, (group) => {
-        return _.includes(groupsOfMember, group._id)
-      })
+      return _.filter(this.item.groups, { context: this.contextId })
     },
     role () {
       let role = getRoleForOrganisation(this.item, this.contextId)
@@ -142,6 +137,9 @@ export default {
     roleIcon (role) {
       return this.roleIcons[role]
     },
+    roleName (role) {
+      return this.roleNames[role]
+    },
     roleForGroup (group) {
       let role = getRoleForGroup(this.item, this.contextId, group._id)
       if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
@@ -196,6 +194,7 @@ export default {
     this.$options.components['k-card'] = this.$load('collection/KCard')
     // Load the role configuration
     this.roleIcons = this.$config('roles.icons')
+    this.roleNames = this.$config('roles.names')
   }
 }
 </script>
