@@ -1,6 +1,6 @@
 <template>
   <k-card v-bind="$props" :itemActions="actions">
-        <!--
+    <!--
       Card icon
      -->
     <q-icon slot="card-icon" :name="memberRole" />

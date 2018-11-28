@@ -79,6 +79,7 @@
     "UPDATE_BUTTON": "Update"
   },
   "KMemberCard": {
+    "JOIN_GROUP_LABEL": "Join a group",
     "TAG_LABEL": "Tag",
     "EXPIRE_AT_LABEL": "Invitation expire at",
     "CHANGE_ROLE_LABEL": "Change role",

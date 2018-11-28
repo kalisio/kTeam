@@ -36,10 +36,9 @@ export default {
       renderer: {
         component: 'KMemberCard',
         props: {
-          groups: [],
           options: {
             tags: 'chip',
-            avatar: { size: 96 }
+            avatar: { size: 40 }
           }
         }
       }
@@ -92,24 +91,6 @@ export default {
         })
       }
       this.subscribeUsers()
-      // Refresh the group list
-      this.subscribeGroups()
-    },
-    subscribeGroups () {
-      // Remove previous listener if any
-      this.unsubscribeGroups()
-      let groupsService = this.$api.getService('groups')
-      this.groupsListener = groupsService.watch({ listStrategy: 'smart' })
-      .find()
-      .subscribe(response => {
-        this.renderer.props.groups = response.data
-      })
-    },
-    unsubscribeGroups () {
-      if (this.groupsListener) {
-        this.groupsListener.unsubscribe()
-        this.groupsListener = null
-      }
     },
     subscribeUsers () {
       // Remove previous listener if any
@@ -138,7 +119,6 @@ export default {
     this.$options.components['k-grid'] = this.$load('collection/KGrid')
   },
   beforeDestroy () {
-    this.unsubscribeGroups()
     this.unsubscribeUsers()
   }
 }
