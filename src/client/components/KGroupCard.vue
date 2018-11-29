@@ -3,7 +3,9 @@
     <!--
       Card icon
      -->
-    <q-icon slot="card-icon" :name="memberRole" />
+    <q-icon slot="card-icon" :name="memberRoleIcon" size="1.4rem">
+      <q-tooltip>{{ $t(memberRoleLabel) }}</q-tooltip>
+    </q-icon>
     <!--
       Card content
      -->
@@ -12,7 +14,7 @@
         <template v-for="(role, index) in roleNames">
           <q-btn :key="roleKey(role)" flat small round color="tertiary" @click="onMembersClicked(role)">
             <q-icon :name="roleIcons[index]" />
-              {{memberStats[role]}}
+            {{ memberStats[role] }}
           </q-btn>
         </template>
       </div>
@@ -25,7 +27,7 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from '@kalisio/kdk-core/client'
 import { permissions as kCorePermissions } from '@kalisio/kdk-core/common'
 import { findMembersOfGroup, getRoleForGroup } from '../../common/permissions'
-import { QChip, QBtn, QIcon, Dialog } from 'quasar'
+import { QChip, QBtn, QIcon, QTooltip, Dialog } from 'quasar'
 
 export default {
   name: 'k-group-card',
@@ -33,19 +35,27 @@ export default {
   components: {
     QChip,
     QBtn,
-    QIcon
+    QIcon,
+    QTooltip
   },
   computed: {
-    memberRole () {
+    memberRoleIcon () {
       const user = this.$store.get('user')
       let role = getRoleForGroup(user, this.contextId, this.item._id)
       if (!_.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
+      else return ''
+    },
+    memberRoleLabel () {
+      const user = this.$store.get('user')
+      let role = getRoleForGroup(user, this.contextId, this.item._id)
+      if (!_.isUndefined(role)) return this.roleLabels[kCorePermissions.Roles[role]]
       else return ''
     }
   },
   data () {
     return {
-      memberStats: {}
+      memberStats: {},
+      roleLabels: []
     }
   },
   methods: {
@@ -117,6 +127,7 @@ export default {
     // Compute the list of groups this member belongs
     this.roleNames = kCorePermissions.RoleNames
     this.roleIcons = this.$config('roles.icons')
+    this.roleLabels = this.$config('roles.labels')
     this.refreshStats()
   }
 }
