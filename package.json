@@ -1,7 +1,7 @@
 {
   "name": "@kalisio/kdk-team",
   "description": "Module to support organization management for Kalisio applications and services",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/kalisio/kTeam",
   "main": "lib/",
   "browser": {
