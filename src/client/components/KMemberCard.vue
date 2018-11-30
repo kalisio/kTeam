@@ -4,7 +4,7 @@
       Card icon
      -->
     <q-icon slot="card-icon" size="1.4rem" :name="roleIcon(role)">
-      <q-tooltip>{{ $t(roleName(role)) }}</q-tooltip>
+      <q-tooltip>{{ $t(roleLabel(role)) }}</q-tooltip>
     </q-icon>
     <!--
       Card content
@@ -137,8 +137,8 @@ export default {
     roleIcon (role) {
       return this.roleIcons[role]
     },
-    roleName (role) {
-      return this.roleNames[role]
+    roleLabel (role) {
+      return this.roleLabels[role]
     },
     roleForGroup (group) {
       let role = getRoleForGroup(this.item, this.contextId, group._id)
@@ -194,7 +194,7 @@ export default {
     this.$options.components['k-card'] = this.$load('collection/KCard')
     // Load the role configuration
     this.roleIcons = this.$config('roles.icons')
-    this.roleNames = this.$config('roles.names')
+    this.roleLabels = this.$config('roles.labels')
   }
 }
 </script>
