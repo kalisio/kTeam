@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.2](https://github.com/kalisio/kTeam/tree/v1.0.2) (2018-11-30)
+
+[Full Changelog](https://github.com/kalisio/kTeam/compare/v1.0.1...v1.0.2)
+
+**Implemented enhancements:**
+
+- Add role tooltip on the group card [\#40](https://github.com/kalisio/kTeam/issues/40)
+
 ## [v1.0.1](https://github.com/kalisio/kTeam/tree/v1.0.1) (2018-11-29)
 
 [Full Changelog](https://github.com/kalisio/kTeam/compare/v1.0.0...v1.0.1)
