@@ -4,10 +4,10 @@
 [![Code Climate](https://codeclimate.com/github/kalisio/kTeam/badges/gpa.svg)](https://codeclimate.com/github/kalisio/kTeam)
 [![Test Coverage](https://codeclimate.com/github/kalisio/kTeam/badges/coverage.svg)](https://codeclimate.com/github/kalisio/kTeam/coverage)
 [![Dependency Status](https://img.shields.io/david/kalisio/kTeam.svg?style=flat-square)](https://david-dm.org/kalisio/kTeam)
-[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen.svg)](https://kalisio.gitbooks.io/kalisio/api)
+[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen.svg)](https://kalisio.github.io/kdk/)
 [![Known Vulnerabilities](https://snyk.io/test/github/kalisio/kTeam/badge.svg)](https://snyk.io/test/github/kalisio/kTeam)
 
-> Basic utils to support organization management for Kalisio applications and services
+> Basic utils to support organization management for KDK-based applications and services
 
 ## Installation
 
@@ -19,7 +19,7 @@ yarn add @kalisio/kdk-team
 
 ## Documentation
 
-The [kDocs](https://kalisio.gitbooks.io/kalisio/) are loaded with awesome stuff and tell you everything you need to know about using and configuring it.
+The [kDocs](https://kalisio.github.io/kdk/) are loaded with awesome stuff and tell you everything you need to know about using and configuring it.
 
 ## License
 
