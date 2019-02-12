@@ -27,7 +27,6 @@
       id="editor"
       ref="editor" 
       service="organisations"
-      :route="false"
       @applied="onOrganisationCreated" />
   </div>
 </template>
