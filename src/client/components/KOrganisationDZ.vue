@@ -41,7 +41,7 @@ export default {
         },
         buttons: [
           {
-            label: 'Ok',
+            label: this.$t('OK'),
             preventClose: true,
             handler: (data, close) => {
               if (data.confirm === this.name) {
@@ -53,8 +53,9 @@ export default {
                 })
               }
             }
-          },
-          'Cancel'
+          }, {
+            label: this.$t('CANCEL')
+          }
         ]
       })
     }

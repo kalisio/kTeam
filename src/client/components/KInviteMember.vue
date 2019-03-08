@@ -170,26 +170,26 @@ export default {
         Dialog.create({
           title: this.$t('KInviteMember.ALERT_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.ALERT_FILE_IMPORT_MESSAGE'),
-          buttons: [
-            'Ok'
-          ]
+          buttons: [{
+            label: this.$t('OK')
+          }]
         })
         done()
       } else if (errors.length > 0) {
         Dialog.create({
           title: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_MESSAGE', { errors: errors.length, records: data.length }),
-          buttons: [
-            { label: 'Ok',
-              handler: async () => {
-                let usersService = this.$api.getService('users')
-                for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
-                done()
-                this.doClose()
-              }
-            },
-            { label: this.$t('KInviteMember.CANCEL_BUTTON'), handler: () => done() }
-          ]
+          buttons: [{
+            label: this.$t('OK'),
+            handler: async () => {
+              let usersService = this.$api.getService('users')
+              for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
+              done()
+              this.doClose()
+            }
+          }, {
+            label: this.$t('KInviteMember.CANCEL_BUTTON'), handler: () => done()
+          }]
         })
       } else {
         let usersService = this.$api.getService('users')

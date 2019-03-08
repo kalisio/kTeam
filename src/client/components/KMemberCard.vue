@@ -111,7 +111,7 @@ export default {
         message: this.$t('KMemberCard.REMOVE_DIALOG_MESSAGE', { member: member.name }),
         buttons: [
           {
-            label: 'Ok',
+            label: this.$t('OK'),
             handler: () => {
               let authorisationService = this.$api.getService('authorisations')
               authorisationService.remove(this.contextId, {
@@ -123,8 +123,9 @@ export default {
                 }
               })
             }
-          },
-          'Cancel'
+          }, {
+            label: this.$t('CANCEL')
+          }
         ]
       })
     },
@@ -171,7 +172,7 @@ export default {
         message: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_MESSAGE', { group: group.name, member: this.item.name }),
         buttons: [
           {
-            label: 'Ok',
+            label: this.$t('OK'),
             handler: () => {
               const authorisationService = this.$api.getService('authorisations')
               authorisationService.remove(group._id, {
@@ -183,8 +184,9 @@ export default {
                 }
               })
             }
-          },
-          'Cancel'
+          }, {
+            label: this.$t('CANCEL')
+          }
         ]
       })
     }
