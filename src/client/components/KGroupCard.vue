@@ -84,13 +84,14 @@ export default {
         message: this.$t('KGroupCard.REMOVE_DIALOG_MESSAGE', { group: group.name }),
         buttons: [
           {
-            label: 'Ok',
+            label: this.$t('OK'),
             handler: () => {
               let groupsService = this.$api.getService('groups')
               groupsService.remove(group._id)
             }
-          },
-          'Cancel'
+          }, {
+            label: this.$t('CANCEL')
+          }
         ]
       })
     },

@@ -111,8 +111,7 @@ export default {
         // was not in our list he might have been added so refresh
         if (role && !member) this.$refs.membersGrid.refreshCollection()
       }
-    },
-
+    }
   },
   created () {
     // Load the required components
