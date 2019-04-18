@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.1.0](https://github.com/kalisio/kTeam/tree/v1.1.0) (2019-04-18)
+
+[Full Changelog](https://github.com/kalisio/kTeam/compare/v1.0.2...v1.1.0)
+
 ## [v1.0.2](https://github.com/kalisio/kTeam/tree/v1.0.2) (2018-11-30)
 
 [Full Changelog](https://github.com/kalisio/kTeam/compare/v1.0.1...v1.0.2)
