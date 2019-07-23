@@ -45,6 +45,7 @@
 
 <script>
 import _ from 'lodash'
+import { Dialog } from 'quasar'
 import { mixins as kCoreMixins } from '@kalisio/kdk-core/client'
 import { permissions as kCorePermissions } from '@kalisio/kdk-core/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'

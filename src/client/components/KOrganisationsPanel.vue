@@ -94,7 +94,8 @@ export default {
       this.$refs.editor.close(() => this.sideNav.navigate({ name: 'context', params: { contextId: org._id } }))
     },
     onOrganisationRemoved (org) {
-      Toast.create.warning({
+      this.$toast({
+        type: 'warning',
         html: this.$t('KOrganisationPanel.ORGANISATION_REMOVED_WARNING', { organisation: org.name })
       })
     }
