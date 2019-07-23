@@ -1,23 +1,25 @@
 <template>
   <div>
     <q-list link no-border>
-      <q-item-separator />
+      <q-separator />
       <!-- 
         Organisations list
       -->
       <q-item v-for="org in items" :id="getId(org)" :key="org._id" @click="setCurrentOrganisation(org)">
-        <q-item-side><avatar :username="org.name" :size="24" /></q-item-side>
-        <q-item-main :label="org.name"/>
-        <q-item-side v-if="org._id === currentOrgId" right>
-          <q-item-tile  icon="check" />
-        </q-item-side>
+        <q-item-section><avatar :username="org.name" :size="24" /></q-item-section>
+        <q-item-label>{{org.name}}</q-item-label>
+        <q-item-section v-if="org._id === currentOrgId" side>
+          <q-icon name="check" />
+        </q-item-section>
       </q-item>
       <!--
         Create link
       -->
       <q-item id="new-organisation" @click="createOrganisation">
-        <q-item-side icon="add_circle" />
-        <q-item-main :label="$t('KOrganisationPanel.NEW_ORGANISATION')" />
+        <q-item-section side>
+          <q-icon name="add_circle" />
+        </q-item-section>
+        <q-item-label>{{$t('KOrganisationPanel.NEW_ORGANISATION')}}</q-item-label>
       </q-item>
     </q-list>
     <!--
@@ -33,23 +35,10 @@
 
 <script>
 import _ from 'lodash'
-import { Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
-import { Avatar } from 'vue-avatar'
 import { mixins } from '@kalisio/kdk-core/client'
 
 export default {
   name: 'k-organisations-panel',
-  components: {
-    QCollapsible,
-    QList,
-    QItem,
-    QSideLink,
-    QItemMain,
-    QItemSide,
-    QItemTile,
-    QItemSeparator,
-    Avatar
-  },
   mixins: [mixins.baseCollection],
   inject: ['sideNav'],
   watch: {

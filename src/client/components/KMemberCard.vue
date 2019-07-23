@@ -14,18 +14,18 @@
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
             <q-btn id="group-button" :key="groupKey(group)" flat small round color="primary">
-              <avatar :username="group.name" :size="32" />
-              <q-popover ref="popover">
+              <q-avatar :size="32">{{group.name}}</q-avatar>
+              <q-menu ref="popover">
                 <q-toolbar inverted color="grey-7">     
                   <span style="margin:8px">{{group.name}}</span>
-                  <q-btn id="change-role-group" v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].close()">
+                  <q-btn id="change-role-group" v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].hide()">
                     <q-icon :name="roleIcon(roleForGroup(group))" />
                   </q-btn>
-                  <q-btn id="leave-group" v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].close()">
+                  <q-btn id="leave-group" v-if="canLeaveGroup(group)" flat round small @click="onLeaveGroup(group), $refs.popover[index].hide()">
                     <q-icon name="remove_circle" />
                   </q-btn>
                 </q-toolbar>
-              </q-popover>
+              </q-menu>
               <q-tooltip>{{ group.name }}</q-tooltip>
             </q-btn>
           </template>
@@ -48,22 +48,10 @@ import _ from 'lodash'
 import { mixins as kCoreMixins } from '@kalisio/kdk-core/client'
 import { permissions as kCorePermissions } from '@kalisio/kdk-core/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
-import { QBtn, QIcon, QPopover, QToolbar, QCardSeparator, QChip, QTooltip, Dialog } from 'quasar'
-import { Avatar } from 'vue-avatar'
 
 export default {
   name: 'k-member-card',
   mixins: [ kCoreMixins.baseItem ],
-  components: {
-    QBtn,
-    QIcon,
-    QPopover,
-    QToolbar,
-    QCardSeparator,
-    QTooltip,
-    QChip,
-    Avatar
-  },
   computed: {
     memberGroups () {
       return _.filter(this.item.groups, { context: this.contextId })

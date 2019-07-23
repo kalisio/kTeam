@@ -1,12 +1,14 @@
 <template>
   <k-modal ref="modal" :title="$t('KInviteMember.TITLE')" :toolbar="getToolbar()" :buttons="getButtons()" :route="true">
     <q-tabs slot="modal-content" align="justify" v-model="mode" inverted>
-      <q-tab name="unique" icon="person" slot="title" />
-      <q-tab name="multiple" icon="people" slot="title" />
-      <q-tab-pane name="unique">
+      <q-tab name="unique" icon="person"  />
+      <q-tab name="multiple" icon="people"  />
+    </q-tabs>
+    <q-tab-panels v-model="mode" animated>
+      <q-tab-panel name="unique">
         <k-form ref="form" :schema="getSchema()" />
-      </q-tab-pane>
-      <q-tab-pane name="multiple">
+      </q-tab-panel>
+      <q-tab-panel name="multiple">
         <q-field
           :helper="$t('KInviteMember.FILE_FIELD_HELPER')"
           :error-label="fileErrorLabel"
@@ -19,13 +21,13 @@
               @failed="onInputFileFailed" 
               @loaded="onInputFileLoaded" />
         </q-field>
-      </q-tab-pane>
-    </q-tabs> 
+      </q-tab-panel>
+    </q-tab-panels>
   </k-modal>
 </template>
 
 <script>
-import { QTabs, QTab, QTabPane, QField, Dialog } from 'quasar'
+import { Dialog } from 'quasar'
 import { permissions as kCorePermissions, mixins as kCoreMixins, utils } from '@kalisio/kdk-core/client'
 import Papa from 'papaparse'
 
@@ -34,13 +36,6 @@ export default {
   mixins: [
     kCoreMixins.refsResolver(['form'])
   ],
-  components: {
-    QTabs,
-    QTab,
-    QTabPane,
-    QField,
-    Dialog
-  },
   props: {
     contextId: {
       type: String,
