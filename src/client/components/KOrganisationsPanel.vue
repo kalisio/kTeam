@@ -33,7 +33,7 @@
 
 <script>
 import _ from 'lodash'
-import { Events, Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
+import { Toast, QCollapsible, QList, QItem, QSideLink, QItemMain, QItemSide, QItemTile, QItemSeparator } from 'quasar'
 import { Avatar } from 'vue-avatar'
 import { mixins } from '@kalisio/kdk-core/client'
 
@@ -118,7 +118,7 @@ export default {
     // Update the list of organisations
     this.updateOrganisations()
     // Required when user permissions change
-    Events.$on('user-changed', this.updateOrganisations)
+    this.$events.$on('user-changed', this.updateOrganisations)
     // Required to get the org objects first
     this.$on('collection-refreshed', this.updateCurrentOrganisation)
     // Required to get notify when an orga is deleted
@@ -126,7 +126,7 @@ export default {
     organisationsService.on('removed', (org) => this.onOrganisationRemoved(org))
   },
   beforeDestroy () {
-    Events.$off('user-changed', this.updateOrganisations)
+    this.$events.$off('user-changed', this.updateOrganisations)
     this.$off('collection-refreshed', this.updateCurrentOrganisation)
     const organisationsService = this.$api.getService('organisations')
     organisationsService.off('removed', this.onOrganisationRemoved)
