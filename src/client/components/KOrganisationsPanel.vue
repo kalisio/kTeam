@@ -5,21 +5,19 @@
       <!-- 
         Organisations list
       -->
-      <q-item v-for="org in items" :id="getId(org)" :key="org._id" @click="setCurrentOrganisation(org)">
-        <q-item-section><avatar :username="org.name" :size="24" /></q-item-section>
-        <q-item-label>{{org.name}}</q-item-label>
-        <q-item-section v-if="org._id === currentOrgId" side>
-          <q-icon name="check" />
-        </q-item-section>
-      </q-item>
+      <template v-for="org in items">
+        <q-item v-ripple clickable :id="getId(org)" :key="org._id" @click="setCurrentOrganisation(org)">
+          <q-item-section avatar><q-avatar size="24px" color="primary" text-color="white">{{getInitials(org)}}</q-avatar></q-item-section>
+          <q-item-section>{{org.name}}</q-item-section>
+          <q-item-section v-if="org._id === currentOrgId" side><q-icon name="check" /></q-item-section>
+        </q-item>
+      </template>
       <!--
         Create link
       -->
-      <q-item id="new-organisation" @click="createOrganisation">
-        <q-item-section side>
-          <q-icon name="add_circle" />
-        </q-item-section>
-        <q-item-label>{{$t('KOrganisationPanel.NEW_ORGANISATION')}}</q-item-label>
+      <q-item v-ripple clickable id="new-organisation" @click="createOrganisation">
+        <q-item-section avatar><q-icon name="add_circle" /></q-item-section>
+        <q-item-section>{{$t('KOrganisationPanel.NEW_ORGANISATION')}}</q-item-section>
       </q-item>
     </q-list>
     <!--
@@ -35,7 +33,7 @@
 
 <script>
 import _ from 'lodash'
-import { mixins } from '@kalisio/kdk-core/client'
+import { mixins, utils as kCoreUtils } from '@kalisio/kdk-core/client'
 
 export default {
   name: 'k-organisations-panel',
@@ -55,6 +53,9 @@ export default {
   methods: {
     getId (org) {
       return _.kebabCase(org.name)
+    },
+    getInitials (org) {
+      return kCoreUtils.getInitials(org.name)
     },
     loadService () {
       this._service = this.$api.getService('organisations')

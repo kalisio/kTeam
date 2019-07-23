@@ -38,7 +38,7 @@ export default {
         props: {
           options: {
             tags: 'chip',
-            avatar: { size: 40 }
+            avatar: { size: '40px' }
           }
         }
       }

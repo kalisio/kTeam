@@ -42,7 +42,7 @@ export default {
         component: 'KGroupCard',
         props: {
           options: {
-            avatar: { size: 40 }
+            avatar: { size: '40px' }
           }
         }
       }
