@@ -32,31 +32,26 @@ export default {
     onDeleteClicked () {
       Dialog.create({
         title: this.$t('KOrganisationDZ.DIALOG_TITLE', {organisation: this.name}),
-        form: {
-          confirm: {
-            type: 'text',
-            model: '',
-            label: this.$t('KOrganisationDZ.DIALOG_HELPER')
-          }
+        message: this.$t('KOrganisationDZ.DIALOG_HELPER'),
+        html: true,
+        prompt: {
+          type: 'text',
+          model: ''
         },
         buttons: [
           {
             label: this.$t('OK'),
             preventClose: true,
-            handler: (data, close) => {
-              if (data.confirm === this.name) {
-                close(() => {
-                  this.loadService().remove(this.objectId)
-                  .then(() => {
-                    this.$router.push({ name: 'home' })
-                  })
-                })
-              }
-            }
+            
           }, {
             label: this.$t('CANCEL')
           }
         ]
+      }).onOk(async (data) => {
+        if (data === this.name) {
+          await this.loadService().remove(this.objectId)
+          this.$router.push({ name: 'home' })
+        }
       })
     }
   },

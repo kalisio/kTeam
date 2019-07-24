@@ -14,7 +14,7 @@
         <div class="row justify-start items-center">
           <template v-for="(group, index) in memberGroups">
             <q-btn id="group-button" :key="groupKey(group)" flat small round color="primary">
-              <q-avatar size="32px">{{group.name}}</q-avatar>
+              <q-avatar color="secondary" text-color="white" size="32px">{{groupInitials(group)}}</q-avatar>
               <q-menu ref="popover">
                 <q-toolbar inverted color="grey-7">     
                   <span style="margin:8px">{{group.name}}</span>
@@ -46,7 +46,7 @@
 <script>
 import _ from 'lodash'
 import { Dialog } from 'quasar'
-import { mixins as kCoreMixins } from '@kalisio/kdk-core/client'
+import { mixins as kCoreMixins, utils as kCoreUtils } from '@kalisio/kdk-core/client'
 import { permissions as kCorePermissions } from '@kalisio/kdk-core/common'
 import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../../common/permissions'
 
@@ -98,24 +98,23 @@ export default {
       Dialog.create({
         title: this.$t('KMemberCard.REMOVE_DIALOG_TITLE', { member: member.name }),
         message: this.$t('KMemberCard.REMOVE_DIALOG_MESSAGE', { member: member.name }),
-        buttons: [
-          {
-            label: this.$t('OK'),
-            handler: () => {
-              let authorisationService = this.$api.getService('authorisations')
-              authorisationService.remove(this.contextId, {
-                query: {
-                  scope: 'organisations',
-                  subjects: member._id,
-                  subjectsService: this.contextId + '/members',
-                  resourcesService: 'organisations'
-                }
-              })
-            }
-          }, {
-            label: this.$t('CANCEL')
+        html: true,
+        ok: {
+          label: this.$t('OK'),
+        },
+        cancel: {
+          label: this.$t('CANCEL')
+        }
+      }).onOk(() => {
+        let authorisationService = this.$api.getService('authorisations')
+        authorisationService.remove(this.contextId, {
+          query: {
+            scope: 'organisations',
+            subjects: member._id,
+            subjectsService: this.contextId + '/members',
+            resourcesService: 'organisations'
           }
-        ]
+        })
       })
     },
     tagKey (tag) {
@@ -123,6 +122,9 @@ export default {
     },
     groupKey (group) {
       return this.item._id + group._id
+    },
+    groupInitials (group) {
+      return kCoreUtils.getInitials(group.name)
     },
     roleIcon (role) {
       return this.roleIcons[role]
@@ -159,24 +161,22 @@ export default {
       Dialog.create({
         title: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_TITLE', { group: group.name }),
         message: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_MESSAGE', { group: group.name, member: this.item.name }),
-        buttons: [
-          {
-            label: this.$t('OK'),
-            handler: () => {
-              const authorisationService = this.$api.getService('authorisations')
-              authorisationService.remove(group._id, {
-                query: {
-                  scope: 'groups',
-                  subjects: this.item._id,
-                  subjectsService: this.contextId + '/members',
-                  resourcesService: this.contextId + '/groups'
-                }
-              })
-            }
-          }, {
-            label: this.$t('CANCEL')
+        ok: {
+          label: this.$t('OK'),
+        },
+        cancel: {
+          label: this.$t('CANCEL')
+        }
+      }).onOk(() => {
+        const authorisationService = this.$api.getService('authorisations')
+        authorisationService.remove(group._id, {
+          query: {
+            scope: 'groups',
+            subjects: this.item._id,
+            subjectsService: this.contextId + '/members',
+            resourcesService: this.contextId + '/groups'
           }
-        ]
+        })
       })
     }
   },

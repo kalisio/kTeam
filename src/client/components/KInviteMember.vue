@@ -165,27 +165,26 @@ export default {
         Dialog.create({
           title: this.$t('KInviteMember.ALERT_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.ALERT_FILE_IMPORT_MESSAGE'),
-          buttons: [{
+          ok: {
             label: this.$t('OK')
-          }]
-        })
-        done()
+          }
+        }).onOk(() => done())
       } else if (errors.length > 0) {
         Dialog.create({
           title: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_MESSAGE', { errors: errors.length, records: data.length }),
-          buttons: [{
+          ok: {
             label: this.$t('OK'),
-            handler: async () => {
-              let usersService = this.$api.getService('users')
-              for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
-              done()
-              this.doClose()
-            }
-          }, {
-            label: this.$t('KInviteMember.CANCEL_BUTTON'), handler: () => done()
-          }]
-        })
+          },
+          cancel: {
+            label: this.$t('KInviteMember.CANCEL_BUTTON')
+          }
+        }).onOk(async () => {
+          let usersService = this.$api.getService('users')
+          for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
+          done()
+          this.doClose()
+        }).onCancel(() => done())
       } else {
         let usersService = this.$api.getService('users')
         for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])

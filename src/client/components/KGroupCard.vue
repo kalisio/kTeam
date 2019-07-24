@@ -12,10 +12,10 @@
     <div slot="card-content">
       <div class="row justify-around items-center">
         <template v-for="(role, index) in roleNames">
-          <q-btn :key="roleKey(role)" flat small round color="tertiary" @click="onMembersClicked(role)">
-            <q-icon :name="roleIcons[index]" />
-            {{ memberStats[role] }}
-          </q-btn>
+          <q-btn :key="roleKey(role)" flat small rounded color="primary"
+            :icon="roleIcons[index]"
+            :label="memberStats[role]"
+            @click="onMembersClicked(role)"/>
         </template>
       </div>
     </div>
@@ -82,17 +82,15 @@ export default {
       Dialog.create({
         title: this.$t('KGroupCard.REMOVE_DIALOG_TITLE', { group: group.name }),
         message: this.$t('KGroupCard.REMOVE_DIALOG_MESSAGE', { group: group.name }),
-        buttons: [
-          {
-            label: this.$t('OK'),
-            handler: () => {
-              let groupsService = this.$api.getService('groups')
-              groupsService.remove(group._id)
-            }
-          }, {
-            label: this.$t('CANCEL')
-          }
-        ]
+        ok: {
+          label: this.$t('OK'),
+        },
+        cancel: {
+          label: this.$t('CANCEL')
+        }
+      }).onOk(() => {
+        let groupsService = this.$api.getService('groups')
+        groupsService.remove(group._id)
       })
     },
     roleKey (role) {
