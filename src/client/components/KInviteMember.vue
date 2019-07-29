@@ -100,7 +100,7 @@ export default {
     },
     getButtons () {
       return [
-        { name: 'invite-button', label: this.$t('KInviteMember.INVITE_BUTTON'), color: 'primary', handler: (event, done) => this.doInvite(event, done) }
+        { name: 'invite-button', label: this.$t('KInviteMember.INVITE_BUTTON'), color: 'primary', handler: () => this.doInvite() }
       ]
     },
     doInvite (event, done) {
@@ -165,6 +165,7 @@ export default {
         Dialog.create({
           title: this.$t('KInviteMember.ALERT_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.ALERT_FILE_IMPORT_MESSAGE'),
+          html: true,
           ok: {
             label: this.$t('OK')
           }
@@ -173,6 +174,7 @@ export default {
         Dialog.create({
           title: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_DIALOG'),
           message: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_MESSAGE', { errors: errors.length, records: data.length }),
+          html: true,
           ok: {
             label: this.$t('OK'),
           },
@@ -193,7 +195,8 @@ export default {
       }
     },
     doClose () {
-      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close()
+      this.$router.push({ name: 'members-activity' })
     },
     onInputFileCleared () {
       this.fileError = false

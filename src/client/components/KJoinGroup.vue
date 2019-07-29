@@ -100,11 +100,11 @@ export default {
     loadService () {
       return this.$api.getService('members')
     },
-    doJoin (event, done) {
+    async doJoin () {
       let result = this.$refs.form.validate()
       if (result.isValid) {
         let authorisationService = this.$api.getService('authorisations')
-        authorisationService.create({
+        await authorisationService.create({
           scope: 'groups',
           permissions: result.values.role,
           subjects: this.objectId,
@@ -112,19 +112,12 @@ export default {
           resource: result.values.group._id,
           resourcesService: this.contextId + '/groups'
         })
-        .then(() => {
-          done()
-          this.doClose()
-        })
-        .catch(error => {
-          done(error)
-        })
-      } else {
-        done()
+        this.doClose()
       }
     },
     doClose () {
-      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close()
+      this.$router.push({ name: 'members-activity' })
     }
   },
   created () {

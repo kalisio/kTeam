@@ -92,7 +92,8 @@ export default {
     },
     onOrganisationCreated (org) {
       this.currentOrgId = org._id
-      this.$refs.editor.close(() => this.sideNav.navigate({ name: 'context', params: { contextId: org._id } }))
+      this.$refs.editor.close()
+      this.sideNav.navigate({ name: 'context', params: { contextId: org._id } })
     },
     onOrganisationRemoved (org) {
       this.$toast({

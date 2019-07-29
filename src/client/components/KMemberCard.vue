@@ -161,6 +161,7 @@ export default {
       Dialog.create({
         title: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_TITLE', { group: group.name }),
         message: this.$t('KMemberCard.LEAVE_GROUP_DIALOG_MESSAGE', { group: group.name, member: this.item.name }),
+        html: true,
         ok: {
           label: this.$t('OK'),
         },

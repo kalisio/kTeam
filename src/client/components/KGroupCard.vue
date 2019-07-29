@@ -82,6 +82,7 @@ export default {
       Dialog.create({
         title: this.$t('KGroupCard.REMOVE_DIALOG_TITLE', { group: group.name }),
         message: this.$t('KGroupCard.REMOVE_DIALOG_MESSAGE', { group: group.name }),
+        html: true,
         ok: {
           label: this.$t('OK'),
         },

@@ -61,14 +61,14 @@ export default {
     },
     getButtons () {
       return [
-        { name: 'update-button', label: this.$t('KChangeRole.UPDATE_BUTTON'), color: 'primary', handler: (event, done) => this.doUpdate(event, done) }
+        { name: 'update-button', label: this.$t('KChangeRole.UPDATE_BUTTON'), color: 'primary', handler: () => this.doUpdate() }
       ]
     },
-    doUpdate (event, done) {
+    async doUpdate () {
       let result = this.$refs.form.validate()
       if (result.isValid) {
         let authorisationService = this.$api.getService('authorisations')
-        authorisationService.create({
+        await authorisationService.create({
           scope: this.resource.scope,
           permissions: result.values.role,
           subjects: this.objectId,
@@ -76,19 +76,12 @@ export default {
           resource: this.resource.id,
           resourcesService: this.resource.service
         })
-        .then(() => {
-          done()
-          this.doClose()
-        })
-        .catch(error => {
-          done(error)
-        })
-      } else {
-        done()
+        this.doClose()
       }
     },
     doClose () {
-      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close()
+      this.$router.push({ name: 'members-activity' })
     }
   },
   created () {

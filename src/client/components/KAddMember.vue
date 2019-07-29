@@ -76,14 +76,14 @@ export default {
     },
     getButtons () {
       return [
-        { name: 'add-button', label: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: (event, done) => this.doAdd(event, done) }
+        { name: 'add-button', label: this.$t('KAddMember.ADD_BUTTON'), color: 'primary', handler: () => this.doAdd() }
       ]
     },
-    doAdd (event, done) {
+    async doAdd () {
       let result = this.$refs.form.validate()
       if (result.isValid) {
         let authorisationService = this.$api.getService('authorisations')
-        authorisationService.create({
+        await authorisationService.create({
           scope: 'organisations',
           permissions: result.values.role,
           subjects: result.values.user._id,
@@ -91,19 +91,12 @@ export default {
           resource: this.contextId,
           resourcesService: 'organisations'
         })
-        .then(() => {
-          done()
-          this.doClose()
-        })
-        .catch(error => {
-          done(error)
-        })
-      } else {
-        done()
+        this.doClose()
       }
     },
     doClose () {
-      this.$refs.modal.close(() => this.$router.push({ name: 'members-activity' }))
+      this.$refs.modal.close()
+      this.$router.push({ name: 'members-activity' })
     }
   },
   created () {
