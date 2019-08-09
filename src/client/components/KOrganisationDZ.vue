@@ -1,13 +1,11 @@
 <template>
-  <div v-if="name !== ''" class="row items-center justify-center full-width">
-    <div class="col-12">
-      <k-block
-        color="red" 
-        :title="$t('KOrganisationDZ.BLOCK_TITLE')"
-        :text="$t('KOrganisationDZ.BLOCK_TEXT', {organisation: name})"
-        :action="$t('KOrganisationDZ.BLOCK_ACTION')"
-        @action-triggered="onDeleteClicked" />
-    </div>
+  <div v-if="name !== ''">
+    <k-block
+      color="red" 
+      :title="$t('KOrganisationDZ.BLOCK_TITLE')"
+      :text="$t('KOrganisationDZ.BLOCK_TEXT', {organisation: name})"
+      :action="$t('KOrganisationDZ.BLOCK_ACTION')"
+      @action-triggered="onDeleteClicked" />
   </div>
 </template>
 
