@@ -1,28 +1,34 @@
 <template>
   <k-modal ref="modal" :title="$t('KInviteMember.TITLE')" :toolbar="getToolbar()" :buttons="getButtons()" :route="true">
-    <q-tabs slot="modal-content" align="justify" v-model="mode" inverted>
-      <q-tab name="unique" icon="person"  />
-      <q-tab name="multiple" icon="people"  />
-    </q-tabs>
-    <q-tab-panels v-model="mode" animated>
-      <q-tab-panel name="unique">
-        <k-form ref="form" :schema="getSchema()" />
-      </q-tab-panel>
-      <q-tab-panel name="multiple">
-        <q-field
-          :helper="$t('KInviteMember.FILE_FIELD_HELPER')"
-          :error-label="fileErrorLabel"
-          :error="fileError">
-            <k-input-file 
-              :mime-types="['txt/csv', 'application/vnd.ms-excel']"
-              :clearable="true"
-              @cleared="onInputFileCleared"
-              @rejected="onInputFileRejected" 
-              @failed="onInputFileFailed" 
-              @loaded="onInputFileLoaded" />
-        </q-field>
-      </q-tab-panel>
-    </q-tab-panels>
+    <div slot="modal-content">
+      <q-tabs  align="justify" v-model="mode" inverted>
+        <q-tab name="unique" icon="person"  />
+        <q-tab name="multiple" icon="people"  />
+      </q-tabs>
+      <div>
+        <q-tab-panels v-model="mode" animated>
+          <q-tab-panel name="unique">
+            <k-form ref="form" :schema="getSchema()" />
+          </q-tab-panel>
+          <q-tab-panel name="multiple">
+            <q-field
+              :error-message="fileErrorLabel"
+              :error="fileError">
+                <k-input-file 
+                  :mime-types="['txt/csv', 'application/vnd.ms-excel']"
+                  :clearable="true"
+                  @cleared="onInputFileCleared"
+                  @rejected="onInputFileRejected" 
+                  @failed="onInputFileFailed" 
+                  @loaded="onInputFileLoaded" />
+              <template v-slot:hint>
+                <span v-html="$t('KInviteMember.FILE_FIELD_HELPER')"></span>
+              </template>
+            </q-field>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+    </div>
   </k-modal>
 </template>
 

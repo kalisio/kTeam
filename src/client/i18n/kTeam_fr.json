@@ -31,7 +31,7 @@
     "INVITE_GUEST_LABEL": "Inviter des personnes"
   },
   "KAddMember": {
-    "TITLE": "Ajouter un membre à votre organisation ?",
+    "TITLE": "Ajouter un membre ?",
     "USER_FIELD_HELPER": "Sélectionnez l'utilisateur à ajouter",
     "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer",
     "OWNER_LABEL": "$t(OWNER_LABEL)",
@@ -41,7 +41,7 @@
     "ADD_BUTTON": "Ajouter"    
   },
   "KInviteMember": {
-    "TITLE": "Inviter des personnes à rejoindre votre organisation ?",
+    "TITLE": "Inviter des personnes ?",
     "NAME_FIELD_HELPER": "Saisissez le nom de votre invité",
     "EMAIL_FIELD_HELPER": "Saisissez l'adresse mail de votre invité",
     "ROLE_FIELD_HELPER": "Sélectionnez le rôle à attribuer à votre invité",
