@@ -84,7 +84,7 @@ export default {
         message: this.$t('KGroupCard.REMOVE_DIALOG_MESSAGE', { group: group.name }),
         html: true,
         ok: {
-          label: this.$t('OK'),
+          label: this.$t('OK')
         },
         cancel: {
           label: this.$t('CANCEL')

@@ -39,8 +39,8 @@ export default {
         buttons: [
           {
             label: this.$t('OK'),
-            preventClose: true,
-            
+            preventClose: true
+
           }, {
             label: this.$t('CANCEL')
           }

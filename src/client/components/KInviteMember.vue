@@ -182,7 +182,7 @@ export default {
           message: this.$t('KInviteMember.CONFIRM_FILE_IMPORT_MESSAGE', { errors: errors.length, records: data.length }),
           html: true,
           ok: {
-            label: this.$t('OK'),
+            label: this.$t('OK')
           },
           cancel: {
             label: this.$t('KInviteMember.CANCEL_BUTTON')
