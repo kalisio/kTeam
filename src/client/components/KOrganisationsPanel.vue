@@ -2,7 +2,7 @@
   <div>
     <q-list link no-border>
       <q-separator />
-      <!-- 
+      <!--
         Organisations list
       -->
       <template v-for="org in items">
@@ -25,7 +25,7 @@
      -->
     <k-modal-editor
       id="editor"
-      ref="editor" 
+      ref="editor"
       service="organisations"
       @applied="onOrganisationCreated" />
   </div>
@@ -68,7 +68,7 @@ export default {
       return this.items.find(org => org._id === id)
     },
     updateOrganisations () {
-      let list = this.$store.get('user.organisations', [])
+      const list = this.$store.get('user.organisations', [])
       this.filterQuery = { _id: { $in: list.map(org => { return org._id }) } }
       this.refreshCollection()
     },

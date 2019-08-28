@@ -34,7 +34,7 @@ export function preventRemovingLastOwner (resourceScope) {
       // If none remains stop
       if (removedOwners >= owners.total) {
         debug('Cannot remove the last owner of resource ', resource)
-        let resourceName = resource.name ? resource.name : resource._id.toString()
+        const resourceName = resource.name ? resource.name : resource._id.toString()
         throw new Forbidden('You are not allowed to remove the last owner of resource ' + resourceName, {
           translation: {
             key: 'CANNOT_REMOVE_LAST_OWNER',
@@ -48,49 +48,49 @@ export function preventRemovingLastOwner (resourceScope) {
 }
 
 export function removeOrganisationGroupsAuthorisations (hook) {
-  let app = hook.app
-  let authorisationService = app.getService('authorisations')
-  let org = hook.params.resource
-  let user = hook.params.user
+  const app = hook.app
+  const authorisationService = app.getService('authorisations')
+  const org = hook.params.resource
+  const user = hook.params.user
   // Unset membership for the all org groups
-  let orgGroupService = app.getService('groups', org)
+  const orgGroupService = app.getService('groups', org)
   return orgGroupService.find({ paginate: false })
-  .then(groups => {
-    return Promise.all(groups.map(group => {
+    .then(groups => {
+      return Promise.all(groups.map(group => {
       // Unset membership on group for the all org users
-      return authorisationService.remove(group._id.toString(), {
-        query: {
-          scope: 'groups'
-        },
-        user,
-        force: hook.params.force,
-        // Because we already have resource set it as objects to avoid populating
-        // Moreover used as an after hook the resource might not already exist anymore
-        subjects: hook.params.subjects,
-        subjectsService: hook.params.subjectsService,
-        resource: group,
-        resourcesService: orgGroupService
-      })
-    }))
-  })
-  .then(groups => {
-    debug('Authorisations unset on groups for organisation ' + org._id)
-    return hook
-  })
+        return authorisationService.remove(group._id.toString(), {
+          query: {
+            scope: 'groups'
+          },
+          user,
+          force: hook.params.force,
+          // Because we already have resource set it as objects to avoid populating
+          // Moreover used as an after hook the resource might not already exist anymore
+          subjects: hook.params.subjects,
+          subjectsService: hook.params.subjectsService,
+          resource: group,
+          resourcesService: orgGroupService
+        })
+      }))
+    })
+    .then(groups => {
+      debug('Authorisations unset on groups for organisation ' + org._id)
+      return hook
+    })
 }
 
 export async function removeOrganisationTagsAuthorisations (hook) {
-  let app = hook.app
-  let org = hook.params.resource
+  const app = hook.app
+  const org = hook.params.resource
   const subjectService = hook.params.subjectsService
   const orgTagsService = app.getService('tags', org)
-  let subjects = hook.params.subjects || []
+  const subjects = hook.params.subjects || []
   if (subjects.length === 0) return hook
   // Retrieve org tags
-  let orgTags = await orgTagsService.find({ paginate: false })
-  let promises = []
+  const orgTags = await orgTagsService.find({ paginate: false })
+  const promises = []
   subjects.forEach(subject => {
-    let tags = subject.tags || []
+    const tags = subject.tags || []
     // Find tags from org
     const fromOrg = _.intersectionWith(tags, orgTags, hooks.isTagEqual)
     // Clear removed tags

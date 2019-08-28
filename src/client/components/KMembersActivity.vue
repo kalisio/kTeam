@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
-    <!-- 
+    <!--
       Members collection, cannot use smart strategy here because membership is not managed at service level
       but using authorisations on users
      -->
     <k-grid ref="membersGrid" service="members" :renderer="renderer" :contextId="contextId" :base-query="baseQuery" :filter-query="searchQuery" />
-    <!-- 
+    <!--
       Router view to enable routing to modals
      -->
     <router-view service="members" :router="router()"></router-view>
@@ -19,7 +19,7 @@ import { getRoleForOrganisation } from '../../common/permissions'
 
 export default {
   name: 'k-members-activity',
-  mixins: [ mixins.baseActivity ],
+  mixins: [mixins.baseActivity],
   props: {
     contextId: {
       type: String,
@@ -72,8 +72,7 @@ export default {
         name: 'groups',
         label: this.$t('KMembersActivity.GROUPS_LABEL'),
         icon: 'group_work',
-        route: {
-          name: 'groups-activity', params: { contextId: this.contextId } }
+        route: { name: 'groups-activity', params: { contextId: this.contextId } }
       })
       // Fab actions
       if (this.$can('create', 'authorisations', this.contextId, { resource: this.contextId })) {
@@ -95,11 +94,11 @@ export default {
     subscribeUsers () {
       // Remove previous listener if any
       this.unsubscribeUsers()
-      let usersService = this.$api.getService('users')
+      const usersService = this.$api.getService('users')
       usersService.on('patched', this.refreshOnAddMember)
     },
     unsubscribeUsers () {
-      let usersService = this.$api.getService('users')
+      const usersService = this.$api.getService('users')
       usersService.off('patched', this.refreshOnAddMember)
     },
     refreshOnAddMember (user) {

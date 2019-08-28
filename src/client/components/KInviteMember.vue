@@ -14,12 +14,12 @@
             <q-field
               :error-message="fileErrorLabel"
               :error="fileError">
-                <k-input-file 
+                <k-input-file
                   :mime-types="['txt/csv', 'application/vnd.ms-excel']"
                   :clearable="true"
                   @cleared="onInputFileCleared"
-                  @rejected="onInputFileRejected" 
-                  @failed="onInputFileFailed" 
+                  @rejected="onInputFileRejected"
+                  @failed="onInputFileFailed"
                   @loaded="onInputFileLoaded" />
               <template v-slot:hint>
                 <span v-html="$t('KInviteMember.FILE_FIELD_HELPER')"></span>
@@ -59,44 +59,44 @@ export default {
   methods: {
     getSchema () {
       return {
-        '$schema': 'http://json-schema.org/draft-06/schema#',
-        '$id': 'http://kalisio.xyz/schemas/invite-member',
-        'title': 'Invite Member Form',
-        'type': 'object',
-        'properties': {
-          'name': {
-            'type': 'string',
-            'minLength': 3,
-            'maxLength': 128,
-            'field': {
-              'component': 'form/KTextField',
-              'helper': 'KInviteMember.NAME_FIELD_HELPER'
+        $schema: 'http://json-schema.org/draft-06/schema#',
+        $id: 'http://kalisio.xyz/schemas/invite-member',
+        title: 'Invite Member Form',
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 3,
+            maxLength: 128,
+            field: {
+              component: 'form/KTextField',
+              helper: 'KInviteMember.NAME_FIELD_HELPER'
             }
           },
-          'email': {
-            'type': 'string',
-            'format': 'email',
-            'field': {
-              'component': 'form/KEmailField',
-              'helper': 'KInviteMember.EMAIL_FIELD_HELPER'
+          email: {
+            type: 'string',
+            format: 'email',
+            field: {
+              component: 'form/KEmailField',
+              helper: 'KInviteMember.EMAIL_FIELD_HELPER'
             }
           },
-          'role': {
-            'type': 'string',
-            'default': 'member',
-            'field': {
-              'component': 'form/KSelectField',
-              'helper': 'KInviteMember.ROLE_FIELD_HELPER',
-              'type': 'radio',
-              'options': [
-                { 'label': this.$t('KInviteMember.MEMBER_LABEL'), 'value': 'member' },
-                { 'label': this.$t('KInviteMember.MANAGER_LABEL'), 'value': 'manager' },
-                { 'label': this.$t('KInviteMember.OWNER_LABEL'), 'value': 'owner' }
+          role: {
+            type: 'string',
+            default: 'member',
+            field: {
+              component: 'form/KSelectField',
+              helper: 'KInviteMember.ROLE_FIELD_HELPER',
+              type: 'radio',
+              options: [
+                { label: this.$t('KInviteMember.MEMBER_LABEL'), value: 'member' },
+                { label: this.$t('KInviteMember.MANAGER_LABEL'), value: 'manager' },
+                { label: this.$t('KInviteMember.OWNER_LABEL'), value: 'owner' }
               ]
             }
           }
         },
-        'required': ['name', 'email', 'role']
+        required: ['name', 'email', 'role']
       }
     },
     getToolbar () {
@@ -111,12 +111,12 @@ export default {
     },
     doInvite (event, done) {
       if (this.mode === 'unique') {
-        let result = this.$refs.form.validate()
+        const result = this.$refs.form.validate()
         if (result.isValid) this.doInviteUnique(result.values, done)
         else done()
       } else {
         if (this.fileContent !== '') {
-          let result = Papa.parse(this.fileContent, { skipEmptyLines: true })
+          const result = Papa.parse(this.fileContent, { skipEmptyLines: true })
           this.doInviteMultiple(result.data, done)
         } else {
           this.fileError = true
@@ -136,19 +136,19 @@ export default {
       // Remove the role from the form data
       delete data.role
       // Create the user
-      let usersService = this.$api.getService('users')
+      const usersService = this.$api.getService('users')
       await usersService.create(data)
       done()
       this.doClose()
     },
     async doInviteMultiple (data, done) {
-      let errors = []
-      let guests = []
-      let emailExpr = /\S+@\S+\.\S+/
+      const errors = []
+      const guests = []
+      const emailExpr = /\S+@\S+\.\S+/
       for (let i = 0; i < data.length; i++) {
-        let record = data[i]
+        const record = data[i]
         if (record.length === 3 && emailExpr.test(record[1]) && kCorePermissions.RoleNames.includes(record[2])) {
-          let guest = {
+          const guest = {
             locale: utils.getLocale(),
             sponsor: {
               id: this.$store.get('user._id'),
@@ -160,7 +160,7 @@ export default {
           }
           guests.push(guest)
         } else {
-          let error = {
+          const error = {
             line: i + 1,
             record: record
           }
@@ -188,13 +188,13 @@ export default {
             label: this.$t('KInviteMember.CANCEL_BUTTON')
           }
         }).onOk(async () => {
-          let usersService = this.$api.getService('users')
+          const usersService = this.$api.getService('users')
           for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
           done()
           this.doClose()
         }).onCancel(() => done())
       } else {
-        let usersService = this.$api.getService('users')
+        const usersService = this.$api.getService('users')
         for (let i = 0; i < guests.length; ++i) await usersService.create(guests[i])
         done()
         this.doClose()

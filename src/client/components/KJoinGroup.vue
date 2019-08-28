@@ -36,48 +36,48 @@ export default {
     schema () {
       if (this.member === null) return {}
       return {
-        '$schema': 'http://json-schema.org/draft-06/schema#',
-        '$id': 'http://kalisio.xyz/schemas/join-group#',
-        'title': 'Join Group Form',
-        'type': 'object',
-        'properties': {
-          'group': {
-            'type': 'object',
-            'multiselect': false,
-            'uniqueItems': true,
-            'minItems': 1,
-            'maxItems': 1,
-            'services': [{
-              'service': this.contextId + '/groups',
-              'field': 'name',
-              'baseQuery': {
-                '_id': { '$nin': _.map(this.member.groups, '_id') }
+        $schema: 'http://json-schema.org/draft-06/schema#',
+        $id: 'http://kalisio.xyz/schemas/join-group#',
+        title: 'Join Group Form',
+        type: 'object',
+        properties: {
+          group: {
+            type: 'object',
+            multiselect: false,
+            uniqueItems: true,
+            minItems: 1,
+            maxItems: 1,
+            services: [{
+              service: this.contextId + '/groups',
+              field: 'name',
+              baseQuery: {
+                _id: { $nin: _.map(this.member.groups, '_id') }
               },
-              'icon': {
-                'name': 'group_work'
+              icon: {
+                name: 'group_work'
               }
             }],
-            'field': {
-              'component': 'form/KItemField',
-              'helper': 'KJoinGroup.GROUP_FIELD_HELPER'
+            field: {
+              component: 'form/KItemField',
+              helper: 'KJoinGroup.GROUP_FIELD_HELPER'
             }
           },
-          'role': {
-            'type': 'string',
-            'default': 'member',
-            'field': {
-              'component': 'form/KSelectField',
-              'helper': 'KJoinGroup.ROLE_FIELD_HELPER',
-              'type': 'radio',
-              'options': [
-                { 'label': this.$t('KAddMember.MEMBER_LABEL'), 'value': 'member' },
-                { 'label': this.$t('KAddMember.MANAGER_LABEL'), 'value': 'manager' },
-                { 'label': this.$t('KAddMember.OWNER_LABEL'), 'value': 'owner' }
+          role: {
+            type: 'string',
+            default: 'member',
+            field: {
+              component: 'form/KSelectField',
+              helper: 'KJoinGroup.ROLE_FIELD_HELPER',
+              type: 'radio',
+              options: [
+                { label: this.$t('KAddMember.MEMBER_LABEL'), value: 'member' },
+                { label: this.$t('KAddMember.MANAGER_LABEL'), value: 'manager' },
+                { label: this.$t('KAddMember.OWNER_LABEL'), value: 'owner' }
               ]
             }
           }
         },
-        'required': ['group', 'role']
+        required: ['group', 'role']
       }
     }
   },
@@ -101,9 +101,9 @@ export default {
       return this.$api.getService('members')
     },
     async doJoin () {
-      let result = this.$refs.form.validate()
+      const result = this.$refs.form.validate()
       if (result.isValid) {
-        let authorisationService = this.$api.getService('authorisations')
+        const authorisationService = this.$api.getService('authorisations')
         await authorisationService.create({
           scope: 'groups',
           permissions: result.values.role,
@@ -125,9 +125,9 @@ export default {
     this.$options.components['k-form'] = this.$load('form/KForm')
     // Load the member
     this.loadObject()
-    .then(object => {
-      this.member = object
-    })
+      .then(object => {
+        this.member = object
+      })
   }
 }
 </script>

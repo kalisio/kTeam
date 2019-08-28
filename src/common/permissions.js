@@ -73,17 +73,17 @@ export function countMembersOfGroup (membersService, groupId, role) {
 }
 
 export function getRoleForOrganisation (user, organisationId) {
-  let result = _.find(user.organisations, { '_id': organisationId })
+  const result = _.find(user.organisations, { _id: organisationId })
   if (!_.isUndefined(result)) return result.permissions
   return undefined
 }
 
 export function getRoleForGroup (user, organisationId, groupId) {
-  let result = _.find(user.groups, { 'context': organisationId, '_id': groupId })
+  const result = _.find(user.groups, { context: organisationId, _id: groupId })
   if (!_.isUndefined(result)) return result.permissions
   return undefined
 }
 
 export function findGroupsWithRole (user, organisationId, role) {
-  return _.filter(user.groups || [], { 'context': organisationId, 'permissions': permissions.RoleNames[role] })
+  return _.filter(user.groups || [], { context: organisationId, permissions: permissions.RoleNames[role] })
 }

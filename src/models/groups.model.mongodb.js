@@ -1,5 +1,5 @@
 module.exports = function (app, options) {
-  let db = options.db || app.db
+  const db = options.db || app.db
   options.Model = db.collection('groups')
   // Collation provided in query ensure sorting to be case insensitive w.r.t. user's language
   // We built indices with collation to cover the most used languages, it requires different naming...

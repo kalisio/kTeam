@@ -16,7 +16,7 @@
             <q-btn id="group-button" :key="groupKey(group)" flat small round color="primary">
               <q-avatar color="secondary" text-color="white" size="32px">{{groupInitials(group)}}</q-avatar>
               <q-menu ref="popover">
-                <q-toolbar inverted color="grey-7">     
+                <q-toolbar inverted color="grey-7">
                   <span style="margin:8px">{{group.name}}</span>
                   <q-btn id="change-role-group" v-if="canChangeRoleInGroup(group)" flat round small @click="onChangeRoleInGroup(group), $refs.popover[index].hide()">
                     <q-icon :name="roleIcon(roleForGroup(group))" />
@@ -52,13 +52,13 @@ import { getRoleForOrganisation, getRoleForGroup, findGroupsWithRole } from '../
 
 export default {
   name: 'k-member-card',
-  mixins: [ kCoreMixins.baseItem ],
+  mixins: [kCoreMixins.baseItem],
   computed: {
     memberGroups () {
       return _.filter(this.item.groups, { context: this.contextId })
     },
     role () {
-      let role = getRoleForOrganisation(this.item, this.contextId)
+      const role = getRoleForOrganisation(this.item, this.contextId)
       if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     },
@@ -106,7 +106,7 @@ export default {
           label: this.$t('CANCEL')
         }
       }).onOk(() => {
-        let authorisationService = this.$api.getService('authorisations')
+        const authorisationService = this.$api.getService('authorisations')
         authorisationService.remove(this.contextId, {
           query: {
             scope: 'organisations',
@@ -133,7 +133,7 @@ export default {
       return this.roleLabels[role]
     },
     roleForGroup (group) {
-      let role = getRoleForGroup(this.item, this.contextId, group._id)
+      const role = getRoleForGroup(this.item, this.contextId, group._id)
       if (!_.isUndefined(role)) return kCorePermissions.Roles[role]
       return ''
     },
@@ -141,7 +141,7 @@ export default {
       const user = this.$store.get('user')
       // Can add members to a group if at least manager/owner of one
       const groups = findGroupsWithRole(user, this.contextId, kCorePermissions.Roles.manager)
-      .concat(findGroupsWithRole(user, this.contextId, kCorePermissions.Roles.owner))
+        .concat(findGroupsWithRole(user, this.contextId, kCorePermissions.Roles.owner))
       // FIXME: we should also filter by the member groups so that if already added to all my groups we don't show the action
       return groups.length > 0
     },

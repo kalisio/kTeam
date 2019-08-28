@@ -31,27 +31,27 @@ export default {
   methods: {
     getSchema () {
       return {
-        '$schema': 'http://json-schema.org/draft-06/schema#',
-        '$id': 'http://kalisio.xyz/schemas/change-role#',
-        'title': 'Change role form',
-        'type': 'object',
-        'properties': {
-          'role': {
-            'type': 'string',
-            'default': 'member',
-            'field': {
-              'component': 'form/KSelectField',
-              'helper': 'KChangeRole.ROLE_FIELD_HELPER',
-              'type': 'radio',
-              'options': [
-                { 'label': this.$t('KChangeRole.MEMBER_LABEL'), 'value': 'member' },
-                { 'label': this.$t('KChangeRole.MANAGER_LABEL'), 'value': 'manager' },
-                { 'label': this.$t('KChangeRole.OWNER_LABEL'), 'value': 'owner' }
+        $schema: 'http://json-schema.org/draft-06/schema#',
+        $id: 'http://kalisio.xyz/schemas/change-role#',
+        title: 'Change role form',
+        type: 'object',
+        properties: {
+          role: {
+            type: 'string',
+            default: 'member',
+            field: {
+              component: 'form/KSelectField',
+              helper: 'KChangeRole.ROLE_FIELD_HELPER',
+              type: 'radio',
+              options: [
+                { label: this.$t('KChangeRole.MEMBER_LABEL'), value: 'member' },
+                { label: this.$t('KChangeRole.MANAGER_LABEL'), value: 'manager' },
+                { label: this.$t('KChangeRole.OWNER_LABEL'), value: 'owner' }
               ]
             }
           }
         },
-        'required': ['role']
+        required: ['role']
       }
     },
     getToolbar () {
@@ -65,9 +65,9 @@ export default {
       ]
     },
     async doUpdate () {
-      let result = this.$refs.form.validate()
+      const result = this.$refs.form.validate()
       if (result.isValid) {
-        let authorisationService = this.$api.getService('authorisations')
+        const authorisationService = this.$api.getService('authorisations')
         await authorisationService.create({
           scope: this.resource.scope,
           permissions: result.values.role,

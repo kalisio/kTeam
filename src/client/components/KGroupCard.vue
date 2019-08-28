@@ -41,13 +41,13 @@ export default {
   computed: {
     memberRoleIcon () {
       const user = this.$store.get('user')
-      let role = getRoleForGroup(user, this.contextId, this.item._id)
+      const role = getRoleForGroup(user, this.contextId, this.item._id)
       if (!_.isUndefined(role)) return this.roleIcons[kCorePermissions.Roles[role]]
       else return ''
     },
     memberRoleLabel () {
       const user = this.$store.get('user')
-      let role = getRoleForGroup(user, this.contextId, this.item._id)
+      const role = getRoleForGroup(user, this.contextId, this.item._id)
       if (!_.isUndefined(role)) return this.roleLabels[kCorePermissions.Roles[role]]
       else return ''
     }
@@ -90,7 +90,7 @@ export default {
           label: this.$t('CANCEL')
         }
       }).onOk(() => {
-        let groupsService = this.$api.getService('groups')
+        const groupsService = this.$api.getService('groups')
         groupsService.remove(group._id)
       })
     },
@@ -100,20 +100,20 @@ export default {
     refreshStats () {
       // Clear the counters. We use a temporaty object to ensure reactivity
       // see: https://v1.vuejs.org/guide/reactivity.html
-      let stats = {}
+      const stats = {}
       this.roleNames.forEach(role => {
         stats[role] = 0
       })
       const membersService = this.$api.getService('members', this.contextId)
       findMembersOfGroup(membersService, this.item._id)
-      .then(members => {
+        .then(members => {
         // filter the subjects according the role in order to count them
-        _.forEach(members.data, (user) => {
-          let group = _.find(user.groups, { '_id': this.item._id })
-          stats[group.permissions]++
+          _.forEach(members.data, (user) => {
+            const group = _.find(user.groups, { _id: this.item._id })
+            stats[group.permissions]++
+          })
+          this.memberStats = Object.assign({}, stats)
         })
-        this.memberStats = Object.assign({}, stats)
-      })
     },
     onMembersClicked (role) {
     /* FIXME

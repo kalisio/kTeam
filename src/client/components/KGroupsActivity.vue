@@ -1,10 +1,10 @@
 <template>
   <q-page padding>
-    <!-- 
+    <!--
       Groups collection
     -->
     <k-grid ref="groups" :contextId="contextId" service="groups" :renderer="renderer" :base-query="baseQuery" :filter-query="searchQuery" :list-strategy="'smart'" />
-    <!-- 
+    <!--
       Router view to enable routing to modals
     -->
     <router-view service="groups" :router="router()"></router-view>
@@ -16,7 +16,7 @@ import { mixins } from '@kalisio/kdk-core/client'
 
 export default {
   name: 'k-groups-activity',
-  mixins: [ mixins.baseActivity ],
+  mixins: [mixins.baseActivity],
   props: {
     contextId: {
       type: String,

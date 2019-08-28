@@ -51,13 +51,13 @@ export default function (name, app, options) {
     configureOrganisations () {
       // Reinstanciated services for all organisations
       return this.find({ paginate: false })
-      .then(organisations => {
-        organisations.forEach(organisation => {
+        .then(organisations => {
+          organisations.forEach(organisation => {
           // Get org DB
-          let db = this.app.db.instance.db(organisation._id.toString())
-          this.createOrganisationServices(organisation, db)
+            const db = this.app.db.instance.db(organisation._id.toString())
+            this.createOrganisationServices(organisation, db)
+          })
         })
-      })
     }
   }
 }

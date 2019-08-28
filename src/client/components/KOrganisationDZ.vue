@@ -1,7 +1,7 @@
 <template>
   <div v-if="name !== ''">
     <k-block
-      color="red" 
+      color="red"
       :title="$t('KOrganisationDZ.BLOCK_TITLE')"
       :text="$t('KOrganisationDZ.BLOCK_TEXT', {organisation: name})"
       :action="$t('KOrganisationDZ.BLOCK_ACTION')"
@@ -29,7 +29,7 @@ export default {
     },
     onDeleteClicked () {
       Dialog.create({
-        title: this.$t('KOrganisationDZ.DIALOG_TITLE', {organisation: this.name}),
+        title: this.$t('KOrganisationDZ.DIALOG_TITLE', { organisation: this.name }),
         message: this.$t('KOrganisationDZ.DIALOG_HELPER'),
         html: true,
         prompt: {
@@ -58,9 +58,9 @@ export default {
     this.$options.components['k-block'] = this.$load('frame/KBlock')
     // Update underlying object
     this.loadObject()
-    .then(object => {
-      this.name = object.name
-    })
+      .then(object => {
+        this.name = object.name
+      })
   }
 }
 </script>

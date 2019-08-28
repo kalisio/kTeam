@@ -23,50 +23,50 @@ export default {
   methods: {
     getSchema () {
       return {
-        '$schema': 'http://json-schema.org/draft-06/schema#',
-        '$id': 'http://kalisio.xyz/schemas/add-member#',
-        'title': 'Add Member Form',
-        'type': 'object',
-        'properties': {
-          'user': {
-            'type': 'object',
-            'multiselect': false,
-            'uniqueItems': true,
-            'minItems': 1,
-            'maxItems': 1,
-            'services': [{
-              'service': 'users',
-              'field': 'profile.name',
-              'subfield': 'email',
-              'baseQuery': {
-                'organisations._id': { '$nin': [this.contextId] },
-                '$select': ['email', 'profile']
+        $schema: 'http://json-schema.org/draft-06/schema#',
+        $id: 'http://kalisio.xyz/schemas/add-member#',
+        title: 'Add Member Form',
+        type: 'object',
+        properties: {
+          user: {
+            type: 'object',
+            multiselect: false,
+            uniqueItems: true,
+            minItems: 1,
+            maxItems: 1,
+            services: [{
+              service: 'users',
+              field: 'profile.name',
+              subfield: 'email',
+              baseQuery: {
+                'organisations._id': { $nin: [this.contextId] },
+                $select: ['email', 'profile']
               },
-              'icon': {
-                'name': 'person'
+              icon: {
+                name: 'person'
               }
             }],
-            'field': {
-              'component': 'form/KItemField',
-              'helper': 'KAddMember.USER_FIELD_HELPER'
+            field: {
+              component: 'form/KItemField',
+              helper: 'KAddMember.USER_FIELD_HELPER'
             }
           },
-          'role': {
-            'type': 'string',
-            'default': 'member',
-            'field': {
-              'component': 'form/KSelectField',
-              'helper': 'KAddMember.ROLE_FIELD_HELPER',
-              'type': 'radio',
-              'options': [
-                { 'label': this.$t('KAddMember.MEMBER_LABEL'), 'value': 'member' },
-                { 'label': this.$t('KAddMember.MANAGER_LABEL'), 'value': 'manager' },
-                { 'label': this.$t('KAddMember.OWNER_LABEL'), 'value': 'owner' }
+          role: {
+            type: 'string',
+            default: 'member',
+            field: {
+              component: 'form/KSelectField',
+              helper: 'KAddMember.ROLE_FIELD_HELPER',
+              type: 'radio',
+              options: [
+                { label: this.$t('KAddMember.MEMBER_LABEL'), value: 'member' },
+                { label: this.$t('KAddMember.MANAGER_LABEL'), value: 'manager' },
+                { label: this.$t('KAddMember.OWNER_LABEL'), value: 'owner' }
               ]
             }
           }
         },
-        'required': ['user', 'role']
+        required: ['user', 'role']
       }
     },
     getToolbar () {
@@ -80,9 +80,9 @@ export default {
       ]
     },
     async doAdd () {
-      let result = this.$refs.form.validate()
+      const result = this.$refs.form.validate()
       if (result.isValid) {
-        let authorisationService = this.$api.getService('authorisations')
+        const authorisationService = this.$api.getService('authorisations')
         await authorisationService.create({
           scope: 'organisations',
           permissions: result.values.role,

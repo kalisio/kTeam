@@ -7,15 +7,15 @@ const debug = makeDebug('kalisio:kTeam:users:hooks')
 
 export function preventRemoveUser (hook) {
   if (hook.type !== 'before') {
-    throw new Error(`The 'preventRemoveUser' hook should only be used as a 'before' hook.`)
+    throw new Error('The \'preventRemoveUser\' hook should only be used as a \'before\' hook.')
   }
 
   // By pass check ?
   if (hook.params.force) return hook
-  let user = hook.params.user
+  const user = hook.params.user
   if (user.organisations) {
     // We must ensure the user is no more a owner of an organisation
-    let owningOrganisations = _.filter(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
+    const owningOrganisations = _.filter(user.organisations, { permissions: permissions.RoleNames[permissions.Roles.owner] })
     if (!_.isEmpty(owningOrganisations)) {
       debug('Cannot remove the user: ', user)
       throw new Forbidden('You are not allowed to delete the user ' + user.name, {
@@ -30,12 +30,12 @@ export function preventRemoveUser (hook) {
 }
 
 export function joinOrganisation (hook) {
-  let app = hook.app
-  let subject = getItems(hook)
-  let authorisationService = app.getService('authorisations')
-  let usersService = app.getService('users')
+  const app = hook.app
+  const subject = getItems(hook)
+  const authorisationService = app.getService('authorisations')
+  const usersService = app.getService('users')
 
-    // Set membership for the created user
+  // Set membership for the created user
   return authorisationService.create({
     scope: 'organisations',
     permissions: subject.sponsor.roleGranted, // Member by default
@@ -45,23 +45,23 @@ export function joinOrganisation (hook) {
     subjectsService: usersService,
     subjects: [subject]
   })
-  .then(authorisation => {
-    debug('Organisation membership set for user ' + subject._id)
-    return hook
-  })
+    .then(authorisation => {
+      debug('Organisation membership set for user ' + subject._id)
+      return hook
+    })
 }
 
 export function leaveOrganisations (options = { skipPrivate: true }) {
   return async function (hook) {
     if (hook.type !== 'after') {
-      throw new Error(`The 'leaveOrganisations' hook should only be used as a 'after' hook.`)
+      throw new Error('The \'leaveOrganisations\' hook should only be used as a \'after\' hook.')
     }
 
-    let app = hook.app
-    let organisationsService = app.getService('organisations')
-    let authorisationService = app.getService('authorisations')
-    let usersService = app.getService('users')
-    let subject = getItems(hook)
+    const app = hook.app
+    const organisationsService = app.getService('organisations')
+    const authorisationService = app.getService('authorisations')
+    const usersService = app.getService('users')
+    const subject = getItems(hook)
     const organisations = _.get(subject, 'organisations', [])
 
     await Promise.all(organisations.map(organisation => {

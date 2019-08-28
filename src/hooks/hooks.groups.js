@@ -2,9 +2,9 @@ import makeDebug from 'debug'
 const debug = makeDebug('kalisio:kTeam:groups:hooks')
 
 export function createGroupAuthorisations (hook) {
-  let app = hook.app
-  let authorisationService = app.getService('authorisations')
-  let userService = app.getService('users')
+  const app = hook.app
+  const authorisationService = app.getService('authorisations')
+  const userService = app.getService('users')
 
   // Set membership for the owner
   return authorisationService.create({
@@ -18,15 +18,15 @@ export function createGroupAuthorisations (hook) {
     resource: hook.result,
     resourcesService: hook.service
   })
-  .then(authorisation => {
-    debug('Group ownership set for user ' + hook.result._id)
-    return hook
-  })
+    .then(authorisation => {
+      debug('Group ownership set for user ' + hook.result._id)
+      return hook
+    })
 }
 
 export function removeGroupAuthorisations (hook) {
-  let app = hook.app
-  let authorisationService = app.getService('authorisations')
+  const app = hook.app
+  const authorisationService = app.getService('authorisations')
 
   // Unset membership for the all org users
   return authorisationService.remove(hook.result._id.toString(), {
@@ -41,8 +41,8 @@ export function removeGroupAuthorisations (hook) {
     resource: hook.result,
     resourcesService: hook.service
   })
-  .then(authorisation => {
-    debug('Authorisations unset for group ' + hook.result._id)
-    return hook
-  })
+    .then(authorisation => {
+      debug('Authorisations unset for group ' + hook.result._id)
+      return hook
+    })
 }
