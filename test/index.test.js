@@ -44,12 +44,8 @@ describe('kTeam', () => {
     // baseUrl = `http://localhost:${port}${app.get('apiPath')}`
     // Register authorisation hook
     app.hooks({
-      before: { all: [hooks.processObjectIDs, hooks.authorise] }
-      /* For debug
-      before: { all: [coreHooks.log, teamHooks.authorise] },
-      after: { all: coreHooks.log },
-      error: { all: coreHooks.log }
-      */
+      before: { all: [hooks.processObjectIDs, hooks.authorise] },
+      error: { all: hooks.log }
     })
     // Add hooks for contextual services
     app.on('service', service => {
@@ -420,7 +416,6 @@ describe('kTeam', () => {
       checkAuthorisation: true
     })
       .catch(error => {
-        console.log(error)
         expect(error).toExist()
         expect(error.name).to.equal('Forbidden')
         done()
