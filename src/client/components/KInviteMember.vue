@@ -14,7 +14,7 @@
             <q-field
               :error-message="fileErrorLabel"
               :error="fileError">
-                <k-input-file
+                <k-file-input
                   :mime-types="['txt/csv', 'application/vnd.ms-excel']"
                   :clearable="true"
                   @cleared="onInputFileCleared"
@@ -208,15 +208,15 @@ export default {
       this.fileError = false
       this.fileContent = ''
     },
-    onInputFileRejected () {
+    onInputFileRejected (file) {
       this.fileError = true
       this.fileErrorLabel = this.$t('KInviteMember.INVALID_FILE_TYPE')
     },
-    onInputFileFailed () {
+    onInputFileFailed (file) {
       this.fileError = true
       this.fileErrorLabel = this.$t('KInviteMember.ERROR_WHILE_LOADING_THE_FILE')
     },
-    onInputFileLoaded (content) {
+    onInputFileLoaded (file, content) {
       this.fileError = false
       this.fileContent = content
     }
@@ -225,7 +225,7 @@ export default {
     // Load the required components
     this.$options.components['k-modal'] = this.$load('frame/KModal')
     this.$options.components['k-form'] = this.$load('form/KForm')
-    this.$options.components['k-input-file'] = this.$load('input/KInputFile')
+    this.$options.components['k-file-input'] = this.$load('input/KFileInput')
   }
 }
 </script>
