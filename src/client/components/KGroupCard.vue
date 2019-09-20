@@ -97,7 +97,7 @@ export default {
     roleKey (role) {
       return this.item._id + '-' + role
     },
-    refreshStats () {
+    async refreshStats () {
       // Clear the counters. We use a temporaty object to ensure reactivity
       // see: https://v1.vuejs.org/guide/reactivity.html
       const stats = {}
@@ -105,15 +105,13 @@ export default {
         stats[role] = 0
       })
       const membersService = this.$api.getService('members', this.contextId)
-      findMembersOfGroup(membersService, this.item._id)
-        .then(members => {
-        // filter the subjects according the role in order to count them
-          _.forEach(members.data, (user) => {
-            const group = _.find(user.groups, { _id: this.item._id })
-            stats[group.permissions]++
-          })
-          this.memberStats = Object.assign({}, stats)
-        })
+      const members = await findMembersOfGroup(membersService, this.item._id)
+      // filter the subjects according the role in order to count them
+      _.forEach(members.data, (user) => {
+        const group = _.find(user.groups, { _id: this.item._id })
+        stats[group.permissions]++
+      })
+      this.memberStats = Object.assign({}, stats)
     },
     onMembersClicked (role) {
     /* FIXME

@@ -120,14 +120,11 @@ export default {
       this.$router.push({ name: 'members-activity' })
     }
   },
-  created () {
+  async created () {
     this.$options.components['k-modal'] = this.$load('frame/KModal')
     this.$options.components['k-form'] = this.$load('form/KForm')
     // Load the member
-    this.loadObject()
-      .then(object => {
-        this.member = object
-      })
+    this.member = await this.loadObject()
   }
 }
 </script>

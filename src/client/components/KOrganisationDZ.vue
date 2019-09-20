@@ -53,14 +53,12 @@ export default {
       })
     }
   },
-  created () {
+  async created () {
     // Load the components
     this.$options.components['k-block'] = this.$load('frame/KBlock')
     // Update underlying object
-    this.loadObject()
-      .then(object => {
-        this.name = object.name
-      })
+    const object = await this.loadObject()
+    this.name = object.name
   }
 }
 </script>
