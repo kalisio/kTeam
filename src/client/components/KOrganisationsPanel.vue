@@ -5,7 +5,7 @@
       <!--
         Organisations list
       -->
-      <template v-for="org in items">
+      <template v-if="items.length > 1" v-for="org in items">
         <q-item v-ripple clickable :active="org._id === currentOrgId" :id="getId(org)" :key="org._id" @click="setCurrentOrganisation(org)">
           <q-item-section avatar><q-avatar size="24px" color="primary" text-color="white">{{getInitials(org)}}</q-avatar></q-item-section>
           <q-item-section>{{org.name}}</q-item-section>
