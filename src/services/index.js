@@ -18,20 +18,20 @@ module.exports = function () {
     // it is a perspective and permissions are not available in this case
     if (user.organisations || user.groups) authorisationsService.updateAbilities(user)
   })
-	// Ensure org services are correctly distributed when replicated
-	orgsService.on('created', organisation => {
-	  // Check if already done (initiator)
-	  const orgMembersService = app.getService('members', organisation)
-	  if (!orgMembersService) {
-	    // Jump from infos/stats to real DB object
-	    const db = app.db.instance.db(organisation._id.toString())
-	    orgsService.createOrganisationServices(organisation, db)
-	  }
-	})
-	orgsService.on('removed', organisation => {
-	  // Check if already done (initiator)
-	  const orgMembersService = app.getService('members', organisation)
-	  if (orgMembersService) return
-	  orgsService.removeOrganisationServices(organisation)
-	})
+  // Ensure org services are correctly distributed when replicated
+  orgsService.on('created', organisation => {
+    // Check if already done (initiator)
+    const orgMembersService = app.getService('members', organisation)
+    if (!orgMembersService) {
+      // Jump from infos/stats to real DB object
+      const db = app.db.instance.db(organisation._id.toString())
+      orgsService.createOrganisationServices(organisation, db)
+    }
+  })
+  orgsService.on('removed', organisation => {
+    // Check if already done (initiator)
+    const orgMembersService = app.getService('members', organisation)
+    if (orgMembersService) return
+    orgsService.removeOrganisationServices(organisation)
+  })
 }
