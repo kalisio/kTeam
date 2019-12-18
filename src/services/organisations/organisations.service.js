@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import path from 'path'
 import makeDebug from 'debug'
 import aws from 'aws-sdk'
@@ -19,6 +20,19 @@ export default function (name, app, options) {
   debug('S3 team storage client created with config ', config)
 
   return {
+    // Hooks that can be added to customize organization services
+    organisationServicesHooks: [],
+
+    registerOrganisationServicesHook (hook) {
+      if (!this.organisationServicesHooks.includes(hook)) {
+        this.organisationServicesHooks.push(hook)
+      }
+    },
+
+    unregisterOrganisationServicesHook (hook) {
+      this.organisationServicesHooks = this.organisationServicesHooks.filter(registeredHook => registeredHook !== hook)
+    },
+
     createOrganisationServices (organisation, db) {
       this.app.createService('members', {
         servicesPath,
@@ -42,22 +56,23 @@ export default function (name, app, options) {
       const blobService = BlobService({ Model: blobStore, id: '_id' })
       createStorageService.call(this.app, blobService, { context: organisation })
       debug('Storage service created for organisation ' + organisation.name)
+      // Run registered hooks
+      _.forEach(this.organisationServicesHooks, hook => hook.createOrganisationServices.call(this.app, organisation, db))
     },
 
     removeOrganisationServices (organisation) {
-      // TODO
+      // Run registered hooks (reverse order with respect to creation)
+      _.forEachRight(this.organisationServicesHooks, hook => hook.removeOrganisationServices.call(this.app, organisation))
     },
 
-    configureOrganisations () {
+    async configureOrganisations () {
       // Reinstanciated services for all organisations
-      return this.find({ paginate: false })
-        .then(organisations => {
-          organisations.forEach(organisation => {
-          // Get org DB
-            const db = this.app.db.instance.db(organisation._id.toString())
-            this.createOrganisationServices(organisation, db)
-          })
-        })
+      const organisations = await this.find({ paginate: false })
+      organisations.forEach(organisation => {
+        // Get org DB
+        const db = this.app.db.instance.db(organisation._id.toString())
+        this.createOrganisationServices(organisation, db)
+      })
     }
   }
 }
